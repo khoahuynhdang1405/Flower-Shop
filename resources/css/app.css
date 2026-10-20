@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+    themes: false;
+}
+
+/*
+ * Bảng màu Lá & Hoa — lấy chính xác từ Figma (xem docs/designs/README.md).
+ * Mọi component dùng các token `lh-*` này, không hardcode mã màu.
+ * `static` để biến luôn có trên :root (theme daisyUI bên dưới tham chiếu tới).
+ */
+@theme static {
+    --color-lh-primary: #355b46;
+    --color-lh-primary-dark: #273f33;
+    --color-lh-heading: #1f472b;
+    --color-lh-muted: #778078;
+
+    --color-lh-surface: #ffffff;
+    --color-lh-cream: #fbf9f4;
+    --color-lh-canvas: #f4f5ef;
+
+    --color-lh-sage-50: #e8ede3;
+    --color-lh-sage-100: #d5dfd0;
+    --color-lh-sage-200: #cbd8c6;
+    --color-lh-border: #dce1d7;
+
+    --color-lh-warning-bg: #f5ebd9;
+    --color-lh-warning-fg: #926b35;
+
+    --color-lh-accent-soft: rgb(78 135 82 / 0.4);
+    --color-lh-on-dark-divider: rgb(255 255 255 / 0.149);
+    --color-lh-star: #f59e0b;
+
+    /*
+     * Logo (docs/designs/storefront/14-logo.png). Ba màu dưới đây lấy mẫu từ ảnh xuất,
+     * chưa có mã trong bảng màu Figma — TODO: đối chiếu lại với gradient "Linear" của Figma.
+     */
+    --color-lh-logo-from: #f2f7f1;
+    --color-lh-logo-to: #dde8dd;
+    --color-lh-flower-center: #ed9e0b;
+    --shadow-lh-logo: 0 2px 10px 1px rgb(78 135 82 / 0.15);
+
+    /* Font theo Figma: Lora cho tiêu đề và câu trích dẫn, Inter cho phần còn lại.
+     * --font-inter / --font-lora do @fonts (laravel-vite-plugin) sinh ra. */
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    --font-serif: var(--font-lora), ui-serif, Georgia, serif;
+}
+
+/* Mờ chéo khi thay nội dung trang (chuyển ngôn ngữ) — xem resources/js/locale-switcher.js. */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 180ms;
+}
+
+@plugin "daisyui/theme" {
+    name: "lahoa";
+    default: true;
+    prefersdark: false;
+    color-scheme: light;
+
+    --color-base-100: var(--color-lh-cream);
+    --color-base-200: var(--color-lh-canvas);
+    --color-base-300: var(--color-lh-border);
+    --color-base-content: var(--color-lh-heading);
+
+    --color-primary: var(--color-lh-primary);
+    --color-primary-content: var(--color-lh-surface);
+    --color-secondary: var(--color-lh-sage-50);
+    --color-secondary-content: var(--color-lh-heading);
+    --color-accent: var(--color-lh-sage-100);
+    --color-accent-content: var(--color-lh-heading);
+    --color-neutral: var(--color-lh-primary-dark);
+    --color-neutral-content: var(--color-lh-surface);
+
+    --color-warning: var(--color-lh-warning-bg);
+    --color-warning-content: var(--color-lh-warning-fg);
+
+    --radius-selector: 9999px;
+    --radius-field: 0.25rem;
+    --radius-box: 0.375rem;
+    --border: 1px;
+    --depth: 0;
+    --noise: 0;
+}

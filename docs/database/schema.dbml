@@ -1,0 +1,206 @@
+// Lá & Hoa — Database schema (17 bảng)
+// Laravel 12 · MySQL 8.0
+// Đặc tả chi tiết: docs/database/database-spec.md
+
+Table users {
+  id bigint [pk, increment]
+  name varchar(255) [not null]
+  email varchar(255) [unique, not null]
+  phone varchar(20)
+  password varchar(255)
+  google_id varchar(100)
+  remember_token varchar(100)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table admins {
+  id bigint [pk, increment]
+  role_id bigint [not null]
+  name varchar(255) [not null]
+  email varchar(255) [unique, not null]
+  phone varchar(20)
+  avatar varchar(500)
+  password varchar(255) [not null]
+  is_active boolean [default: true]
+  remember_token varchar(100)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table roles {
+  id bigint [pk, increment]
+  name varchar(100) [not null, note: 'Admin, Nhân viên / Thợ cắm']
+  slug varchar(100) [unique, not null]
+  description varchar(255)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table permissions {
+  id bigint [pk, increment]
+  name varchar(100) [not null]
+  slug varchar(100) [unique, not null]
+  group_name varchar(100) [not null]
+}
+
+Table role_has_permissions {
+  role_id bigint [not null]
+  permission_id bigint [not null]
+  Note: 'Bảng trung gian phân quyền Nhiều - Nhiều'
+}
+
+Table categories {
+  id bigint [pk, increment]
+  name varchar(255) [not null]
+  slug varchar(255) [unique, not null]
+  type varchar(50) [default: 'occasion', note: 'season, occasion, flower_type']
+  description text
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products {
+  id bigint [pk, increment]
+  category_id bigint [not null]
+  name varchar(255) [not null]
+  slug varchar(255) [unique, not null]
+  base_price decimal(12,2) [not null]
+  description text
+  dimension_info varchar(255)
+  freshness_guarantee varchar(255)
+  stock int [default: 0]
+  is_featured boolean [default: false]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table product_sizes {
+  id bigint [pk, increment]
+  product_id bigint [not null]
+  size_name varchar(50) [not null, note: 'Nhỏ, Vừa, Lớn']
+  price decimal(12,2) [not null]
+  is_default boolean [default: false]
+}
+
+Table product_images {
+  id bigint [pk, increment]
+  product_id bigint [not null]
+  image_path varchar(500) [not null]
+  is_primary boolean [default: false]
+  sort_order int [default: 0]
+}
+
+Table addons {
+  id bigint [pk, increment]
+  name varchar(255) [not null]
+  price decimal(12,2) [default: 0]
+  image_path varchar(500)
+  is_free boolean [default: false]
+  is_active boolean [default: true]
+}
+
+Table promotions {
+  id bigint [pk, increment]
+  code varchar(50) [unique, not null]
+  discount_type varchar(20) [not null]
+  discount_value decimal(12,2) [not null]
+  min_order_amount decimal(12,2) [default: 0]
+  max_discount_amount decimal(12,2)
+  is_active boolean [default: true]
+}
+
+Table orders {
+  id bigint [pk, increment]
+  user_id bigint
+  order_code varchar(50) [unique, not null, note: 'VD: #LH-8291']
+  subtotal decimal(12,2) [not null]
+  discount_amount decimal(12,2) [default: 0]
+  shipping_fee decimal(12,2) [default: 0]
+  total_amount decimal(12,2) [not null]
+  promotion_id bigint
+  payment_method varchar(30) [not null, note: 'cod, vnpay, momo, bank_transfer']
+  payment_status varchar(30) [default: 'pending', note: 'pending, paid, failed, refunded']
+  order_status varchar(30) [default: 'received', note: 'received, preparing, prepared_ready, shipping, completed, cancelled']
+  transaction_ref varchar(255)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table order_delivery_details {
+  id bigint [pk, increment]
+  order_id bigint [unique, not null]
+  sender_name varchar(255) [not null]
+  sender_phone varchar(20) [not null]
+  sender_email varchar(255) [not null]
+  is_gift boolean [default: true]
+  receiver_name varchar(255) [not null]
+  receiver_phone varchar(20) [not null]
+  shipping_address varchar(500) [not null]
+  shipping_district varchar(100) [not null]
+  delivery_date date [not null]
+  time_slot varchar(50) [not null, note: 'VD: 14:00-16:00']
+  card_sender varchar(100)
+  card_receiver varchar(100)
+  card_message text
+  delivery_notes text
+}
+
+Table order_items {
+  id bigint [pk, increment]
+  order_id bigint [not null]
+  item_type varchar(20) [not null, note: 'flower, addon']
+  item_id bigint [not null]
+  item_name varchar(255) [not null]
+  size_name varchar(50)
+  unit_price decimal(12,2) [not null]
+  quantity int [not null, default: 1]
+  total_price decimal(12,2) [not null]
+}
+
+Table order_status_logs {
+  id bigint [pk, increment]
+  order_id bigint [not null]
+  admin_id bigint [note: 'Nhân viên thực hiện chuyển trạng thái']
+  status varchar(30) [not null, note: 'received, preparing, prepared_ready, shipping, completed']
+  title varchar(255) [not null]
+  description text
+  created_at timestamp [not null]
+}
+
+Table subscribers {
+  id bigint [pk, increment]
+  email varchar(255) [unique, not null]
+  coupon_given varchar(50)
+  created_at timestamp [not null]
+}
+
+Table posts {
+  id bigint [pk, increment]
+  title varchar(255) [not null]
+  slug varchar(255) [unique, not null]
+  summary text
+  content text [not null]
+  thumbnail varchar(500)
+  admin_id bigint [not null, note: 'Tác giả bài viết là Admin/Staff']
+  is_published boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Thiết lập các quan hệ (Foreign Keys)
+Ref: admins.role_id > roles.id
+Ref: role_has_permissions.role_id > roles.id
+Ref: role_has_permissions.permission_id > permissions.id
+Ref: products.category_id > categories.id
+Ref: product_sizes.product_id > products.id
+Ref: product_images.product_id > products.id
+Ref: orders.user_id > users.id
+Ref: orders.promotion_id > promotions.id
+Ref: order_delivery_details.order_id - orders.id
+Ref: order_items.order_id > orders.id
+Ref: order_status_logs.order_id > orders.id
+Ref: order_status_logs.admin_id > admins.id
+Ref: posts.admin_id > admins.id
