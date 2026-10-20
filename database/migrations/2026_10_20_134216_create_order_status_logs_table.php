@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('status', 30);
             $table->string('title', 255);
             $table->text('description')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent(); // Nhật ký chỉ ghi một lần, không có updated_at
         });
     }
 

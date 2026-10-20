@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Role;
 use App\Models\Permission;
+use App\Models\Role;
+use Illuminate\Database\Seeder;
 
 class RolepermissionSeeder extends Seeder
 {
@@ -17,26 +17,26 @@ class RolepermissionSeeder extends Seeder
         $adminRole = Role::create([
             'name' => 'Chủ tiệm',
             'slug' => 'admin',
-            'description' => 'Quản trị viên tối cao, toàn quyền hệ thống'
+            'description' => 'Quản trị viên tối cao, toàn quyền hệ thống',
         ]);
 
         $staffRole = Role::create([
             'name' => 'Thợ cắm hoa',
             'slug' => 'staff',
-            'description' => 'Nhân viên cắm hoa và sử lý đơn hàng'
+            'description' => 'Nhân viên cắm hoa và sử lý đơn hàng',
         ]);
 
         // Các quyền hạng
         $permProducts = Permission::create([
             'name' => 'Quản lý sản phẩm',
             'slug' => 'manage-products',
-            'group_name' => 'Sản phẩm'
+            'group_name' => 'Sản phẩm',
         ]);
 
         $permOrders = Permission::create([
             'name' => 'Quản lý đơn hàng',
             'slug' => 'manage-orders',
-            'group_name' => 'Đơn hàng'
+            'group_name' => 'Đơn hàng',
         ]);
 
         // Gán quyền cho vai trò
