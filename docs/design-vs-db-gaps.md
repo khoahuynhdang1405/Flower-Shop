@@ -33,7 +33,7 @@ Mục đích: để khi code, không tự ý thêm cột/bảng hoặc tự ch�
 | 2 | Giá "Lời thì thầm" | 680.000 đ (chi tiết, giỏ hàng, trang chủ) và 690.000 đ (Tất cả hoa, Admin, Đơn hàng, Tài khoản). Ảnh sản phẩm cũng khác nhau giữa trang chi tiết (tông kem/đào) và danh sách (hồng đậm). |
 | 3 | Định dạng mã đơn | `#LH-8291` (storefront, DB) và `#LH1028` (admin, tài khoản). |
 | 4 | Hotline tiệm | `0378599249` (footer), `0901 234 567` (thanh toán, xác nhận, tra cứu), `0378590249` (sidebar tài khoản). |
-| 5 | Mã chào mừng | `CHAOHOA` 10%, tối đa 100.000 đ (đăng ký) và `CHAOBAN10` 10%, tối đa 80.000 đ (admin); `LAMOI` giảm 40.000 đ đơn đầu (giỏ hàng) không có trong danh sách admin. |
+| 5 | Mã chào mừng | **Đã chốt: `CHAOHOA`** (10%, đơn từ 500.000 đ, tối đa 100.000 đ — như trang đăng ký); admin Ưu đãi cần đổi `CHAOBAN10` theo. Còn mở: `LAMOI` giảm 40.000 đ đơn đầu (giỏ hàng) không có trong danh sách admin. |
 | 6 | Email xác nhận | Thanh toán nhập `Dangkhoa@gmail.com`, trang xác nhận ghi đã gửi tới `khoa@gmail.com`. |
 | 7 | Địa chỉ | `18 Võ Văn Tần, Phường 6, Quận 3` (đơn hàng) và `Phường Xuân Hòa` (tài khoản). Cần chốt dùng đơn vị hành chính cũ hay mới. |
 | 8 | Tồn kho "Thu dịu dàng" | "3 bó" (Tổng quan) và "3 bình" (Sản phẩm). |

@@ -31,13 +31,18 @@
     --color-lh-on-dark-divider: rgb(255 255 255 / 0.149);
     --color-lh-star: #f59e0b;
 
+    --color-lh-ink: #000000; /* Chữ "Lá & Hoa" và bông hoa ở footer storefront */
+
+    /* Lỗi nhập liệu. TODO: Figma chưa có màu báo lỗi — tạm dùng đỏ gạch ấm (tương phản 6.3:1 trên nền trắng). */
+    --color-lh-danger: #a63d2f;
+
     /*
-     * Logo (docs/designs/storefront/14-logo.png). Ba màu dưới đây lấy mẫu từ ảnh xuất,
-     * chưa có mã trong bảng màu Figma — TODO: đối chiếu lại với gradient "Linear" của Figma.
+     * Logo (docs/designs/storefront/14-logo.png). Nhụy hoa dùng #F59E0B theo bảng màu Figma.
+     * Hai điểm gradient lấy mẫu từ ảnh xuất — TODO: đối chiếu với gradient "Linear" của Figma.
      */
     --color-lh-logo-from: #f2f7f1;
     --color-lh-logo-to: #dde8dd;
-    --color-lh-flower-center: #ed9e0b;
+    --color-lh-flower-center: #f59e0b;
     --shadow-lh-logo: 0 2px 10px 1px rgb(78 135 82 / 0.15);
 
     /* Font theo Figma: Lora cho tiêu đề và câu trích dẫn, Inter cho phần còn lại.

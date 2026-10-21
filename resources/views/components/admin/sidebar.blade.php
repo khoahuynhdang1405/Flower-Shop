@@ -25,7 +25,7 @@
     </button>
 
     <div class="flex flex-col items-center">
-        <x-admin.logo />
+        <x-logo :href="route('admin.dashboard')" />
         <p class="mt-4 text-[11px] tracking-wide text-white/85 uppercase">{{ __('admin.workspace') }}</p>
     </div>
 
