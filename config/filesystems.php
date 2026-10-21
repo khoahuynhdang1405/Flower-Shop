@@ -47,6 +47,17 @@ return [
             'report' => false,
         ],
 
+        // Ảnh hoa upload từ admin (product_images.image_path, addons.image_path lưu đường dẫn tương đối trong disk này).
+        // Ảnh tĩnh của giao diện (ảnh vòm đăng nhập/đăng ký...) đặt ở public/images/flowers.
+        'flowers' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/flowers'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/flowers',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -1,0 +1,72 @@
+<?php
+
+return [
+
+    'failed' => 'That email or password doesn’t look right. Could you check it again?',
+    'password' => 'The password is incorrect.',
+    'throttle' => 'That’s a few too many tries. Take a little break and try again in :seconds seconds.',
+
+    'required' => '(required)',
+    'busy' => 'Working on it…',
+    'or' => 'or',
+    'google_button' => 'Continue with Google',
+    'show_password' => 'Show password',
+    'hide_password' => 'Hide password',
+
+    'login' => [
+        'title' => 'Sign in',
+        'eyebrow' => 'Your little corner',
+        'subtitle' => 'Drop by again and keep sending the things you love.',
+        'email' => 'Email',
+        'email_placeholder' => 'Your email address',
+        'password' => 'Password',
+        'password_placeholder' => 'Enter your password',
+        'remember' => 'Remember me',
+        'forgot' => 'Forgot your password?',
+        'submit' => 'Sign in',
+        'no_account' => 'Don’t have an account?',
+        'register_link' => 'Join Lá',
+        'privacy' => 'Lá keeps your information with great care.',
+        'quote' => 'So glad you’re back at Lá.',
+        'quote_body' => 'A saved basket of flowers, a note left half-written. The things you love are still waiting for you here.',
+        'image_alt' => 'A bouquet of blush roses and white daisies wrapped in paper on a stone stand in the Lá & Hoa shop',
+    ],
+
+    'register' => [
+        'title' => 'Create an account',
+        'eyebrow' => 'Welcome to Lá',
+        'subtitle' => 'Make a little corner for the things you love.',
+        'name' => 'Full name',
+        'name_placeholder' => 'What should Lá call you?',
+        'email' => 'Email',
+        'email_placeholder' => 'Your email address',
+        'phone' => 'Phone number',
+        'phone_placeholder' => 'Phone number for order updates',
+        'password' => 'Password',
+        'password_placeholder' => 'Create a password',
+        'password_hint' => 'At least 8 characters, with uppercase, lowercase and a number.',
+        'password_confirmation' => 'Confirm password',
+        'password_confirmation_placeholder' => 'Enter your password again',
+        'terms' => 'I agree to the :terms and :privacy of Lá & Hoa.',
+        'newsletter' => 'Send me flower stories and little offers from Lá.',
+        'submit' => 'Create account',
+        'has_account' => 'Already have a little corner?',
+        'login_link' => 'Sign in',
+        'heading_line_1' => 'One more friend,',
+        'heading_line_2' => 'so much more to love.',
+        'body' => 'A small account to save the bouquets you like, follow the gifts you’ve sent and welcome each new flower season.',
+        'image_alt' => 'A glass vase of white cosmos and lilac by a window',
+        'promo_title' => '10% off your first gift of love',
+        'promo_detail' => 'Code CHAOHOA · Orders from 500,000 VND · Up to 100,000 VND off',
+        'phone_invalid' => 'Vietnamese mobile numbers have 10 digits and start with 03, 05, 07, 08 or 09.',
+        'terms_required' => 'Please agree to the terms so Lá can create your account.',
+        'welcome' => 'Hi :name, your little corner is ready.',
+    ],
+
+    'google' => [
+        'failed' => 'Lá couldn’t connect to Google just now. Please try again in a moment.',
+        'no_email' => 'This Google account has no email, so Lá can’t create your corner yet.',
+        'unverified' => 'This email already has an account at Lá. Please sign in with your password.',
+    ],
+
+];

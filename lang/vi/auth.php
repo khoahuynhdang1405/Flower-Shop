@@ -1,0 +1,72 @@
+<?php
+
+return [
+
+    'failed' => 'Email hoặc mật khẩu chưa đúng. Bạn kiểm tra lại giúp Lá nhé.',
+    'password' => 'Mật khẩu chưa đúng.',
+    'throttle' => 'Bạn đã thử hơi nhiều lần. Nghỉ một chút rồi thử lại sau :seconds giây nhé.',
+
+    'required' => '(bắt buộc)',
+    'busy' => 'Đang xử lý…',
+    'or' => 'hoặc',
+    'google_button' => 'Tiếp tục với Google',
+    'show_password' => 'Hiện mật khẩu',
+    'hide_password' => 'Ẩn mật khẩu',
+
+    'login' => [
+        'title' => 'Đăng nhập',
+        'eyebrow' => 'Góc nhỏ của bạn',
+        'subtitle' => 'Ghé lại để tiếp tục gửi những điều thương.',
+        'email' => 'Email',
+        'email_placeholder' => 'Địa chỉ email của bạn',
+        'password' => 'Mật khẩu',
+        'password_placeholder' => 'Nhập mật khẩu',
+        'remember' => 'Ghi nhớ đăng nhập',
+        'forgot' => 'Quên mật khẩu?',
+        'submit' => 'Đăng nhập',
+        'no_account' => 'Chưa có tài khoản?',
+        'register_link' => 'Đăng ký cùng Lá',
+        'privacy' => 'Thông tin của bạn được Lá giữ thật cẩn thận.',
+        'quote' => 'Thật vui vì bạn lại ghé Lá.',
+        'quote_body' => 'Một giỏ hoa đã lưu, một lời nhắn còn dang dở. Những điều thương vẫn luôn chờ bạn ở đây.',
+        'image_alt' => 'Bó hồng phấn và cúc trắng gói giấy, đặt trên bệ đá trong tiệm Lá & Hoa',
+    ],
+
+    'register' => [
+        'title' => 'Đăng ký',
+        'eyebrow' => 'Chào bạn đến với Lá',
+        'subtitle' => 'Tạo một góc nhỏ cho những điều bạn thương.',
+        'name' => 'Họ và tên',
+        'name_placeholder' => 'Lá nên gọi bạn là gì?',
+        'email' => 'Email',
+        'email_placeholder' => 'Địa chỉ email của bạn',
+        'phone' => 'Số điện thoại',
+        'phone_placeholder' => 'Số điện thoại nhận thông tin đơn hàng',
+        'password' => 'Mật khẩu',
+        'password_placeholder' => 'Tạo mật khẩu',
+        'password_hint' => 'Ít nhất 8 ký tự, gồm chữ hoa, chữ thường và số.',
+        'password_confirmation' => 'Xác nhận mật khẩu',
+        'password_confirmation_placeholder' => 'Nhập lại mật khẩu',
+        'terms' => 'Tôi đồng ý với :terms và :privacy của Lá & Hoa.',
+        'newsletter' => 'Gửi tôi chuyện Hoa và những ưu đãi nhỏ từ Lá.',
+        'submit' => 'Tạo tài khoản',
+        'has_account' => 'Đã có một góc nhỏ?',
+        'login_link' => 'Đăng nhập',
+        'heading_line_1' => 'Thêm một người bạn,',
+        'heading_line_2' => 'thêm nhiều điều thương.',
+        'body' => 'Một tài khoản nhỏ để lưu những bó hoa bạn thích, theo dõi món quà đã gửi và đón những mùa hoa mới.',
+        'image_alt' => 'Bình thủy tinh cắm cúc trắng và tử đinh hương bên khung cửa sổ',
+        'promo_title' => 'Tặng bạn 10% cho lần gửi thương đầu tiên',
+        'promo_detail' => 'Mã CHAOHOA · Đơn từ 500.000 VNĐ · Giảm tối đa 100.000 VNĐ',
+        'phone_invalid' => 'Số di động Việt Nam gồm 10 số, bắt đầu bằng 03, 05, 07, 08 hoặc 09.',
+        'terms_required' => 'Bạn đồng ý với điều khoản giúp Lá để tạo tài khoản nhé.',
+        'welcome' => 'Chào :name, góc nhỏ của bạn đã sẵn sàng.',
+    ],
+
+    'google' => [
+        'failed' => 'Lá chưa kết nối được với Google. Bạn thử lại sau một chút nhé.',
+        'no_email' => 'Tài khoản Google này chưa có email nên Lá chưa thể tạo góc nhỏ cho bạn.',
+        'unverified' => 'Email này đã có tài khoản ở Lá. Bạn đăng nhập bằng mật khẩu giúp Lá nhé.',
+    ],
+
+];
