@@ -9,6 +9,10 @@ Table users {
   phone varchar(20)
   password varchar(255)
   google_id varchar(100)
+  customer_group varchar(20) [not null, default: 'new', note: 'new | loyal | best_friend — admin gán']
+  birthday date
+  default_shipping_address varchar(500) [note: 'Địa chỉ giao hoa mặc định (số nhà, đường, phường)']
+  default_shipping_district varchar(100) [note: 'Quận/Huyện TP.HCM giao hoa mặc định (danh sách trong config/shop.php)']
   remember_token varchar(100)
   created_at timestamp
   updated_at timestamp

@@ -1,7 +1,4 @@
-{{--
-    Chuyển ngôn ngữ giao diện. Form POST chạy được khi chưa có JS;
-    resources/js/locale-switcher.js nâng cấp thành chuyển mượt (nền trượt + thay trang không tải lại).
---}}
+{{-- Chuyển ngôn ngữ giao diện --}}
 @php($locales = array_keys(config('app.supported_locales')))
 @php($activeIndex = max(0, array_search(app()->getLocale(), $locales, true)))
 
@@ -13,7 +10,8 @@
 
     @foreach (config('app.supported_locales') as $code => $name)
         @php($isCurrent = app()->getLocale() === $code)
-        <form method="POST" action="{{ route('locale.update', $code) }}" data-locale-form data-index="{{ $loop->index }}">
+        <form method="POST" action="{{ route('locale.update', $code) }}" data-locale-form
+            data-index="{{ $loop->index }}">
             @csrf
             <button type="submit" lang="{{ $code }}" title="{{ $name }}"
                 aria-pressed="{{ $isCurrent ? 'true' : 'false' }}"

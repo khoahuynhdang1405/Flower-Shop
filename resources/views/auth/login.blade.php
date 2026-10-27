@@ -1,4 +1,4 @@
-<x-layouts.storefront :title="__('auth.login.title')">
+<x-layouts.storefront :title="__('auth.login.title')" compact>
     <x-auth.split :eyebrow="__('auth.login.eyebrow')" :title="__('auth.login.title')" :subtitle="__('auth.login.subtitle')">
         <form method="POST" action="{{ route('login.store') }}" novalidate data-busy-form class="flex flex-col gap-6">
             @csrf

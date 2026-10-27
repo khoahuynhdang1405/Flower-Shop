@@ -18,6 +18,8 @@ Quản lý tài khoản khách hàng thành viên trên Storefront. Lưu thông 
 - `name`, `email`, `phone`: thông tin liên hệ cơ bản.
 - `password`: mật khẩu mã hóa Bcrypt (cho phép NULL nếu đăng ký/đăng nhập qua Google).
 - `google_id`: định danh OAuth của Google.
+- `customer_group`: nhóm khách (`App\Enums\CustomerGroup`), admin gán; khách không tự đổi được. `birthday`: ngày sinh khách tự nhập.
+- `default_shipping_address`, `default_shipping_district`: địa chỉ giao hoa mặc định khách lưu ở trang Tài khoản, dùng để điền sẵn khi thanh toán. Đơn hàng vẫn lưu snapshot riêng trong `orders.shipping_address`.
 
 **1.2. `admins` — Nhân sự nội bộ tiệm hoa**
 Toàn bộ tài khoản đăng nhập trang quản trị (`/admin`), gồm Chủ tiệm (Admin) và Nhân viên/Thợ cắm (Staff/Florist). **Tách biệt hoàn toàn khỏi `users`** để đảm bảo an toàn bảo mật.
@@ -119,6 +121,10 @@ Bài viết cắm hoa, dưỡng hoa tươi lâu.
 | phone | VARCHAR(20) | NULLABLE | Số điện thoại nhận đơn hàng |
 | password | VARCHAR(255) | NULLABLE | Mật khẩu mã hóa (NULL nếu đăng nhập Google) |
 | google_id | VARCHAR(100) | NULLABLE | ID liên kết tài khoản Google |
+| customer_group | VARCHAR(20) | NOT NULL, DEFAULT 'new' | Nhóm khách: `new` Khách mới, `loyal` Khách thân thiết, `best_friend` Bạn thân của Lá (admin gán) |
+| birthday | DATE | NULLABLE | Ngày sinh |
+| default_shipping_address | VARCHAR(500) | NULLABLE | Địa chỉ giao hoa mặc định (số nhà, đường, phường) |
+| default_shipping_district | VARCHAR(100) | NULLABLE | Quận/Huyện giao hoa mặc định |
 | remember_token | VARCHAR(100) | NULLABLE | Token ghi nhớ đăng nhập |
 | created_at | TIMESTAMP | NULLABLE | Thời gian tạo tài khoản |
 | updated_at | TIMESTAMP | NULLABLE | Thời gian cập nhật gần nhất |

@@ -2,7 +2,7 @@
     $legalLink = fn (string $label): string => '<a href="#" class="rounded underline underline-offset-4 hover:text-lh-primary focus-visible:outline-2 focus-visible:outline-lh-primary">'.e($label).'</a>';
 @endphp
 
-<x-layouts.storefront :title="__('auth.register.title')">
+<x-layouts.storefront :title="__('auth.register.title')" compact>
     <x-auth.split :eyebrow="__('auth.register.eyebrow')" :title="__('auth.register.title')" :subtitle="__('auth.register.subtitle')">
         <form method="POST" action="{{ route('register.store') }}" novalidate data-busy-form class="flex flex-col gap-6">
             @csrf

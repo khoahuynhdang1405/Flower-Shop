@@ -18,6 +18,8 @@ const swapPage = (html, locale) => {
     window.scrollTo(0, scrollY);
 
     document.querySelector(`[data-locale-switcher] button[lang="${locale}"]`)?.focus();
+    // Báo cho các script khác (vd. live-validation) khởi tạo lại trên nội dung mới.
+    document.dispatchEvent(new Event('lh:page-updated'));
 };
 
 document.addEventListener('submit', async (event) => {

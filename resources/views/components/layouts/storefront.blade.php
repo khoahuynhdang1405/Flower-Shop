@@ -1,4 +1,8 @@
-@props(['title'])
+@props([
+    'title',
+    // Trang đăng nhập/đăng ký: header gọn (không tìm kiếm, giỏ hàng) + footer rút gọn.
+    'compact' => false,
+])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="lahoa" class="bg-lh-cream">
@@ -18,13 +22,17 @@
     </a>
 
     <x-storefront.top-bar />
-    <x-storefront.header />
+    <x-storefront.header :compact="$compact" />
 
     <main id="main-content" tabindex="-1" class="flex-1 focus:outline-none">
         {{ $slot }}
     </main>
 
-    <x-storefront.footer />
+    @if ($compact)
+        <x-storefront.footer-compact />
+    @else
+        <x-storefront.footer />
+    @endif
 </body>
 
 </html>
