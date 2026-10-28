@@ -39,4 +39,8 @@ Route::post('/locale/{locale}', LocaleController::class)
 // TODO: thêm middleware auth:admin khi đã có guard admin.
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+
+    // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng controller.
+    Route::view('/collections', 'admin.collections.index')->name('collections');
+    Route::view('/promotions', 'admin.promotions.index')->name('promotions');
 });
