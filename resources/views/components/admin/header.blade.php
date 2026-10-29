@@ -1,11 +1,10 @@
-@props([
-    'fallbackPage' => null,
-    // TODO: lấy từ auth('admin')->user() và vai trò của admin khi đã có guard admin.
-    'adminName' => 'Đăng Khoa',
-    'adminRole' => 'admin',
-])
+@props(['fallbackPage' => null])
 
 @php
+    $admin = auth('admin')->user();
+    $adminName = $admin?->name ?? '';
+    $adminRole = $admin?->role?->slug ?? 'staff';
+
     $currentItem = collect(config('admin.menu'))
         ->first(fn (array $item): bool => request()->routeIs($item['route'], $item['route'].'.*'));
     $pageLabel = $currentItem ? __('admin.menu.'.$currentItem['key']) : $fallbackPage;
@@ -43,16 +42,28 @@
 
         <span aria-hidden="true" class="hidden h-6 w-px bg-lh-border sm:block"></span>
 
-        {{-- TODO: dropdown tài khoản (hồ sơ, đăng xuất). --}}
-        <button type="button"
-            class="flex items-center gap-3 rounded-full py-1 pr-1 pl-1 text-left hover:bg-lh-canvas focus-visible:outline-2 focus-visible:outline-lh-primary sm:gap-5 sm:rounded sm:pr-2">
-            <span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-lh-sage-50 text-xs font-medium text-lh-heading">{{ $initials }}</span>
-            <span class="hidden flex-col sm:flex">
-                <span class="text-sm leading-5 font-semibold">{{ $adminName }}</span>
-                <span class="text-xs leading-4 text-lh-muted">{{ __('admin.roles.'.$adminRole) }}</span>
-            </span>
-            <span class="sr-only sm:hidden">{{ __('admin.header.account', ['name' => $adminName]) }}</span>
-            <x-lucide-chevron-down class="hidden size-4 text-lh-heading sm:block stroke-[1.5]" aria-hidden="true" />
-        </button>
+        {{-- TODO: trang hồ sơ quản trị. --}}
+        <details class="relative" data-dropdown>
+            <summary
+                class="flex cursor-pointer list-none items-center gap-3 rounded-full py-1 pr-1 pl-1 text-left hover:bg-lh-canvas focus-visible:outline-2 focus-visible:outline-lh-primary sm:gap-5 sm:rounded sm:pr-2 [&::-webkit-details-marker]:hidden">
+                <span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-lh-sage-50 text-xs font-medium text-lh-heading">{{ $initials }}</span>
+                <span class="hidden flex-col sm:flex">
+                    <span class="text-sm leading-5 font-semibold">{{ $adminName }}</span>
+                    <span class="text-xs leading-4 text-lh-muted">{{ __('admin.roles.'.$adminRole) }}</span>
+                </span>
+                <span class="sr-only sm:hidden">{{ __('admin.header.account', ['name' => $adminName]) }}</span>
+                <x-lucide-chevron-down class="hidden size-4 text-lh-heading sm:block stroke-[1.5]" aria-hidden="true" />
+            </summary>
+            <div class="absolute top-full right-0 z-30 mt-3 w-52 rounded-md border border-lh-border bg-lh-surface p-2 shadow-sm">
+                <form method="POST" action="{{ route('admin.logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="flex w-full items-center gap-2 rounded px-3 py-2.5 text-left text-sm hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
+                        <x-lucide-log-out class="size-4 stroke-[1.5]" aria-hidden="true" />
+                        {{ __('admin.header.logout') }}
+                    </button>
+                </form>
+            </div>
+        </details>
     </div>
 </header>

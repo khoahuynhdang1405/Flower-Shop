@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Account\ProfileController;
+use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -36,11 +39,22 @@ Route::post('/locale/{locale}', LocaleController::class)
     ->whereIn('locale', array_keys(config('app.supported_locales')))
     ->name('locale.update');
 
-// TODO: thêm middleware auth:admin khi đã có guard admin.
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('/login', [AdminLoginController::class, 'create'])->name('login');
+        Route::post('/login', [AdminLoginController::class, 'store'])->name('login.store');
+    });
 
-    // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng controller.
-    Route::view('/collections', 'admin.collections.index')->name('collections');
-    Route::view('/promotions', 'admin.promotions.index')->name('promotions');
+    Route::middleware('auth:admin')->group(function () {
+        Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
+
+        Route::get('/', DashboardController::class)->name('dashboard');
+
+        // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng ProductController.
+        Route::view('/products', 'admin.products.index')->name('products');
+
+        // Tên route trang danh sách giữ "admin.collections" / "admin.promotions" cho menu (config/admin.php).
+        Route::resource('collections', CategoryController::class)->except('show')->names(['index' => 'collections']);
+        Route::resource('promotions', PromotionController::class)->except('show')->names(['index' => 'promotions']);
+    });
 });

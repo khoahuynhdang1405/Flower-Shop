@@ -25,10 +25,10 @@ class LocaleSwitchTest extends TestCase
     public function test_chosen_locale_is_applied_on_following_requests(): void
     {
         $this->withSession([SetLocale::SESSION_KEY => 'en'])
-            ->get(route('admin.dashboard'))
+            ->get(route('admin.login'))
             ->assertOk()
             ->assertSee('<html lang="en"', false)
-            ->assertSeeText('A lovely day at Lá & Hoa')
+            ->assertSeeText('Admin sign in')
             ->assertSee('aria-pressed="true"', false);
     }
 
@@ -37,10 +37,10 @@ class LocaleSwitchTest extends TestCase
         config(['app.locale' => 'vi']);
         app()->setLocale('vi');
 
-        $this->get(route('admin.dashboard'))
+        $this->get(route('admin.login'))
             ->assertOk()
             ->assertSee('<html lang="vi"', false)
-            ->assertSeeText('Một ngày đẹp ở Lá & Hoa');
+            ->assertSeeText('Đăng nhập quản trị');
     }
 
     public function test_unsupported_locale_route_returns_not_found(): void
@@ -53,7 +53,7 @@ class LocaleSwitchTest extends TestCase
         app()->setLocale('vi');
 
         $this->withSession([SetLocale::SESSION_KEY => 'fr'])
-            ->get(route('admin.dashboard'))
+            ->get(route('admin.login'))
             ->assertOk()
             ->assertSee('<html lang="vi"', false);
     }

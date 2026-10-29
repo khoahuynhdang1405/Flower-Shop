@@ -2,16 +2,21 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class AdminDashboardTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->withoutVite();
+        $this->actingAs(Admin::factory()->create(['name' => 'Đăng Khoa']), 'admin');
     }
 
     public function test_dashboard_renders_layout_in_vietnamese(): void

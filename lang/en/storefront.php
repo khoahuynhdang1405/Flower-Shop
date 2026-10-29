@@ -55,6 +55,7 @@ return [
     'legal' => [
         'privacy' => 'Privacy policy',
         'terms' => 'Terms of use',
+        'staff' => 'Staff sign in',
     ],
 
 ];
