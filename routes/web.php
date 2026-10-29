@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
@@ -24,6 +25,13 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'destroy'])->middleware('auth')->name('logout');
 
+Route::middleware('auth')->prefix('account')->controller(ProfileController::class)->group(function () {
+    Route::get('/', 'edit')->name('account');
+    Route::patch('/profile', 'updateProfile')->name('account.profile.update');
+    Route::patch('/address', 'updateAddress')->name('account.address.update');
+    Route::put('/password', 'updatePassword')->middleware('throttle:6,1')->name('account.password.update');
+});
+
 Route::post('/locale/{locale}', LocaleController::class)
     ->whereIn('locale', array_keys(config('app.supported_locales')))
     ->name('locale.update');
@@ -31,4 +39,8 @@ Route::post('/locale/{locale}', LocaleController::class)
 // TODO: thêm middleware auth:admin khi đã có guard admin.
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
+
+    // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng controller.
+    Route::view('/collections', 'admin.collections.index')->name('collections');
+    Route::view('/promotions', 'admin.promotions.index')->name('promotions');
 });

@@ -4,10 +4,6 @@
 |--------------------------------------------------------------------------
 | Thông báo kiểm tra dữ liệu (tiếng Việt)
 |--------------------------------------------------------------------------
-|
-| Giọng văn mềm mại, gọi khách là "bạn". Rule chưa có ở đây sẽ dùng bản tiếng Anh
-| (fallback_locale). Thêm rule mới khi form cần đến.
-|
 */
 
 return [

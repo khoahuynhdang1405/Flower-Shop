@@ -26,6 +26,7 @@
 
     --color-lh-warning-bg: #f5ebd9;
     --color-lh-warning-fg: #926b35;
+    --color-lh-amber: #a67430; /* Chữ badge "Sắp diễn ra" (Admin › Ưu đãi) */
 
     --color-lh-accent-soft: rgb(78 135 82 / 0.4);
     --color-lh-on-dark-divider: rgb(255 255 255 / 0.149);

@@ -1,3 +1,10 @@
+@props([
+    // Header gọn cho trang đăng nhập/đăng ký: ẩn tìm kiếm và giỏ hàng.
+    'compact' => false,
+    // TODO: số sản phẩm trong giỏ khi có giỏ hàng.
+    'cartCount' => 0,
+])
+
 @php
     $linkFor = fn (array $item): string => isset($item['url'])
         ? url($item['url'])
@@ -24,7 +31,15 @@
             </ul>
         </nav>
 
-        <div class="flex items-center justify-end gap-1 sm:gap-3">
+        <div class="flex items-center justify-end gap-0.5 sm:gap-2">
+            @unless ($compact)
+                {{-- TODO: trang tìm kiếm. --}}
+                <a href="#" class="{{ $iconButton }} max-sm:hidden">
+                    <x-lucide-search class="size-5 stroke-[1.5]" aria-hidden="true" />
+                    <span class="sr-only">{{ __('storefront.nav.search') }}</span>
+                </a>
+            @endunless
+
             @guest
                 <a href="{{ route('login') }}" class="{{ $iconButton }}">
                     <x-lucide-user class="size-5 stroke-[1.5]" aria-hidden="true" />
@@ -38,7 +53,11 @@
                     </summary>
                     <div class="absolute top-full right-0 z-30 mt-3 w-56 rounded-md border border-lh-border bg-lh-surface p-2 shadow-sm">
                         <p class="truncate px-3 py-2 text-sm font-medium">{{ auth()->user()->name }}</p>
-                        {{-- TODO: link trang Tài khoản của tôi khi có. --}}
+                        <a href="{{ route('account') }}"
+                            class="flex items-center gap-2 rounded px-3 py-2.5 text-sm hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
+                            <x-lucide-user class="size-4 stroke-[1.5]" aria-hidden="true" />
+                            {{ __('storefront.nav.my_account') }}
+                        </a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
@@ -52,6 +71,15 @@
             @endguest
 
             <x-storefront.locale-menu :trigger-class="$iconButton" />
+
+            @unless ($compact)
+                {{-- TODO: trang giỏ hàng. --}}
+                <a href="#" class="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
+                    <x-lucide-shopping-bag class="size-5 stroke-[1.5]" aria-hidden="true" />
+                    <span aria-hidden="true">({{ $cartCount }})</span>
+                    <span class="sr-only">{{ __('storefront.nav.cart', ['count' => $cartCount]) }}</span>
+                </a>
+            @endunless
         </div>
     </div>
 </header>
