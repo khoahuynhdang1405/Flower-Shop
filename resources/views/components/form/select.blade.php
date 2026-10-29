@@ -1,7 +1,7 @@
 @props([
     'name',
     'label',
-    // Danh sách lựa chọn: giá trị lưu cũng là nhãn hiển thị.
+    // ['Quận 1', ...] (giá trị lưu cũng là nhãn) hoặc ['season' => 'Theo mùa', ...].
     'options' => [],
     'placeholder' => null,
     'hint' => null,
@@ -11,7 +11,8 @@
 
 @php
     $hasError = $errors->has($name);
-    $selected = old($name, $value);
+    $selected = old($name, $value instanceof BackedEnum ? $value->value : $value);
+    $options = array_is_list($options) ? array_combine($options, $options) : $options;
     $describedBy = collect([$hint ? "{$name}-hint" : null, $hasError ? "{$name}-error" : null])->filter()->implode(' ');
 @endphp
 
@@ -38,8 +39,8 @@
             @if ($placeholder)
                 <option value="" disabled @selected(blank($selected))>{{ $placeholder }}</option>
             @endif
-            @foreach ($options as $option)
-                <option value="{{ $option }}" @selected($option === $selected)>{{ $option }}</option>
+            @foreach ($options as $optionValue => $optionLabel)
+                <option value="{{ $optionValue }}" @selected((string) $optionValue === (string) $selected)>{{ $optionLabel }}</option>
             @endforeach
         </select>
         <x-lucide-chevron-down class="pointer-events-none absolute inset-y-0 right-4 my-auto size-4 stroke-[1.5] text-lh-muted" aria-hidden="true" />

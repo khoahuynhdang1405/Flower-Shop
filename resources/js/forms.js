@@ -39,6 +39,17 @@ document.addEventListener('submit', (event) => {
 });
 
 /**
+ * Form [data-confirm="<câu hỏi>"]: hỏi lại trước khi gửi (vd. xóa bản ghi).
+ */
+document.addEventListener('submit', (event) => {
+    const form = event.target.closest('[data-confirm]');
+
+    if (form && !window.confirm(form.dataset.confirm)) {
+        event.preventDefault();
+    }
+});
+
+/**
  * Trang được khôi phục từ bộ nhớ đệm khi bấm Back: mở lại nút đã khóa.
  */
 window.addEventListener('pageshow', (event) => {

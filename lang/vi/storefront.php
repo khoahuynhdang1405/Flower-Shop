@@ -55,6 +55,7 @@ return [
     'legal' => [
         'privacy' => 'Chính sách bảo mật',
         'terms' => 'Điều khoản sử dụng',
+        'staff' => 'Dành cho nhân viên tiệm',
     ],
 
 ];

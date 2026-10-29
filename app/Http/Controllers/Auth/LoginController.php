@@ -31,13 +31,14 @@ class LoginController extends Controller
     }
 
     /**
-     * Đăng xuất.
+     * Đăng xuất. Chỉ đổi mã phiên thay vì xóa cả phiên, để phiên quản trị (guard admin) trên cùng trình duyệt vẫn giữ.
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        $request->session()->forget('password_hash_web');
+        $request->session()->regenerate(true);
         $request->session()->regenerateToken();
 
         return redirect('/');

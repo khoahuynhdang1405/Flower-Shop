@@ -43,7 +43,7 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::guard($this->guardName())->attempt($this->credentials(), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -52,6 +52,19 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+    }
+
+    protected function guardName(): string
+    {
+        return 'web';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function credentials(): array
+    {
+        return $this->only('email', 'password');
     }
 
     /**
@@ -77,6 +90,6 @@ class LoginRequest extends FormRequest
 
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate($this->guardName().'|'.Str::lower($this->string('email')).'|'.$this->ip());
     }
 }

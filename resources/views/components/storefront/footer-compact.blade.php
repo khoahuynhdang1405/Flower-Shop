@@ -19,6 +19,8 @@
                     <li><a href="#" class="rounded hover:text-lh-heading focus-visible:outline-2 focus-visible:outline-lh-primary">{{ __('storefront.legal.privacy') }}</a></li>
                     <li aria-hidden="true">·</li>
                     <li><a href="#" class="rounded hover:text-lh-heading focus-visible:outline-2 focus-visible:outline-lh-primary">{{ __('storefront.legal.terms') }}</a></li>
+                    <li aria-hidden="true">·</li>
+                    <li><a href="{{ route('admin.login') }}" class="rounded hover:text-lh-heading focus-visible:outline-2 focus-visible:outline-lh-primary">{{ __('storefront.legal.staff') }}</a></li>
                 </ul>
             </nav>
         </div>

@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Đổi mật khẩu thì các phiên đăng nhập khác hết hiệu lực.
         $middleware->authenticateSessions();
+
+        // Khách và quản trị có trang đăng nhập / trang chủ riêng.
+        $middleware->redirectGuestsTo(fn (Request $request): string => $request->is('admin', 'admin/*') ? route('admin.login') : route('login'));
+        $middleware->redirectUsersTo(fn (Request $request): string => $request->is('admin', 'admin/*') ? route('admin.dashboard') : url('/'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
