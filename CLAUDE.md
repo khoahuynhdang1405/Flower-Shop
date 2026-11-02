@@ -8,6 +8,7 @@
 This application is a Laravel application running on PHP 8.5. Always use the APIs that match the installed major version of each package — do not assume a version.
 
 Before relying on a package's API, confirm its installed version:
+
 - PHP packages: run `composer show --direct` to list direct dependencies with versions, or `composer show <vendor/package>` for a single package.
 - JS packages: check `package.json` for the installed versions.
 
@@ -56,7 +57,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 - Execute PHP in app context for debugging and testing code. Do not create models without user approval, prefer tests with factories instead. Prefer existing Artisan commands over custom tinker code.
 - Always use single quotes to prevent shell expansion: `php artisan tinker --execute 'Your::code();'`
-  - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
+    - Double quotes for PHP strings inside: `php artisan tinker --execute 'User::where("active", true)->count();'`
 
 === php rules ===
 
@@ -504,3 +505,173 @@ Quy tắc:
 - Hai guard riêng: `web` (bảng `users`) cho khách, `admin` (bảng `admins`) cho quản trị. Phân quyền qua `roles` / `permissions` / `role_has_permissions` (slug vai trò: `admin`, `staff`).
 - `order_items` lưu snapshot (tên, size, đơn giá) tại thời điểm đặt; `item_type` = `flower` | `addon`.
 - Toàn bộ nội dung giao diện bằng tiếng Việt, giọng văn mềm mại, xưng "Lá"/"tiệm", gọi khách là "bạn". Tiền định dạng `680.000 đ`, ngày `dd/mm/yyyy`.
+
+# Quy tắc kiến trúc dự án Laravel
+
+> Đây là các quy tắc BẮT BUỘC. Đọc và tuân thủ trước khi viết, sửa hoặc refactor bất kỳ đoạn code nào.
+> Nếu yêu cầu của người dùng mâu thuẫn với quy tắc ở đây, hãy chỉ ra mâu thuẫn và hỏi lại trước khi làm.
+
+## 1. Luồng xử lý chuẩn
+
+```
+Route → FormRequest (validate) → Controller → Action (nghiệp vụ) → Repository (truy cập dữ liệu) → Model
+```
+
+- **Controller**: mỏng. Chỉ nhận request, gọi Action, trả response. KHÔNG chứa nghiệp vụ, KHÔNG gọi Eloquent trực tiếp.
+- **FormRequest**: toàn bộ validation và authorization đầu vào.
+- **Action**: chứa nghiệp vụ. Mỗi Action làm đúng MỘT việc.
+- **Repository**: nơi DUY NHẤT được phép query database.
+- **Model**: chỉ khai báo quan hệ, casts, fillable, accessor/mutator đơn giản. KHÔNG chứa nghiệp vụ.
+
+## 2. Cấu trúc thư mục
+
+```
+app/
+├── Actions/{Domain}/              # VD: Actions/Order/CreateOrderAction.php
+├── DTOs/{Domain}/                 # VD: DTOs/Order/CreateOrderData.php
+├── Repositories/
+│   ├── Contracts/                 # Interface: OrderRepositoryInterface.php
+│   └── Eloquent/                  # Implementation: OrderRepository.php
+├── Http/
+│   ├── Controllers/
+│   └── Requests/
+└── Providers/RepositoryServiceProvider.php
+```
+
+## 3. Repository Pattern
+
+Quy tắc:
+
+- Mỗi Repository gồm 1 **interface** (`Repositories/Contracts`) và 1 **implementation** (`Repositories/Eloquent`).
+- Bind interface → implementation trong `RepositoryServiceProvider`. Khi tạo repository mới, PHẢI thêm binding.
+- Các lớp khác chỉ được type-hint **interface**, không bao giờ type-hint class Eloquent cụ thể.
+- Tên method mô tả ý nghĩa nghiệp vụ: `findActiveByCustomer()`, không phải `getWhereStatus1()`.
+- Repository chỉ truy cập dữ liệu: KHÔNG chứa nghiệp vụ, KHÔNG gửi mail, KHÔNG dispatch event.
+- Chỉ viết method khi thực sự có nơi dùng (YAGNI). KHÔNG tạo sẵn BaseRepository với hàng loạt method chung chung không dùng tới.
+
+Mẫu:
+
+```php
+// app/Repositories/Contracts/OrderRepositoryInterface.php
+interface OrderRepositoryInterface
+{
+    public function findById(int $id): ?Order;
+    public function create(array $attributes): Order;
+}
+
+// app/Repositories/Eloquent/OrderRepository.php
+final class OrderRepository implements OrderRepositoryInterface
+{
+    public function findById(int $id): ?Order
+    {
+        return Order::find($id);
+    }
+
+    public function create(array $attributes): Order
+    {
+        return Order::create($attributes);
+    }
+}
+
+// app/Providers/RepositoryServiceProvider.php
+public function register(): void
+{
+    $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
+}
+```
+
+## 4. Action Pattern (đơn nhiệm)
+
+Quy tắc:
+
+- Mỗi Action là một class `final`, tên dạng **Động từ + Danh từ + Action**: `CreateOrderAction`, `CancelOrderAction`.
+- Mỗi Action có đúng MỘT public method: `execute()`.
+- Dependency được inject qua constructor (repository interface, action khác, service).
+- Đầu vào phức tạp (trên 3 tham số) dùng **DTO** (readonly class), không truyền mảng `$request->all()`.
+- Nếu Action dài quá ~50 dòng hoặc làm nhiều hơn một việc → tách thành các Action nhỏ và để Action lớn điều phối.
+- Thao tác ghi nhiều bảng phải bọc trong `DB::transaction()` ở Action, không đặt ở Repository.
+- Action KHÔNG phụ thuộc vào `Request`, `Response` hay bất kỳ thứ gì của tầng HTTP, để có thể gọi từ Controller, Job, Command, Listener.
+
+Mẫu:
+
+```php
+// app/DTOs/Order/CreateOrderData.php
+final readonly class CreateOrderData
+{
+    public function __construct(
+        public int $customerId,
+        public array $items,
+        public ?string $note = null,
+    ) {}
+}
+
+// app/Actions/Order/CreateOrderAction.php
+final class CreateOrderAction
+{
+    public function __construct(
+        private OrderRepositoryInterface $orders,
+        private CalculateOrderTotalAction $calculateTotal,
+    ) {}
+
+    public function execute(CreateOrderData $data): Order
+    {
+        return DB::transaction(function () use ($data) {
+            $total = $this->calculateTotal->execute($data->items);
+
+            return $this->orders->create([
+                'customer_id' => $data->customerId,
+                'total'       => $total,
+                'note'        => $data->note,
+            ]);
+        });
+    }
+}
+
+// Controller
+public function store(StoreOrderRequest $request, CreateOrderAction $action): JsonResponse
+{
+    $order = $action->execute($request->toData());
+
+    return response()->json(new OrderResource($order), 201);
+}
+```
+
+## 5. SOLID — áp dụng cụ thể
+
+- **S — Single Responsibility**: một class chỉ có một lý do để thay đổi. Controller điều hướng, Action xử lý nghiệp vụ, Repository truy cập dữ liệu, FormRequest validate.
+- **O — Open/Closed**: khi thêm biến thể (VD: phương thức thanh toán mới), tạo class mới implement interface có sẵn, KHÔNG thêm nhánh `if/switch` vào class cũ.
+- **L — Liskov Substitution**: mọi implementation của một interface phải thay thế được cho nhau mà không làm sai hành vi (cùng kiểu trả về, không ném exception bất ngờ, không bỏ trống method).
+- **I — Interface Segregation**: interface nhỏ, đúng mục đích. Không ép class implement method nó không cần.
+- **D — Dependency Inversion**: phụ thuộc vào interface, inject qua constructor. KHÔNG dùng `new` cho dependency có logic, KHÔNG gọi `app()` / `resolve()` bên trong Action hoặc Repository.
+
+## 6. KISS, YAGNI, DRY
+
+- **KISS**: chọn cách đơn giản và dễ đọc nhất mà vẫn đúng. Ưu tiên tính năng sẵn có của Laravel trước khi tự viết. Tránh lồng điều kiện quá 2 cấp; dùng early return.
+- **YAGNI**: chỉ code những gì yêu cầu hiện tại cần. KHÔNG thêm tham số, cấu hình, abstraction, method "để sau dùng". Nếu thấy cần mở rộng, đề xuất với người dùng thay vì tự làm.
+- **DRY**: logic nghiệp vụ lặp lại từ lần thứ 2 trở đi → tách thành Action hoặc method dùng chung. Nhưng KHÔNG gộp hai đoạn code chỉ giống nhau về hình thức mà khác nhau về ý nghĩa nghiệp vụ.
+
+Khi các nguyên tắc xung đột: ưu tiên **KISS > YAGNI > DRY**. Code đơn giản lặp lại một chút tốt hơn abstraction sai.
+
+## 7. Quy ước code
+
+- PHP 8.2+, `declare(strict_types=1);` ở đầu mọi file.
+- Khai báo đầy đủ kiểu tham số và kiểu trả về.
+- Class Action, Repository, DTO mặc định là `final`.
+- Tuân thủ PSR-12. Chạy `./vendor/bin/pint` sau khi sửa code.
+
+## 8. Checklist trước khi hoàn thành một tác vụ
+
+1. Controller có còn chứa nghiệp vụ hoặc query Eloquent không? → chuyển đi.
+2. Mỗi Action có làm đúng một việc không?
+3. Có class nào type-hint implementation thay vì interface không?
+4. Repository mới đã được bind trong `RepositoryServiceProvider` chưa?
+5. Có code, method, tham số nào thêm vào mà chưa ai dùng không? → xóa.
+6. Đã viết test cho Action mới (mock repository interface) chưa?
+
+## 9. Không được làm
+
+- Gọi `Model::query()`, `DB::table()` ngoài Repository.
+- Đặt nghiệp vụ trong Model, Controller, Observer hay Blade.
+- Truyền `$request->all()` thẳng vào Action hoặc Repository.
+- Tạo "God class" kiểu `OrderService` gom hàng chục method.
+- Tự ý refactor phần code ngoài phạm vi yêu cầu mà chưa hỏi.

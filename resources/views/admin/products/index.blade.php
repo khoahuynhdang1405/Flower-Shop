@@ -135,8 +135,8 @@
                                 <x-admin.badge :tone="$statusTones[$product['status']]">{{ __('admin.products.statuses.'.$product['status']) }}</x-admin.badge>
                             </td>
                             <td class="{{ $cell }}">
-                                {{-- TODO: trang sửa sản phẩm (giá từng size, tồn kho). --}}
-                                <a href="#" class="{{ $editLink }}" aria-label="{{ __('admin.list.edit_item', ['name' => $product['name']]) }}">
+                                {{-- TODO: form sửa sản phẩm (giá từng size, tồn kho); hiện mới có trang ảnh (sản phẩm từ ProductSeeder). --}}
+                                <a href="{{ route('admin.products.images', $product['slug']) }}" class="{{ $editLink }}" aria-label="{{ __('admin.list.edit_item', ['name' => $product['name']]) }}">
                                     <x-lucide-pencil class="size-[18px] stroke-[1.5]" aria-hidden="true" />
                                     {{ __('admin.list.edit') }}
                                 </a>
