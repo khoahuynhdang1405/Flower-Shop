@@ -2,6 +2,7 @@ import './admin-drawer';
 import './dropdowns';
 import './filter-chips';
 import './forms';
+import './image-preview';
 import './list-filter';
 import './live-validation';
 import './locale-switcher';

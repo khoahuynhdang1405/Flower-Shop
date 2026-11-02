@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * Sản phẩm hoa; giá theo từng size nằm ở product_sizes, bộ ảnh ở product_images.
+ */
+#[Fillable(['category_id', 'name', 'slug', 'base_price', 'description', 'dimension_info', 'freshness_guarantee', 'stock', 'is_featured', 'is_active'])]
+class Product extends Model
+{
+    /** @use HasFactory<ProductFactory> */
+    use HasFactory;
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'base_price' => 'integer',
+            'stock' => 'integer',
+            'is_featured' => 'boolean',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    /**
+     * @return BelongsTo<Category, $this>
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * @return HasMany<ProductSize, $this>
+     */
+    public function sizes(): HasMany
+    {
+        return $this->hasMany(ProductSize::class)->orderBy('price');
+    }
+
+    /**
+     * @return HasMany<ProductImage, $this>
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order')->orderBy('id');
+    }
+}

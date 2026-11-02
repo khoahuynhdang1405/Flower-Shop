@@ -6,22 +6,17 @@ return [
     |--------------------------------------------------------------------------
     | Thông tin tiệm
     |--------------------------------------------------------------------------
-    |
-    | TODO: hotline đang mâu thuẫn giữa các màn hình (0378599249 / 0901 234 567 /
-    | 0378590249 — docs/design-vs-db-gaps.md #4). Tạm dùng số trên footer trang
-    | đăng nhập/đăng ký; khi chốt chỉ cần sửa ở đây.
-    |
     */
 
     'hotline' => env('SHOP_HOTLINE', '0378599249'),
 
-    'email' => env('SHOP_EMAIL', 'lavahoa2026@gmail.com'),
+    'email' => env('SHOP_EMAIL', 'lavahoa@gmail.com'),
 
     'address' => '24 Nguyễn Văn Thủ, phường Tân Định, TP.HCM',
 
     'opening_hours' => '08:00 – 20:00',
 
-    // TODO: link mạng xã hội thật.
+    // Link mạng xã hội thật.
     'socials' => [
         'instagram' => '#',
         'facebook' => '#',

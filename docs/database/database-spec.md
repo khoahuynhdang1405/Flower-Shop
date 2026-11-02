@@ -221,7 +221,8 @@ Khóa chính kép (`role_id`, `permission_id`).
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Khóa chính |
 | product_id | BIGINT UNSIGNED | NOT NULL, FK | Tham chiếu `products.id` |
-| image_path | VARCHAR(500) | NOT NULL | Đường dẫn file ảnh |
+| product_size_id | BIGINT UNSIGNED | NULL, FK (ON DELETE SET NULL) | Tham chiếu `product_sizes.id`; null = ảnh chung của sản phẩm, có giá trị = ảnh riêng của size đó |
+| image_path | VARCHAR(500) | NOT NULL | Đường dẫn file ảnh (disk `public`, vd. `products/12/abc.jpg`) |
 | is_primary | TINYINT(1) | DEFAULT 0 | 1: ảnh đại diện vòm chính |
 | sort_order | INT | DEFAULT 0 | Thứ tự các ảnh phụ (thumbnail) |
 
@@ -350,6 +351,7 @@ Khóa chính kép (`role_id`, `permission_id`).
 | `products.category_id` → `categories.id` | N–1 |
 | `product_sizes.product_id` → `products.id` | N–1 |
 | `product_images.product_id` → `products.id` | N–1 |
+| `product_images.product_size_id` → `product_sizes.id` | N–1 (nullable) |
 | `orders.user_id` → `users.id` | N–1 (nullable) |
 | `orders.promotion_id` → `promotions.id` | N–1 (nullable) |
 | `order_delivery_details.order_id` → `orders.id` | 1–1 |

@@ -92,6 +92,7 @@ Table product_sizes {
 Table product_images {
   id bigint [pk, increment]
   product_id bigint [not null]
+  product_size_id bigint [null, note: 'null = ảnh chung; có giá trị = ảnh riêng của size']
   image_path varchar(500) [not null]
   is_primary boolean [default: false]
   sort_order int [default: 0]
@@ -201,6 +202,7 @@ Ref: role_has_permissions.permission_id > permissions.id
 Ref: products.category_id > categories.id
 Ref: product_sizes.product_id > products.id
 Ref: product_images.product_id > products.id
+Ref: product_images.product_size_id > product_sizes.id
 Ref: orders.user_id > users.id
 Ref: orders.promotion_id > promotions.id
 Ref: order_delivery_details.order_id - orders.id

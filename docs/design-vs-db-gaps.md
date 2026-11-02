@@ -32,7 +32,7 @@ Mục đích: để khi code, không tự ý thêm cột/bảng hoặc tự ch�
 | 1 | **Phí giao & tổng tiền ở trang Thanh toán** | Dropdown ghi "Quận 3 · Phí giao 35.000 đ", tóm tắt ghi giao hoa 0 đ, tổng 760.000 đ, nhưng nút "Đặt hoa · 795.000 đ". Trang xác nhận ghi 760.000 đ; trang tra cứu và tài liệu DB ghi 795.000 đ. Cần chốt: ngưỡng freeship 800.000 đ tính **trước hay sau** giảm giá (trang Ưu đãi ghi "giá trị tối thiểu tính trước phí giao hàng"). |
 | 2 | Giá "Lời thì thầm" | 680.000 đ (chi tiết, giỏ hàng, trang chủ) và 690.000 đ (Tất cả hoa, Admin, Đơn hàng, Tài khoản). Ảnh sản phẩm cũng khác nhau giữa trang chi tiết (tông kem/đào) và danh sách (hồng đậm). |
 | 3 | Định dạng mã đơn | `#LH-8291` (storefront, DB) và `#LH1028` (admin, tài khoản). |
-| 4 | Hotline tiệm | `0378599249` (footer), `0901 234 567` (thanh toán, xác nhận, tra cứu), `0378590249` (sidebar tài khoản). |
+| 4 | Hotline tiệm | **Đã chốt: `0378599249`** (`config/shop.php`). Thiết kế cũ còn ghi `0901 234 567` (thanh toán, xác nhận, tra cứu) và `0378590249` (sidebar tài khoản) — khi dựng các trang đó dùng `config('shop.hotline')`. |
 | 5 | Mã chào mừng | **Đã chốt: `CHAOHOA`** (10%, đơn từ 500.000 đ, tối đa 100.000 đ — như trang đăng ký); admin Ưu đãi cần đổi `CHAOBAN10` theo. Còn mở: `LAMOI` giảm 40.000 đ đơn đầu (giỏ hàng) không có trong danh sách admin. |
 | 6 | Email xác nhận | Thanh toán nhập `Dangkhoa@gmail.com`, trang xác nhận ghi đã gửi tới `khoa@gmail.com`. |
 | 7 | Địa chỉ | `18 Võ Văn Tần, Phường 6, Quận 3` (đơn hàng) và `Phường Xuân Hòa` (tài khoản). Cần chốt dùng đơn vị hành chính cũ hay mới. |

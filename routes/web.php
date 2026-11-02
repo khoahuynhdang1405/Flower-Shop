@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
@@ -52,6 +53,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng ProductController.
         Route::view('/products', 'admin.products.index')->name('products');
+
+        // Ảnh sản phẩm; {image} được giới hạn trong ảnh của {product} (scoped binding).
+        Route::prefix('products/{product:slug}/images')->name('products.images')
+            ->controller(ProductImageController::class)->scopeBindings()->group(function () {
+                Route::get('/', 'edit');
+                Route::post('/', 'store')->name('.store');
+                Route::patch('/{image}', 'update')->name('.update');
+                Route::post('/{image}/primary', 'primary')->name('.primary');
+                Route::delete('/{image}', 'destroy')->name('.destroy');
+            });
 
         // Tên route trang danh sách giữ "admin.collections" / "admin.promotions" cho menu (config/admin.php).
         Route::resource('collections', CategoryController::class)->except('show')->names(['index' => 'collections']);
