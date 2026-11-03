@@ -1,4 +1,5 @@
 import './admin-drawer';
+import './catalog-filters';
 import './dropdowns';
 import './filter-chips';
 import './forms';
