@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -41,6 +42,26 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Các dịp gửi thương (categories.type = occasion) qua pivot category_product.
+     *
+     * @return BelongsToMany<Category, $this>
+     */
+    public function occasions(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Sắc hoa của sản phẩm (bộ lọc "Sắc hoa bạn thích").
+     *
+     * @return HasMany<ProductColor, $this>
+     */
+    public function colors(): HasMany
+    {
+        return $this->hasMany(ProductColor::class);
     }
 
     /**

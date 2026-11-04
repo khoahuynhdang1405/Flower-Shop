@@ -9,14 +9,16 @@ use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/flowers', [FlowerController::class, 'index'])->name('flowers.index');
 
 // TODO: chỉ giao diện với dữ liệu mẫu — khi nối DB thay bằng controller.
-Route::view('/flowers', 'flowers.index')->name('flowers.index');
+Route::view('/flowers/{slug}', 'flowers.show')->name('flowers.show');
 Route::view('/seasons', 'seasons.index')->name('seasons');
 
 Route::middleware('guest')->group(function () {

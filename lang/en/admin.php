@@ -193,6 +193,8 @@ return [
         'selected' => ':count photo(s) selected',
         'size_label' => 'Link to size',
         'size_hint' => 'Shared photos show for every size. A size’s photos only show when customers pick that size.',
+        'colors_label' => 'Flower colours',
+        'colors_hint' => 'Pick one or a few main colours of the bouquet so customers can find it with the "Colours you love" filter.',
         'shared' => 'Shared photo',
         'submit' => 'Upload photos',
         'gallery_title' => 'Current photos',
@@ -218,6 +220,7 @@ return [
             'image_type' => 'Only JPG, PNG or WebP photos, please.',
             'image_size' => 'Each photo must be :max MB or smaller.',
             'size_invalid' => 'This size doesn’t belong to the product.',
+            'colors_required' => 'Please choose at least one flower colour.',
         ],
     ],
 

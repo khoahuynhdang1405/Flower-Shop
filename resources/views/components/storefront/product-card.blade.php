@@ -7,6 +7,8 @@
     'imageUrl' => null,
     'imageName' => null,
     'badge' => null,
+    // Trang chi tiết sản phẩm.
+    'url' => '#',
 ])
 
 @php
@@ -16,8 +18,7 @@
 {{-- Thẻ sản phẩm storefront: ảnh + nhãn góc trái + nút tim, tên (Lora), dòng phụ, giá, nút "+". --}}
 <article {{ $attributes->class('group flex flex-col') }}>
     <div class="relative">
-        {{-- TODO: trỏ tới trang chi tiết sản phẩm khi có. --}}
-        <a href="#" class="block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary" aria-label="{{ $name }}">
+        <a href="{{ $url }}" class="block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary" aria-label="{{ $name }}">
             @if ($imageUrl)
                 <img src="{{ $imageUrl }}" alt="" loading="lazy"
                     class="aspect-[4/5] w-full rounded-sm bg-lh-sage-100 object-cover transition-opacity group-hover:opacity-95">

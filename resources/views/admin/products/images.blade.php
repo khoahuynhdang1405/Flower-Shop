@@ -5,6 +5,7 @@
         + $product->sizes->mapWithKeys(fn ($size): array => [$size->id => $size->size_name.' · '.$money($size->price)])->all();
     // Ô chọn trên từng thẻ ảnh hẹp: chỉ tên size.
     $sizeNames = ['' => __('admin.product_images.shared')] + $product->sizes->pluck('size_name', 'id')->all();
+    $selectedColors = (array) old('colors', $product->colors->map(fn ($productColor): string => $productColor->color->value)->all());
     $imageErrors = collect($errors->get('images'))->merge(collect($errors->get('images.*'))->flatten())->unique();
     $smallButton = 'inline-flex h-9 items-center gap-2 rounded px-3 text-sm whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary';
 @endphp
@@ -65,9 +66,30 @@
                     @endif
                 </div>
 
-                <div class="lg:pt-[52px]">
+                <div class="flex flex-col gap-6 lg:pt-[52px]">
                     <x-form.select name="product_size_id" :label="__('admin.product_images.size_label')" :options="$sizeOptions"
                         :hint="__('admin.product_images.size_hint')" />
+
+                    {{-- Sắc hoa của cả sản phẩm (bộ lọc storefront); hiện sẵn sắc đã lưu, lưu lại cùng lượt upload. --}}
+                    <fieldset aria-describedby="colors-hint @error('colors') colors-error @enderror">
+                        <legend class="text-sm font-medium">{{ __('admin.product_images.colors_label') }}</legend>
+                        <div class="mt-3 flex flex-wrap gap-x-5 gap-y-3">
+                            @foreach (App\Enums\FlowerColor::cases() as $color)
+                                <div class="flex items-center gap-2">
+                                    <x-flower-color-swatch :color="$color" name="colors[]" :checked="in_array($color->value, $selectedColors, true)"
+                                        class="ring-offset-lh-surface" />
+                                    <span class="text-[13px]" aria-hidden="true">{{ $color->label() }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                        <p id="colors-hint" class="mt-3 text-xs text-lh-muted">{{ __('admin.product_images.colors_hint') }}</p>
+                        @error('colors')
+                            <p id="colors-error" class="mt-2 flex items-start gap-1.5 text-xs text-lh-danger">
+                                <x-lucide-circle-alert class="mt-px size-3.5 shrink-0 stroke-[1.5]" aria-hidden="true" />
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </fieldset>
                 </div>
             </div>
 

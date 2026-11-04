@@ -193,6 +193,8 @@ return [
         'selected' => 'Đã chọn :count ảnh',
         'size_label' => 'Gắn cho size',
         'size_hint' => 'Ảnh chung hiện với mọi size. Ảnh của một size chỉ hiện khi khách chọn size đó.',
+        'colors_label' => 'Sắc hoa',
+        'colors_hint' => 'Chọn một hoặc vài sắc chính của bó hoa, để khách tìm thấy ở bộ lọc "Sắc hoa bạn thích".',
         'shared' => 'Ảnh chung',
         'submit' => 'Tải ảnh lên',
         'gallery_title' => 'Bộ ảnh hiện có',
@@ -218,6 +220,7 @@ return [
             'image_type' => 'Chỉ nhận ảnh JPG, PNG hoặc WebP.',
             'image_size' => 'Mỗi ảnh không quá :max MB.',
             'size_invalid' => 'Size này không thuộc sản phẩm đang sửa.',
+            'colors_required' => 'Bạn chọn giúp Lá ít nhất một sắc hoa nhé.',
         ],
     ],
 

@@ -23,30 +23,11 @@ return [
         'price_any' => 'Mọi mức giá',
         'color' => 'Sắc hoa bạn thích',
         'in_stock' => 'Chỉ hiển thị hoa còn hàng',
-        'types' => [
-            'bouquet' => 'Bó hoa',
-            'basket' => 'Giỏ & hộp hoa',
-            'vase' => 'Hoa cắm bình',
-        ],
-        'occasions' => [
-            'birthday' => 'Sinh nhật',
-            'love' => 'Tình yêu',
-            'congrats' => 'Chúc mừng',
-            'everyday' => 'Một ngày bình thường',
-        ],
         'prices' => [
             'under_500' => 'Dưới 500.000 VNĐ',
             '500_800' => '500.000 – 800.000 VNĐ',
             '800_1200' => '800.000 – 1.200.000 VNĐ',
             'over_1200' => 'Trên 1.200.000 VNĐ',
-        ],
-        'colors' => [
-            'pink' => 'Hồng',
-            'peach' => 'Đào',
-            'yellow' => 'Vàng',
-            'white' => 'Trắng',
-            'red' => 'Đỏ',
-            'green' => 'Xanh',
         ],
     ],
 
@@ -66,11 +47,8 @@ return [
             'price_asc' => 'Giá thấp đến cao',
             'price_desc' => 'Giá cao đến thấp',
         ],
-        'badges' => [
-            'popular' => 'Được yêu thích',
-            'new' => 'Thiết kế mới',
-            'month' => 'Hoa tháng 10',
-        ],
+        'empty' => 'Chưa có đóa hoa nào hợp với lựa chọn này. Bạn thử bỏ bớt một vài bộ lọc nhé.',
+        'empty_reset' => 'Xem tất cả hoa',
     ],
 
     'pagination' => [

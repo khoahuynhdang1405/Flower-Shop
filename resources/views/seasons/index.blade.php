@@ -88,7 +88,7 @@
                 @foreach ($seasonProducts as $product)
                     <li>
                         <x-storefront.product-card :name="$product['name']" :subtitle="$product['composition']" :price="$product['price']"
-                            :image-name="$product['slug']" :badge="$product['badge'] ?? null" />
+                            :image-name="$product['slug']" :badge="$product['badge'] ?? null" :url="route('flowers.show', $product['slug'])" />
                     </li>
                 @endforeach
             </ul>

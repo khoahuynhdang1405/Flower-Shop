@@ -33,6 +33,11 @@ class CategoryFactory extends Factory
         return $this->state(fn (array $attributes) => ['type' => CategoryType::Season]);
     }
 
+    public function flowerType(): static
+    {
+        return $this->state(fn (array $attributes) => ['type' => CategoryType::FlowerType]);
+    }
+
     public function hidden(): static
     {
         return $this->state(fn (array $attributes) => ['is_active' => false]);

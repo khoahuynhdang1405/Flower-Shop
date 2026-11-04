@@ -1,12 +1,13 @@
 @php
-    /*
-     * Cột "Lọc hoa" (docs/designs/storefront/02-tat-ca-hoa.png). Form GET giữ lựa chọn trên query string,
-     * để khi có backend chỉ cần đọc lại các tham số type[], occasion[], price, color[], in_stock.
-     * TODO: chưa có cột kiểu hoa / sắc hoa (docs/design-vs-db-gaps.md #3) — số lượng và mã màu là dữ liệu mẫu.
+    /**
+     * Cột "Lọc hoa" (docs/designs/storefront/02-tat-ca-hoa.png). Form GET giữ lựa chọn trên query string;
+     * resources/js/catalog-filters.js gửi form bằng fetch rồi chỉ thay lưới hoa, không tải lại trang.
+     *
+     * @var Illuminate\Database\Eloquent\Collection<int, App\Models\Category> $flowerTypes  kèm products_count
+     * @var Illuminate\Database\Eloquent\Collection<int, App\Models\Category> $occasions
+     *
+     * TODO: chưa lọc theo "chỉ hoa còn hàng" — nhóm này chỉ là giao diện.
      */
-    $typeCounts = ['bouquet' => 24, 'basket' => 14, 'vase' => 10];
-    $swatches = ['pink' => '#dfa3ae', 'peach' => '#f2d9cf', 'yellow' => '#e2b85a', 'white' => '#ffffff', 'red' => '#a5434a', 'green' => '#b5c9ae'];
-
     $hasQuery = request()->query() !== [];
     $selectedTypes = (array) request()->query('type', []);
     $selectedOccasions = (array) request()->query('occasion', []);
@@ -36,14 +37,15 @@
         <div class="max-lg:mt-4">
             <div class="flex items-baseline justify-between gap-4 pb-1">
                 <h2 id="filters-title" class="font-serif text-2xl">{{ __('flowers.filters.title') }}</h2>
-                <a href="{{ route('flowers.index') }}"
+                <a href="{{ route('flowers.index') }}" data-catalog-reset
                     class="rounded text-[11px] text-lh-muted underline underline-offset-4 hover:text-lh-heading focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary">
                     {{ __('flowers.filters.clear') }}
                 </a>
             </div>
 
-            <form id="flower-filters" method="GET" action="{{ route('flowers.index') }}" data-auto-submit>
+            <form id="flower-filters" method="GET" action="{{ route('flowers.index') }}" data-catalog-form data-catalog-region="filters">
                 {{-- Kiểu hoa --}}
+                @if ($flowerTypes->isNotEmpty())
                 <details open class="{{ $group }} group/filter">
                     <summary class="{{ $summary }}">
                         {{ __('flowers.filters.type') }}
@@ -51,16 +53,18 @@
                     </summary>
                     <fieldset class="mt-4 grid gap-3">
                         <legend class="sr-only">{{ __('flowers.filters.type') }}</legend>
-                        @foreach (__('flowers.filters.types') as $value => $label)
+                        @foreach ($flowerTypes as $flowerType)
                             <label class="{{ $option }}">
-                                <input type="checkbox" name="type[]" value="{{ $value }}" class="{{ $checkbox }}" @checked(in_array($value, $selectedTypes, true))>
-                                {{ $label }} ({{ $typeCounts[$value] }})
+                                <input type="checkbox" name="type[]" value="{{ $flowerType->slug }}" class="{{ $checkbox }}" @checked(in_array($flowerType->slug, $selectedTypes, true))>
+                                {{ $flowerType->name }} ({{ $flowerType->products_count }})
                             </label>
                         @endforeach
                     </fieldset>
                 </details>
+                @endif
 
                 {{-- Dịp gửi thương --}}
+                @if ($occasions->isNotEmpty())
                 <details open class="{{ $group }} group/filter">
                     <summary class="{{ $summary }}">
                         {{ __('flowers.filters.occasion') }}
@@ -68,14 +72,15 @@
                     </summary>
                     <fieldset class="mt-4 grid gap-3">
                         <legend class="sr-only">{{ __('flowers.filters.occasion') }}</legend>
-                        @foreach (__('flowers.filters.occasions') as $value => $label)
+                        @foreach ($occasions as $occasion)
                             <label class="{{ $option }}">
-                                <input type="checkbox" name="occasion[]" value="{{ $value }}" class="{{ $checkbox }}" @checked(in_array($value, $selectedOccasions, true))>
-                                {{ $label }}
+                                <input type="checkbox" name="occasion[]" value="{{ $occasion->slug }}" class="{{ $checkbox }}" @checked(in_array($occasion->slug, $selectedOccasions, true))>
+                                {{ $occasion->name }}
                             </label>
                         @endforeach
                     </fieldset>
                 </details>
+                @endif
 
                 {{-- Khoảng giá: chỉ chọn một khoảng nên dùng radio. --}}
                 <details open class="{{ $group }} group/filter">
@@ -89,10 +94,10 @@
                             <input type="radio" name="price" value="" class="{{ $radio }}" @checked($selectedPrice === '')>
                             {{ __('flowers.filters.price_any') }}
                         </label>
-                        @foreach (__('flowers.filters.prices') as $value => $label)
+                        @foreach (App\Enums\PriceRange::cases() as $priceRange)
                             <label class="{{ $option }}">
-                                <input type="radio" name="price" value="{{ $value }}" class="{{ $radio }}" @checked($selectedPrice === (string) $value)>
-                                {{ $label }}
+                                <input type="radio" name="price" value="{{ $priceRange->value }}" class="{{ $radio }}" @checked($selectedPrice === $priceRange->value)>
+                                {{ __('flowers.filters.prices.'.$priceRange->value) }}
                             </label>
                         @endforeach
                     </fieldset>
@@ -102,16 +107,13 @@
                 <fieldset class="{{ $group }}">
                     <legend class="float-left w-full text-sm font-medium">{{ __('flowers.filters.color') }}</legend>
                     <div class="clear-both flex flex-wrap gap-2.5 pt-4">
-                        @foreach (__('flowers.filters.colors') as $value => $label)
-                            <label title="{{ $label }}"
-                                class="relative size-[22px] cursor-pointer rounded-full border border-lh-border ring-lh-primary ring-offset-2 ring-offset-lh-cream transition-shadow has-checked:ring-2 has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-lh-primary motion-reduce:transition-none"
-                                style="background-color: {{ $swatches[$value] }}">
-                                <input type="checkbox" name="color[]" value="{{ $value }}" class="sr-only" @checked(in_array($value, $selectedColors, true))>
-                                <span class="sr-only">{{ $label }}</span>
-                            </label>
+                        @foreach (App\Enums\FlowerColor::cases() as $color)
+                            <x-flower-color-swatch :color="$color" name="color[]" :checked="in_array($color->value, $selectedColors, true)" class="ring-offset-lh-cream" />
                         @endforeach
                     </div>
-                    <p class="mt-3 text-[11px] text-lh-muted" aria-hidden="true">{{ implode(' · ', __('flowers.filters.colors')) }}</p>
+                    <p class="mt-3 text-[11px] text-lh-muted" aria-hidden="true">
+                        {{ collect(App\Enums\FlowerColor::cases())->map(fn (App\Enums\FlowerColor $color): string => $color->label())->implode(' · ') }}
+                    </p>
                 </fieldset>
 
                 <div class="py-5">

@@ -44,8 +44,8 @@ class StorefrontHomeAndSeasonsTest extends TestCase
         $bouquets = Category::factory()->create(['name' => 'Bó hoa', 'slug' => 'bo-hoa']);
         $baskets = Category::factory()->create(['name' => 'Giỏ & hộp hoa', 'slug' => 'gio-hop-hoa']);
 
-        $whisper = Product::factory()->featured()->for($bouquets)->create(['name' => 'Lời thì thầm', 'base_price' => 590000]);
-        ProductSize::factory()->for($whisper)->create(['size_name' => 'Vừa', 'price' => 690000, 'is_default' => true]);
+        $whisper = Product::factory()->featured()->for($bouquets)->create(['name' => 'Lời thì thầm', 'base_price' => 480000]);
+        ProductSize::factory()->for($whisper)->create(['size_name' => 'Vừa', 'price' => 680000, 'is_default' => true]);
         ProductImage::factory()->for($whisper)->primary()->create(['image_path' => 'products/1/loi-thi-tham.jpg']);
         Product::factory()->featured()->for($baskets)->create(['name' => 'Bình yên xanh', 'base_price' => 750000]);
         Product::factory()->for($bouquets)->create(['name' => 'Hồng phấn ban mai']);
@@ -54,7 +54,7 @@ class StorefrontHomeAndSeasonsTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSeeText('Những bó hoa được thương nhất')
-            ->assertSeeTextInOrder(['Lời thì thầm', 'Bó hoa', '690.000 VNĐ'])
+            ->assertSeeTextInOrder(['Lời thì thầm', 'Bó hoa', '680.000 VNĐ'])
             ->assertSeeTextInOrder(['Bình yên xanh', 'Giỏ & hộp hoa', '750.000 VNĐ'])
             ->assertSee('/storage/products/1/loi-thi-tham.jpg', false)
             ->assertSee('data-filter-chip="bo-hoa"', false)
@@ -93,13 +93,13 @@ class StorefrontHomeAndSeasonsTest extends TestCase
     public function test_home_page_renders_in_english(): void
     {
         app()->setLocale('en');
-        Product::factory()->featured()->create(['name' => 'Lời thì thầm', 'base_price' => 690000]);
+        Product::factory()->featured()->create(['name' => 'Lời thì thầm', 'base_price' => 680000]);
 
         $this->get(route('home'))
             ->assertOk()
             ->assertSeeText('Send a flower,')
             ->assertSeeText('Our most-loved bouquets')
-            ->assertSeeText('690,000 VND');
+            ->assertSeeText('680,000 VND');
     }
 
     public function test_seasons_page_shows_current_season_and_its_flowers(): void

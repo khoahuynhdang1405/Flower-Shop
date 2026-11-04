@@ -23,30 +23,11 @@ return [
         'price_any' => 'Any price',
         'color' => 'Colours you love',
         'in_stock' => 'Only show flowers in stock',
-        'types' => [
-            'bouquet' => 'Bouquets',
-            'basket' => 'Baskets & boxes',
-            'vase' => 'Vase arrangements',
-        ],
-        'occasions' => [
-            'birthday' => 'Birthday',
-            'love' => 'Love',
-            'congrats' => 'Congratulations',
-            'everyday' => 'Just because',
-        ],
         'prices' => [
             'under_500' => 'Under 500,000 VND',
             '500_800' => '500,000 – 800,000 VND',
             '800_1200' => '800,000 – 1,200,000 VND',
             'over_1200' => 'Over 1,200,000 VND',
-        ],
-        'colors' => [
-            'pink' => 'Pink',
-            'peach' => 'Peach',
-            'yellow' => 'Yellow',
-            'white' => 'White',
-            'red' => 'Red',
-            'green' => 'Green',
         ],
     ],
 
@@ -66,11 +47,8 @@ return [
             'price_asc' => 'Price: low to high',
             'price_desc' => 'Price: high to low',
         ],
-        'badges' => [
-            'popular' => 'Most loved',
-            'new' => 'New design',
-            'month' => 'October flower',
-        ],
+        'empty' => 'No flowers match these choices yet. Try removing a filter or two.',
+        'empty_reset' => 'See all flowers',
     ],
 
     'pagination' => [

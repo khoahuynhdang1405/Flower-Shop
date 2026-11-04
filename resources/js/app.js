@@ -7,3 +7,6 @@ import './image-preview';
 import './list-filter';
 import './live-validation';
 import './locale-switcher';
+import './product-gallery';
+import './quantity-stepper';
+import './size-picker';

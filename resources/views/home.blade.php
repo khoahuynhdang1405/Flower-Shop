@@ -98,7 +98,7 @@
                 @foreach ($featuredProducts as $product)
                     <li data-filter-item data-filter-value="{{ $product->category->slug }}">
                         <x-storefront.product-card :name="$product->name" :subtitle="$product->category->name" :price="$product->display_price"
-                            :image-url="$product->primaryImage?->url" :image-name="$product->slug" />
+                            :image-url="$product->primaryImage?->url" :image-name="$product->slug" :url="route('flowers.show', $product->slug)" />
                     </li>
                 @endforeach
             </ul>
