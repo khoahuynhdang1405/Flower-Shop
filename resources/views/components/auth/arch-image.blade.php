@@ -6,8 +6,8 @@
         ->first(fn(string $path): bool => file_exists(public_path($path)));
 @endphp
 
-{{-- Khung ảnh vòm như thiết kế đăng nhập/đăng ký --}}
-<div {{ $attributes->class('aspect-[520/480] overflow-hidden rounded-t-full rounded-b-sm bg-lh-sage-100') }}>
+{{-- Ảnh trong khung vòm như thiết kế đăng nhập/đăng ký --}}
+<x-arch-frame :attributes="$attributes->class('aspect-[520/480]')">
     @if ($file)
         <img src="{{ asset($file) }}" alt="{{ $alt }}" class="size-full object-cover" fetchpriority="high">
     @else
@@ -16,4 +16,4 @@
             <x-brand.flower-mark class="h-24 w-auto" />
         </div>
     @endif
-</div>
+</x-arch-frame>

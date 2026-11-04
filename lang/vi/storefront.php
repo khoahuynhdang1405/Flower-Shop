@@ -52,6 +52,11 @@ return [
         ],
     ],
 
+    'product' => [
+        'favorite' => 'Thêm “:name” vào danh sách yêu thích',
+        'add_to_cart' => 'Thêm “:name” vào giỏ hoa',
+    ],
+
     'legal' => [
         'privacy' => 'Chính sách bảo mật',
         'terms' => 'Điều khoản sử dụng',

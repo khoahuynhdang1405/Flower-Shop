@@ -32,4 +32,14 @@ class ProductFactory extends Factory
             'is_active' => true,
         ];
     }
+
+    public function featured(): static
+    {
+        return $this->state(fn (array $attributes) => ['is_featured' => true]);
+    }
+
+    public function hidden(): static
+    {
+        return $this->state(fn (array $attributes) => ['is_active' => false]);
+    }
 }

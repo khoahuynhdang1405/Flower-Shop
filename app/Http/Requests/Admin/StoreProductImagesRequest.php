@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin;
 
 use App\DTOs\ProductImage\UploadProductImagesData;
+use App\Enums\FlowerColor;
 use App\Models\Product;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -12,7 +13,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
 
 /**
- * Upload nhiều ảnh (jpg/png/webp, tối đa 4 MB/ảnh, 10 ảnh/lượt) cho một sản phẩm.
+ * Upload nhiều ảnh (jpg/png/webp, tối đa 4 MB/ảnh, 10 ảnh/lượt) cho một sản phẩm, kèm sắc hoa của sản phẩm (ít nhất một).
  */
 class StoreProductImagesRequest extends FormRequest
 {
@@ -39,6 +40,8 @@ class StoreProductImagesRequest extends FormRequest
             'images' => ['required', 'array', 'max:'.self::MAX_FILES],
             'images.*' => ['required', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_KILOBYTES],
             'product_size_id' => ['nullable', 'integer', $this->sizeOfThisProduct()],
+            'colors' => ['required', 'array'],
+            'colors.*' => [Rule::enum(FlowerColor::class)],
         ];
     }
 
@@ -56,6 +59,8 @@ class StoreProductImagesRequest extends FormRequest
             'images.*.uploaded' => __('admin.product_images.form.image_size', ['max' => self::MAX_KILOBYTES / 1024]),
             'product_size_id.exists' => __('admin.product_images.form.size_invalid'),
             'product_size_id.integer' => __('admin.product_images.form.size_invalid'),
+            'colors.required' => __('admin.product_images.form.colors_required'),
+            'colors.*' => __('admin.product_images.form.colors_required'),
         ];
     }
 
@@ -66,6 +71,14 @@ class StoreProductImagesRequest extends FormRequest
             productSizeId: $this->filled('product_size_id') ? $this->integer('product_size_id') : null,
             files: array_values($this->file('images', [])),
         );
+    }
+
+    /**
+     * @return list<FlowerColor>
+     */
+    public function colors(): array
+    {
+        return array_map(fn (string $color): FlowerColor => FlowerColor::from($color), array_values($this->array('colors')));
     }
 
     /**

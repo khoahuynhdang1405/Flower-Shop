@@ -1,4 +1,5 @@
 import './admin-drawer';
+import './catalog-filters';
 import './dropdowns';
 import './filter-chips';
 import './forms';
@@ -6,3 +7,6 @@ import './image-preview';
 import './list-filter';
 import './live-validation';
 import './locale-switcher';
+import './product-gallery';
+import './quantity-stepper';
+import './size-picker';

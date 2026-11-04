@@ -4,7 +4,7 @@
      * khi làm phần đơn hàng.
      */
     $orders = [
-        ['code' => '#LH1028', 'name' => 'Lời thì thầm', 'image' => 'loi-thi-tham', 'date' => '07/10/2026', 'items' => 1, 'total' => 690000, 'status' => 'preparing', 'delivery_time' => '10:30'],
+        ['code' => '#LH1028', 'name' => 'Lời thì thầm', 'image' => 'loi-thi-tham', 'date' => '07/10/2026', 'items' => 1, 'total' => 680000, 'status' => 'preparing', 'delivery_time' => '10:30'],
         ['code' => '#LH0986', 'name' => 'Nắng trong veo', 'image' => 'nang-trong-veo', 'date' => '28/09/2026', 'items' => 1, 'total' => 550000, 'status' => 'completed'],
         ['code' => '#LH0932', 'name' => 'Bình yên xanh', 'image' => 'binh-yen-xanh', 'date' => '15/09/2026', 'items' => 1, 'total' => 750000, 'status' => 'completed'],
         ['code' => '#LH0881', 'name' => 'Một ngày bình dị', 'image' => 'mot-ngay-binh-di', 'date' => '02/09/2026', 'items' => 1, 'total' => 590000, 'status' => 'completed'],

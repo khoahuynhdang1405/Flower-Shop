@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\FlowerColor;
 use App\Models\Admin;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -69,6 +70,7 @@ class ProductImageTest extends TestCase
             ->post(route('admin.products.images.store', $this->product), [
                 'images' => [$this->photo('bo-lon-1.jpg'), $this->photo('bo-lon-2.png', 'image/png')],
                 'product_size_id' => $large->id,
+                'colors' => ['yellow'],
             ])
             ->assertRedirect(route('admin.products.images', $this->product))
             ->assertSessionHas('status', 'Đã tải lên 2 ảnh.');
@@ -90,7 +92,7 @@ class ProductImageTest extends TestCase
     {
         ProductImage::factory()->for($this->product)->primary()->create(['sort_order' => 4]);
 
-        $this->asAdmin()->post(route('admin.products.images.store', $this->product), ['images' => [$this->photo()]]);
+        $this->asAdmin()->post(route('admin.products.images.store', $this->product), ['images' => [$this->photo()], 'colors' => ['pink']]);
 
         $newImage = ProductImage::query()->latest('id')->first();
 
@@ -104,7 +106,13 @@ class ProductImageTest extends TestCase
         $otherProductSize = ProductSize::factory()->create();
 
         $this->asAdmin()->post(route('admin.products.images.store', $this->product), [])
-            ->assertSessionHasErrors(['images' => __('admin.product_images.form.images_required')]);
+            ->assertSessionHasErrors([
+                'images' => __('admin.product_images.form.images_required'),
+                'colors' => __('admin.product_images.form.colors_required'),
+            ]);
+
+        $this->post(route('admin.products.images.store', $this->product), ['images' => [$this->photo()], 'colors' => ['purple']])
+            ->assertSessionHasErrors(['colors.0' => __('admin.product_images.form.colors_required')]);
 
         $this->post(route('admin.products.images.store', $this->product), [
             'images' => [
@@ -124,6 +132,29 @@ class ProductImageTest extends TestCase
 
         $this->assertSame(0, ProductImage::count());
         $this->assertEmpty($this->disk->allFiles());
+    }
+
+    public function test_upload_replaces_the_product_colors_and_the_page_shows_them_checked(): void
+    {
+        $this->product->colors()->createMany([['color' => FlowerColor::Red], ['color' => FlowerColor::White]]);
+
+        $this->asAdmin()->post(route('admin.products.images.store', $this->product), [
+            'images' => [$this->photo()],
+            'colors' => ['pink', 'peach', 'pink'],
+        ])->assertSessionHasNoErrors();
+
+        $this->assertEqualsCanonicalizing(
+            [FlowerColor::Pink, FlowerColor::Peach],
+            $this->product->colors()->get()->pluck('color')->all(),
+        );
+
+        $html = $this->get(route('admin.products.images', $this->product))
+            ->assertOk()
+            ->assertSeeText('Sắc hoa')
+            ->getContent();
+
+        $this->assertMatchesRegularExpression('/name="colors\[\]" value="pink" class="sr-only" checked>/', $html);
+        $this->assertMatchesRegularExpression('/name="colors\[\]" value="red" class="sr-only"\s*>/', $html);
     }
 
     public function test_admin_changes_image_size_and_back_to_shared(): void

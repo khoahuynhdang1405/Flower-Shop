@@ -52,6 +52,11 @@ return [
         ],
     ],
 
+    'product' => [
+        'favorite' => 'Add “:name” to favourites',
+        'add_to_cart' => 'Add “:name” to your basket',
+    ],
+
     'legal' => [
         'privacy' => 'Privacy policy',
         'terms' => 'Terms of use',

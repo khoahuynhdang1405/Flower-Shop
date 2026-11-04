@@ -89,6 +89,30 @@ Table product_sizes {
   is_default boolean [default: false]
 }
 
+Table category_product {
+  category_id bigint [not null, note: 'categories.type = occasion']
+  product_id bigint [not null]
+
+  indexes {
+    (category_id, product_id) [pk]
+    product_id
+  }
+
+  Note: 'Một sản phẩm thuộc nhiều dịp gửi thương (bộ lọc Tất cả hoa). Kiểu hoa vẫn ở products.category_id.'
+}
+
+Table product_colors {
+  product_id bigint [not null]
+  color varchar(20) [not null, note: 'pink, peach, yellow, white, red, green (App\\Enums\\FlowerColor)']
+
+  indexes {
+    (product_id, color) [pk]
+    color
+  }
+
+  Note: 'Sắc hoa của sản phẩm (bộ lọc "Sắc hoa bạn thích"); admin chọn ở trang ảnh sản phẩm.'
+}
+
 Table product_images {
   id bigint [pk, increment]
   product_id bigint [not null]
@@ -200,6 +224,9 @@ Ref: admins.role_id > roles.id
 Ref: role_has_permissions.role_id > roles.id
 Ref: role_has_permissions.permission_id > permissions.id
 Ref: products.category_id > categories.id
+Ref: category_product.category_id > categories.id [delete: cascade]
+Ref: category_product.product_id > products.id [delete: cascade]
+Ref: product_colors.product_id > products.id [delete: cascade]
 Ref: product_sizes.product_id > products.id
 Ref: product_images.product_id > products.id
 Ref: product_images.product_size_id > product_sizes.id

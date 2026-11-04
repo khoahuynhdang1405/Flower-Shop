@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Product\ReplaceProductColorsAction;
 use App\Actions\ProductImage\AssignProductImageSizeAction;
 use App\Actions\ProductImage\DeleteProductImageAction;
 use App\Actions\ProductImage\SetPrimaryProductImageAction;
@@ -18,7 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 /**
- * Admin › Sản phẩm › Ảnh: upload nhiều ảnh, gắn ảnh với size, chọn ảnh chính, xóa ảnh.
+ * Admin › Sản phẩm › Ảnh: upload nhiều ảnh (kèm sắc hoa của sản phẩm), gắn ảnh với size, chọn ảnh chính, xóa ảnh.
  * Route lồng {product:slug}/images/{image} nên ảnh luôn thuộc đúng sản phẩm trên URL.
  */
 class ProductImageController extends Controller
@@ -32,9 +33,14 @@ class ProductImageController extends Controller
         ]);
     }
 
-    public function store(StoreProductImagesRequest $request, Product $product, UploadProductImagesAction $upload): RedirectResponse
-    {
+    public function store(
+        StoreProductImagesRequest $request,
+        Product $product,
+        UploadProductImagesAction $upload,
+        ReplaceProductColorsAction $replaceColors,
+    ): RedirectResponse {
         $images = $upload->execute($request->toData());
+        $replaceColors->execute($product, $request->colors());
 
         return $this->backToImages($product, trans_choice('admin.product_images.flash.uploaded', count($images)));
     }

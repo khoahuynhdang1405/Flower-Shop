@@ -10,7 +10,7 @@
         ['name' => 'Nắng trong veo', 'slug' => 'nang-trong-veo', 'sku' => 'LH-H001', 'category' => 'bouquet', 'stock' => 18, 'is_active' => true,
             'sizes' => ['small' => 450000, 'medium' => 550000, 'large' => 750000], 'default' => 'medium'],
         ['name' => 'Lời thì thầm', 'slug' => 'loi-thi-tham', 'sku' => 'LH-H002', 'category' => 'bouquet', 'stock' => 12, 'is_active' => true,
-            'sizes' => ['small' => 590000, 'medium' => 690000, 'large' => 890000], 'default' => 'medium'],
+            'sizes' => ['small' => 480000, 'medium' => 680000, 'large' => 880000], 'default' => 'medium'],
         ['name' => 'Thu dịu dàng', 'slug' => 'thu-diu-dang', 'sku' => 'LH-H003', 'category' => 'vase', 'stock' => 3, 'is_active' => true,
             'sizes' => ['medium' => 890000, 'large' => 1190000], 'default' => 'medium'],
         ['name' => 'Bình yên xanh', 'slug' => 'binh-yen-xanh', 'sku' => 'LH-H004', 'category' => 'basket', 'stock' => 10, 'is_active' => true,
