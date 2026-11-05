@@ -20,6 +20,20 @@
         : [['image' => $product->slug]];
     $deliveryFeeFrom = 25000;
 
+    /*
+     * TODO: dữ liệu mẫu theo docs/designs/storefront/04-chi-tiet-san-pham.png — chỉ dựng giao diện.
+     * Khi nối DB: lấy từ bảng addons (is_active). Dòng phụ "Hộp 6 viên" / "Lời nhắn riêng của bạn" (note) chưa có cột.
+     * Ảnh: public/images/flowers/{image}.(webp|jpg|png); chưa có file thì hiện khung giữ chỗ.
+     * Thiệp viết tay (miễn phí) luôn được chọn sẵn cho khách.
+     */
+    $addons = [
+        ['id' => 1, 'name' => 'Hộp quà nhỏ', 'price' => 80000, 'is_free' => false, 'note' => null, 'image' => 'addon-hop-qua'],
+        ['id' => 2, 'name' => 'Gấu bông êm ái', 'price' => 150000, 'is_free' => false, 'note' => null, 'image' => 'addon-gau-bong'],
+        ['id' => 3, 'name' => 'Chocolate ngọt ngào', 'price' => 120000, 'is_free' => false, 'note' => 'Hộp 6 viên', 'image' => 'addon-chocolate'],
+        ['id' => 4, 'name' => 'Thiệp viết tay', 'price' => 0, 'is_free' => true, 'note' => 'Lời nhắn riêng của bạn', 'image' => 'addon-thiep'],
+    ];
+    $preselectedAddons = collect($addons)->where('is_free', true)->pluck('id')->all();
+
     $button = 'inline-flex h-12 items-center justify-center gap-3 rounded px-6 text-[15px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary';
     $stepButton = 'grid size-11 place-items-center text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-lh-primary disabled:cursor-not-allowed disabled:text-lh-border disabled:hover:bg-transparent';
     $container = 'mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-20';
@@ -96,5 +110,7 @@
                 </p>
             </div>
         </div>
+
+        <x-storefront.addon-picker class="mt-14 lg:mt-16" :addons="$addons" :selected="$preselectedAddons" />
     </div>
 </x-layouts.storefront>

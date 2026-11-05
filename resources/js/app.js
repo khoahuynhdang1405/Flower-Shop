@@ -1,3 +1,4 @@
+import './addon-picker';
 import './admin-drawer';
 import './catalog-filters';
 import './dropdowns';

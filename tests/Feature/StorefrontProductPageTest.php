@@ -87,6 +87,25 @@ class StorefrontProductPageTest extends TestCase
         $this->get(route('flowers.show', 'da-ngung-ban'))->assertNotFound();
     }
 
+    public function test_product_page_offers_four_gift_addons_with_the_free_card_preselected(): void
+    {
+        app()->setLocale('vi');
+        Product::factory()->create(['slug' => 'loi-thi-tham']);
+
+        $response = $this->get(route('flowers.show', 'loi-thi-tham'));
+        $html = $response->getContent();
+
+        $response
+            ->assertOk()
+            ->assertSeeText('Thêm một chút thương yêu')
+            ->assertSeeTextInOrder(['Hộp quà nhỏ', '80.000 VNĐ', 'Gấu bông êm ái', '150.000 VNĐ', 'Chocolate ngọt ngào', '120.000 VNĐ · Hộp 6 viên', 'Thiệp viết tay', 'Miễn phí · Lời nhắn riêng của bạn'])
+            ->assertSee('<p class="text-[13px] text-lh-addon-muted" aria-live="polite" data-addon-summary>Đã chọn thiệp viết tay</p>', false);
+
+        $this->assertSame(4, substr_count($html, 'name="addons[]"'));
+        $this->assertSame(1, preg_match_all('/name="addons\[\]" value="\d+"\s+checked/', $html));
+        $this->assertMatchesRegularExpression('/name="addons\[\]" value="4"\s+checked\s+data-addon-option data-name="thiệp viết tay" data-price="0"/', $html);
+    }
+
     public function test_product_page_renders_in_english(): void
     {
         app()->setLocale('en');
