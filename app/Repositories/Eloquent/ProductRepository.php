@@ -56,6 +56,15 @@ final class ProductRepository implements ProductRepositoryInterface
             ->paginate($perPage);
     }
 
+    public function findForSaleBySlug(string $slug): ?Product
+    {
+        return Product::query()
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->with(['category', 'sizes', 'images'])
+            ->first();
+    }
+
     /**
      * Giá hiển thị = giá size mặc định; sản phẩm chưa có size mặc định thì so bằng base_price.
      *

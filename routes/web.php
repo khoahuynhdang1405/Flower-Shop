@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/flowers', [FlowerController::class, 'index'])->name('flowers.index');
+Route::get('/flowers/{slug}', [FlowerController::class, 'show'])->name('flowers.show');
 
 // TODO: chỉ giao diện với dữ liệu mẫu — khi nối DB thay bằng controller.
-Route::view('/flowers/{slug}', 'flowers.show')->name('flowers.show');
 Route::view('/seasons', 'seasons.index')->name('seasons');
 
 Route::middleware('guest')->group(function () {

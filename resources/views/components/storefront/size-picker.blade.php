@@ -1,5 +1,5 @@
 @props([
-    /** @var list<array{id: int|string, name: string, price: int, dimension: string}> $sizes */
+    /** @var list<array{id: int|string, name: string, price: int, dimension: ?string}> $sizes  dimension null = chưa nhập kích thước */
     'sizes',
     'selected',
     'name' => 'size',
@@ -7,7 +7,9 @@
 
 @php
     $money = fn (int $amount): string => number_format($amount, 0, '', __('storefront.thousands_separator')).' '.__('storefront.currency');
-    $dimensionOf = fn (array $size): string => __('product.sizes.dimension', ['size' => Str::lower($size['name']), 'dimension' => $size['dimension']]);
+    $dimensionOf = fn (array $size): string => filled($size['dimension'])
+        ? __('product.sizes.dimension', ['size' => Str::lower($size['name']), 'dimension' => $size['dimension']])
+        : '';
     $current = collect($sizes)->firstWhere('id', $selected) ?? $sizes[0];
 @endphp
 
@@ -33,5 +35,7 @@
         @endforeach
     </div>
 
-    <p class="mt-3 text-xs text-lh-muted" data-size-dimension>{{ $dimensionOf($current) }}</p>
+    @if ($dimensionOf($current) !== '')
+        <p class="mt-3 text-xs text-lh-muted" data-size-dimension>{{ $dimensionOf($current) }}</p>
+    @endif
 </fieldset>

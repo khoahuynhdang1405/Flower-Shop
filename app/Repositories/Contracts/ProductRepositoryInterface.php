@@ -39,4 +39,9 @@ interface ProductRepositoryInterface
      * @return LengthAwarePaginator<int, Product>
      */
     public function paginateForCatalog(CatalogFilterData $filters, int $perPage): LengthAwarePaginator;
+
+    /**
+     * Sản phẩm đang bán theo slug cho trang chi tiết, kèm danh mục, size (theo giá) và toàn bộ ảnh (theo sort_order).
+     */
+    public function findForSaleBySlug(string $slug): ?Product;
 }

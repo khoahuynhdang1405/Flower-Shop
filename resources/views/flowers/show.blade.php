@@ -1,29 +1,23 @@
 @php
-    /*
-     * TODO: dữ liệu mẫu theo docs/designs/storefront/04-chi-tiet-san-pham.png — chỉ dựng giao diện.
-     * Khi nối DB: sản phẩm theo {slug}, size = product_sizes (theo giá, is_default chọn sẵn), ảnh = product_images.
-     * Kích thước cỡ Nhỏ / Lớn là số mẫu (thiết kế chỉ ghi cỡ Vừa); nhãn nhỏ phía trên tên chưa có cột.
-     * Phí giao "từ 25.000" chưa có bảng khu vực (docs/design-vs-db-gaps.md #7).
+    /**
+     * @var \App\Models\Product $product  đã nạp category, sizes (theo giá), images (theo sort_order)
+     *
+     * Kích thước dùng chung products.dimension_info cho mọi size (product_sizes không có cột kích thước).
+     * Gallery hiện toàn bộ ảnh, không lọc theo size; chưa có ảnh upload thì dùng ảnh tĩnh theo slug / khung giữ chỗ.
+     * TODO: video trong gallery (docs/design-vs-db-gaps.md #6); phí giao "từ 25.000" chưa có bảng khu vực (#7).
      */
-    $product = [
-        'name' => 'Lời thì thầm',
-        'slug' => 'loi-thi-tham',
-        'eyebrow' => 'Bó hoa tươi / Dịu dàng & tinh tế',
-        'description' => 'Một chút hồng đào, một chút kem ấm. Hoa hồng vườn, cúc nhỏ và lá bạch đàn cùng nhau kể một lời thương thật khẽ — dành cho người bạn luôn nghĩ đến.',
-        'sizes' => [
-            ['id' => 'small', 'name' => 'Nhỏ', 'price' => 480000, 'dimension' => 'cao khoảng 32 cm · đường kính 24 cm'],
-            ['id' => 'medium', 'name' => 'Vừa', 'price' => 680000, 'dimension' => 'cao khoảng 40 cm · đường kính 30 cm'],
-            ['id' => 'large', 'name' => 'Lớn', 'price' => 880000, 'dimension' => 'cao khoảng 48 cm · đường kính 36 cm'],
-        ],
-        'default_size' => 'medium',
-        'gallery' => [
-            ['image' => 'loi-thi-tham'],
-            ['image' => 'loi-thi-tham-2'],
-            ['image' => 'loi-thi-tham-3'],
-            ['image' => 'loi-thi-tham-4', 'video_duration' => '00:18'],
-        ],
-    ];
-    $defaultSize = collect($product['sizes'])->firstWhere('id', $product['default_size']);
+    $sizes = $product->sizes->map(fn (\App\Models\ProductSize $size): array => [
+        'id' => $size->id,
+        'name' => $size->size_name,
+        'price' => $size->price,
+        'dimension' => $product->dimension_info,
+    ])->all();
+    $selectedSize = $product->sizes->firstWhere('is_default', true) ?? $product->sizes->first();
+    $price = $selectedSize?->price ?? $product->base_price;
+
+    $gallery = $product->images->isNotEmpty()
+        ? $product->images->map(fn (\App\Models\ProductImage $image): array => ['url' => $image->url])->all()
+        : [['image' => $product->slug]];
     $deliveryFeeFrom = 25000;
 
     $button = 'inline-flex h-12 items-center justify-center gap-3 rounded px-6 text-[15px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary';
@@ -31,26 +25,31 @@
     $container = 'mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-20';
 @endphp
 
-<x-layouts.storefront :title="$product['name']">
+<x-layouts.storefront :title="$product->name">
     <div class="{{ $container }} pt-5 pb-16 lg:pb-20">
         <x-storefront.breadcrumb :items="[
             [__('storefront.menu.home'), url('/')],
             [__('flowers.title'), route('flowers.index')],
-            [$product['name'], null],
+            [$product->name, null],
         ]" />
 
         <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16 xl:gap-[68px]" data-product>
-            <x-storefront.product-gallery :product-name="$product['name']" :items="$product['gallery']" />
+            <x-storefront.product-gallery :product-name="$product->name" :items="$gallery" />
 
             <div class="lg:pt-2">
-                <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ $product['eyebrow'] }}</p>
-                <h1 class="mt-5 font-serif text-[40px] leading-tight sm:text-5xl">{{ $product['name'] }}</h1>
+                <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ $product->category->name }}</p>
+                <h1 class="mt-5 font-serif text-[40px] leading-tight sm:text-5xl">{{ $product->name }}</h1>
                 <p class="mt-5 font-serif text-3xl tabular-nums" aria-live="polite" data-size-price>
-                    <x-money :amount="$defaultSize['price']" />
+                    <x-money :amount="$price" />
                 </p>
-                <p class="mt-6 border-b border-lh-border pb-7 text-[15px] leading-relaxed text-lh-muted">{{ $product['description'] }}</p>
+                @if ($product->description)
+                    <p class="mt-6 text-[15px] leading-relaxed text-lh-muted">{{ $product->description }}</p>
+                @endif
+                <div class="mt-7 border-t border-lh-border"></div>
 
-                <x-storefront.size-picker class="mt-7" :sizes="$product['sizes']" :selected="$product['default_size']" />
+                @if ($sizes !== [])
+                    <x-storefront.size-picker class="mt-7" :sizes="$sizes" :selected="$selectedSize->id" />
+                @endif
 
                 <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
                     <div class="inline-flex items-center rounded-sm border border-lh-border bg-lh-surface" data-quantity>
