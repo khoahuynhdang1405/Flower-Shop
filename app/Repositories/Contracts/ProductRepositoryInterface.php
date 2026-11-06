@@ -44,4 +44,12 @@ interface ProductRepositoryInterface
      * Sản phẩm đang bán theo slug cho trang chi tiết, kèm danh mục, size (theo giá) và toàn bộ ảnh (theo sort_order).
      */
     public function findForSaleBySlug(string $slug): ?Product;
+
+    /**
+     * Sản phẩm đang bán trong danh sách id, kèm size — để kiểm tra lựa chọn và tính tiền giỏ hàng.
+     *
+     * @param  list<int>  $ids
+     * @return Collection<int, Product>
+     */
+    public function findForSaleWithSizes(array $ids): Collection;
 }

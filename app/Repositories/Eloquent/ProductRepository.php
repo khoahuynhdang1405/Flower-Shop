@@ -65,6 +65,15 @@ final class ProductRepository implements ProductRepositoryInterface
             ->first();
     }
 
+    public function findForSaleWithSizes(array $ids): Collection
+    {
+        return Product::query()
+            ->whereKey($ids)
+            ->where('is_active', true)
+            ->with('sizes')
+            ->get();
+    }
+
     /**
      * Giá hiển thị = giá size mặc định; sản phẩm chưa có size mặc định thì so bằng base_price.
      *

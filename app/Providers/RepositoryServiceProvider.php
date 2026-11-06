@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\Contracts\AddonRepositoryInterface;
+use App\Repositories\Contracts\CartRepositoryInterface;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\ProductImageRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Repositories\Eloquent\AddonRepository;
 use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\ProductImageRepository;
 use App\Repositories\Eloquent\ProductRepository;
+use App\Repositories\Session\SessionCartRepository;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -25,5 +29,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
         $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
         $this->app->bind(ProductImageRepositoryInterface::class, ProductImageRepository::class);
+        $this->app->bind(AddonRepositoryInterface::class, AddonRepository::class);
+        $this->app->bind(CartRepositoryInterface::class, SessionCartRepository::class);
     }
 }
