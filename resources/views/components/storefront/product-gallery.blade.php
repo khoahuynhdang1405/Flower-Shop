@@ -1,6 +1,9 @@
 @props([
     'productName',
-    /** @var list<array{image: string, video_duration?: string}> $items  image = tên file trong public/images/flowers */
+    /**
+     * @var list<array{url?: string, image?: string, video_duration?: string}> $items
+     *   url = ảnh đã upload (storage); không có url thì image = tên file trong public/images/flowers
+     */
     'items',
 ])
 
@@ -15,8 +18,13 @@
             @foreach ($items as $item)
                 <div data-gallery-slide @if ($loop->first) data-active @else aria-hidden="true" @endif
                     class="absolute inset-0 opacity-0 transition-opacity duration-300 data-active:opacity-100 motion-reduce:transition-none">
-                    <x-flower-image :name="$item['image']" class="size-full"
-                        :alt="__('product.gallery.image_alt', ['position' => $loop->iteration, 'name' => $productName])" />
+                    @isset($item['url'])
+                        <img src="{{ $item['url'] }}" alt="{{ __('product.gallery.image_alt', ['position' => $loop->iteration, 'name' => $productName]) }}"
+                            class="size-full object-cover" @unless ($loop->first) loading="lazy" @endunless>
+                    @else
+                        <x-flower-image :name="$item['image']" class="size-full"
+                            :alt="__('product.gallery.image_alt', ['position' => $loop->iteration, 'name' => $productName])" />
+                    @endisset
                     @isset($item['video_duration'])
                         <div class="absolute inset-0 grid place-items-center bg-lh-primary-dark/20">
                             <span class="flex items-center gap-2 rounded-full bg-lh-surface/95 px-4 py-2 text-xs text-lh-heading">
@@ -41,7 +49,11 @@
             <button type="button" data-gallery-thumb aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
                 aria-label="{{ isset($item['video_duration']) ? __('product.gallery.video', ['duration' => $item['video_duration']]) : __('product.gallery.thumb', ['position' => $loop->iteration]) }}"
                 class="relative block overflow-hidden rounded-sm opacity-80 outline-offset-2 transition-opacity hover:opacity-100 focus-visible:outline-2 focus-visible:outline-lh-primary aria-pressed:opacity-100 aria-pressed:ring-2 aria-pressed:ring-lh-primary motion-reduce:transition-none">
-                <x-flower-image :name="$item['image']" class="aspect-[11/9]" />
+                @isset($item['url'])
+                    <img src="{{ $item['url'] }}" alt="" loading="lazy" class="aspect-[11/9] w-full bg-lh-sage-100 object-cover">
+                @else
+                    <x-flower-image :name="$item['image']" class="aspect-[11/9]" />
+                @endisset
                 @isset($item['video_duration'])
                     <span class="absolute inset-0 grid place-items-center" aria-hidden="true">
                         <span class="grid size-8 place-items-center rounded-full border border-white/80 text-white">

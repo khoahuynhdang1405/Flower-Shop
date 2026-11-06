@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Product\ListCatalogFilterOptionsAction;
 use App\Actions\Product\ListCatalogProductsAction;
+use App\Actions\Product\ShowProductDetailAction;
 use App\Http\Requests\Storefront\ListFlowersRequest;
 use Illuminate\View\View;
 
@@ -23,5 +24,10 @@ class FlowerController extends Controller
             'products' => $listProducts->execute($request->toData())->withQueryString(),
             ...$listFilterOptions->execute(),
         ]);
+    }
+
+    public function show(string $slug, ShowProductDetailAction $showProduct): View
+    {
+        return view('flowers.show', ['product' => $showProduct->execute($slug)]);
     }
 }

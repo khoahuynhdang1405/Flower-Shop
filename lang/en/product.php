@@ -31,6 +31,18 @@ return [
         'buy_now' => 'Buy now',
     ],
 
+    'addons' => [
+        'title' => 'Add a little more love',
+        'add' => 'Add to the gift',
+        'add_label' => 'Add “:name” to the gift',
+        'selected' => 'Added',
+        'free' => 'Free',
+        'and' => ' & ',
+        'summary' => 'Added :items · +:total',
+        'summary_free' => 'Added :items',
+        'summary_empty' => 'Pick a little extra to make the gift complete',
+    ],
+
     'freshness' => [
         'title' => 'Fresh for 3–5 days',
         'body' => 'Flowers are picked every morning and arranged just for you. Delivered gently, colours intact.',

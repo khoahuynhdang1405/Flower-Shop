@@ -35,6 +35,11 @@
 
     --color-lh-ink: #000000; /* Chữ "Lá & Hoa" và bông hoa ở footer storefront */
 
+    /* Khối "Thêm một chút thương yêu" (chi tiết sản phẩm) — bảng màu riêng của khối; chữ chính/viền/nền trắng dùng token chung. */
+    --color-lh-addon-accent: #2f5142; /* Viền thẻ + ô tích khi đã chọn */
+    --color-lh-addon-muted: #737c72; /* Giá, mô tả, dòng tóm tắt */
+    --color-lh-addon-selected: #edf1e8; /* Nền thẻ đã chọn */
+
     /* Lỗi nhập liệu. TODO: Figma chưa có màu báo lỗi — tạm dùng đỏ gạch ấm (tương phản 6.3:1 trên nền trắng). */
     --color-lh-danger: #a63d2f;
 

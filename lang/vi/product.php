@@ -31,6 +31,18 @@ return [
         'buy_now' => 'Mua ngay',
     ],
 
+    'addons' => [
+        'title' => 'Thêm một chút thương yêu',
+        'add' => 'Thêm vào món quà',
+        'add_label' => 'Thêm “:name” vào món quà',
+        'selected' => 'Đã chọn',
+        'free' => 'Miễn phí',
+        'and' => ' & ',
+        'summary' => 'Đã chọn :items · +:total',
+        'summary_free' => 'Đã chọn :items',
+        'summary_empty' => 'Chọn thêm món nhỏ để món quà trọn vẹn hơn',
+    ],
+
     'freshness' => [
         'title' => 'Tươi xinh từ 3–5 ngày',
         'body' => 'Hoa được chọn mỗi sáng và cắm riêng cho bạn. Giao nhẹ nhàng, giữ trọn sắc hoa.',
