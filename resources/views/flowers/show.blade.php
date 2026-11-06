@@ -21,18 +21,17 @@
     $deliveryFeeFrom = 25000;
 
     /*
-     * TODO: dữ liệu mẫu theo docs/designs/storefront/04-chi-tiet-san-pham.png — chỉ dựng giao diện.
-     * Khi nối DB: lấy từ bảng addons (is_active). Dòng phụ "Hộp 6 viên" / "Lời nhắn riêng của bạn" (note) chưa có cột.
-     * Ảnh: public/images/flowers/{image}.(webp|jpg|png); chưa có file thì hiện khung giữ chỗ.
-     * Thiệp viết tay (miễn phí) luôn được chọn sẵn cho khách.
+     * Quà kèm từ bảng addons (is_active), món tính tiền trước. Thiệp viết tay (miễn phí) luôn được chọn sẵn cho khách.
+     * @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Addon> $addons
      */
-    $addons = [
-        ['id' => 1, 'name' => 'Hộp quà nhỏ', 'price' => 80000, 'is_free' => false, 'note' => null, 'image' => 'addon-hop-qua'],
-        ['id' => 2, 'name' => 'Gấu bông êm ái', 'price' => 150000, 'is_free' => false, 'note' => null, 'image' => 'addon-gau-bong'],
-        ['id' => 3, 'name' => 'Chocolate ngọt ngào', 'price' => 120000, 'is_free' => false, 'note' => 'Hộp 6 viên', 'image' => 'addon-chocolate'],
-        ['id' => 4, 'name' => 'Thiệp viết tay', 'price' => 0, 'is_free' => true, 'note' => 'Lời nhắn riêng của bạn', 'image' => 'addon-thiep'],
-    ];
-    $preselectedAddons = collect($addons)->where('is_free', true)->pluck('id')->all();
+    $addonOptions = $addons->map(fn (\App\Models\Addon $addon): array => [
+        'id' => $addon->id,
+        'name' => $addon->name,
+        'price' => $addon->price,
+        'is_free' => $addon->is_free,
+        'image_url' => $addon->image_url,
+    ])->all();
+    $preselectedAddons = $addons->where('is_free', true)->pluck('id')->all();
 
     $button = 'inline-flex h-12 items-center justify-center gap-3 rounded px-6 text-[15px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary';
     $stepButton = 'grid size-11 place-items-center text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-lh-primary disabled:cursor-not-allowed disabled:text-lh-border disabled:hover:bg-transparent';
@@ -47,6 +46,10 @@
             [$product->name, null],
         ]" />
 
+        {{-- Một form bọc cả cột thông tin lẫn khối quà kèm: size, số lượng, addons[] gửi cùng nút "Thêm vào giỏ". --}}
+        <form method="POST" action="{{ route('cart.flowers.store') }}">
+        @csrf
+        <input type="hidden" name="product_id" value="{{ $product->id }}">
         <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16 xl:gap-[68px]" data-product>
             <x-storefront.product-gallery :product-name="$product->name" :items="$gallery" />
 
@@ -84,9 +87,13 @@
                     </p>
                 </div>
 
-                {{-- TODO: thêm vào giỏ / mua ngay khi có giỏ hàng. --}}
+                @if ($errors->any())
+                    <p class="mt-6 text-sm text-lh-danger" role="alert">{{ $errors->first() }}</p>
+                @endif
+
+                {{-- TODO: "Mua ngay" khi có trang thanh toán. --}}
                 <div class="mt-6 grid gap-3 sm:grid-cols-2">
-                    <button type="button" class="{{ $button }} border border-lh-primary bg-lh-surface text-lh-heading hover:bg-lh-sage-50">
+                    <button type="submit" class="{{ $button }} cursor-pointer border border-lh-primary bg-lh-surface text-lh-heading hover:bg-lh-sage-50">
                         {{ __('product.actions.add_to_cart') }}
                         <x-lucide-shopping-bag class="size-5 stroke-[1.5]" aria-hidden="true" />
                     </button>
@@ -111,6 +118,9 @@
             </div>
         </div>
 
-        <x-storefront.addon-picker class="mt-14 lg:mt-16" :addons="$addons" :selected="$preselectedAddons" />
+        @if ($addonOptions !== [])
+            <x-storefront.addon-picker class="mt-14 lg:mt-16" :addons="$addonOptions" :selected="$preselectedAddons" />
+        @endif
+        </form>
     </div>
 </x-layouts.storefront>

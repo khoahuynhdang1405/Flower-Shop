@@ -70,7 +70,7 @@ final class ProductRepository implements ProductRepositoryInterface
         return Product::query()
             ->whereKey($ids)
             ->where('is_active', true)
-            ->with('sizes')
+            ->with(['sizes', 'primaryImage'])
             ->get();
     }
 

@@ -1,7 +1,7 @@
 @props([
-    /** @var list<array{id: int|string, name: string, price: int, is_free: bool, note: ?string, image: string}> $addons */
+    /** @var list<array{id: int, name: string, price: int, is_free: bool, image_url: ?string}> $addons */
     'addons',
-    /** @var list<int|string> $selected  id các món được chọn sẵn */
+    /** @var list<int> $selected  id các món được chọn sẵn */
     'selected' => [],
 ])
 

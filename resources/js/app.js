@@ -1,5 +1,6 @@
 import './addon-picker';
 import './admin-drawer';
+import './cart';
 import './catalog-filters';
 import './dropdowns';
 import './filter-chips';

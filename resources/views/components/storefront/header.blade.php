@@ -1,7 +1,7 @@
 @props([
     // Header gọn cho trang đăng nhập/đăng ký: ẩn tìm kiếm và giỏ hàng.
     'compact' => false,
-    // TODO: số sản phẩm trong giỏ khi có giỏ hàng.
+    // Số hoa + quà tính tiền trong giỏ — AppServiceProvider gắn qua view composer.
     'cartCount' => 0,
 ])
 
@@ -73,8 +73,8 @@
             <x-storefront.locale-menu :trigger-class="$iconButton" />
 
             @unless ($compact)
-                {{-- TODO: trang giỏ hàng. --}}
-                <a href="#" class="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
+                <a href="{{ route('cart.show') }}" @if (request()->routeIs('cart.show')) aria-current="page" @endif data-cart-count
+                    class="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
                     <x-lucide-shopping-bag class="size-5 stroke-[1.5]" aria-hidden="true" />
                     <span aria-hidden="true">({{ $cartCount }})</span>
                     <span class="sr-only">{{ __('storefront.nav.cart', ['count' => $cartCount]) }}</span>

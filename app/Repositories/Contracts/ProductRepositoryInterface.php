@@ -46,7 +46,7 @@ interface ProductRepositoryInterface
     public function findForSaleBySlug(string $slug): ?Product;
 
     /**
-     * Sản phẩm đang bán trong danh sách id, kèm size — để kiểm tra lựa chọn và tính tiền giỏ hàng.
+     * Sản phẩm đang bán trong danh sách id, kèm size và ảnh chính — để kiểm tra lựa chọn, tính tiền và hiện giỏ hàng.
      *
      * @param  list<int>  $ids
      * @return Collection<int, Product>

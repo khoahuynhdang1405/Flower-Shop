@@ -17,4 +17,13 @@ final class AddonRepository implements AddonRepositoryInterface
             ->where('is_active', true)
             ->get();
     }
+
+    public function findAllActive(): Collection
+    {
+        return Addon::query()
+            ->where('is_active', true)
+            ->orderBy('is_free')
+            ->orderBy('id')
+            ->get();
+    }
 }

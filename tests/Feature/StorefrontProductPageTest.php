@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Models\Addon;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
@@ -87,23 +88,31 @@ class StorefrontProductPageTest extends TestCase
         $this->get(route('flowers.show', 'da-ngung-ban'))->assertNotFound();
     }
 
-    public function test_product_page_offers_four_gift_addons_with_the_free_card_preselected(): void
+    public function test_product_page_offers_active_gift_addons_with_the_free_card_preselected(): void
     {
         app()->setLocale('vi');
-        Product::factory()->create(['slug' => 'loi-thi-tham']);
+        $product = Product::factory()->create(['slug' => 'loi-thi-tham']);
+        $card = Addon::factory()->free()->create(['name' => 'Thiệp viết tay']);
+        Addon::factory()->create(['name' => 'Hộp quà nhỏ', 'price' => 80000]);
+        Addon::factory()->create(['name' => 'Gấu bông êm ái', 'price' => 150000]);
+        Addon::factory()->create(['name' => 'Chocolate ngọt ngào', 'price' => 120000]);
+        Addon::factory()->hidden()->create(['name' => 'Nến thơm']);
 
         $response = $this->get(route('flowers.show', 'loi-thi-tham'));
         $html = $response->getContent();
 
         $response
             ->assertOk()
+            ->assertSee('action="'.route('cart.flowers.store').'"', false)
+            ->assertSee('name="product_id" value="'.$product->id.'"', false)
             ->assertSeeText('Thêm một chút thương yêu')
-            ->assertSeeTextInOrder(['Hộp quà nhỏ', '80.000 VNĐ', 'Gấu bông êm ái', '150.000 VNĐ', 'Chocolate ngọt ngào', '120.000 VNĐ · Hộp 6 viên', 'Thiệp viết tay', 'Miễn phí · Lời nhắn riêng của bạn'])
+            ->assertSeeTextInOrder(['Hộp quà nhỏ', '80.000 VNĐ', 'Gấu bông êm ái', '150.000 VNĐ', 'Chocolate ngọt ngào', '120.000 VNĐ', 'Thiệp viết tay', 'Miễn phí'])
+            ->assertDontSeeText('Nến thơm')
             ->assertSee('<p class="text-[13px] text-lh-addon-muted" aria-live="polite" data-addon-summary>Đã chọn thiệp viết tay</p>', false);
 
         $this->assertSame(4, substr_count($html, 'name="addons[]"'));
         $this->assertSame(1, preg_match_all('/name="addons\[\]" value="\d+"\s+checked/', $html));
-        $this->assertMatchesRegularExpression('/name="addons\[\]" value="4"\s+checked\s+data-addon-option data-name="thiệp viết tay" data-price="0"/', $html);
+        $this->assertMatchesRegularExpression('/name="addons\[\]" value="'.$card->id.'"\s+checked\s+data-addon-option data-name="thiệp viết tay" data-price="0"/', $html);
     }
 
     public function test_product_page_renders_in_english(): void

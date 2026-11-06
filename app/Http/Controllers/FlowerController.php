@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Addon\ListActiveAddonsAction;
 use App\Actions\Product\ListCatalogFilterOptionsAction;
 use App\Actions\Product\ListCatalogProductsAction;
 use App\Actions\Product\ShowProductDetailAction;
@@ -26,8 +27,11 @@ class FlowerController extends Controller
         ]);
     }
 
-    public function show(string $slug, ShowProductDetailAction $showProduct): View
+    public function show(string $slug, ShowProductDetailAction $showProduct, ListActiveAddonsAction $listAddons): View
     {
-        return view('flowers.show', ['product' => $showProduct->execute($slug)]);
+        return view('flowers.show', [
+            'product' => $showProduct->execute($slug),
+            'addons' => $listAddons->execute(),
+        ]);
     }
 }
