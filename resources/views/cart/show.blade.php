@@ -15,7 +15,7 @@
     {{-- resources/js/cart.js: các form [data-cart-form] gửi bằng fetch rồi thay [data-cart], không tải lại trang. --}}
     <p class="sr-only" aria-live="polite" data-cart-announcer></p>
 
-    <div class="{{ $container }} pt-5 pb-16 transition-opacity aria-busy:pointer-events-none aria-busy:opacity-70 motion-reduce:transition-none lg:pb-24" data-cart>
+    <div class="{{ $container }} pt-5 pb-16 lg:pb-24" data-cart>
         <x-storefront.breadcrumb :items="[
             [__('storefront.menu.home'), url('/')],
             [__('cart.page.breadcrumb'), null],

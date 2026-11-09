@@ -24,7 +24,8 @@
     Một dòng giỏ: ảnh | tên + dòng phụ + Sửa/Xóa | số lượng | thành tiền.
     Mobile: số lượng + thành tiền xuống hàng dưới tên (wrapper sm:contents trả hai ô về lưới 4 cột từ sm).
 --}}
-<li {{ $attributes->class('grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 border-b border-lh-border py-6 sm:grid-cols-[auto_minmax(0,1fr)_auto_8rem] sm:gap-x-6') }}>
+{{-- data-cart-removing: resources/js/cart.js gắn khi bấm Xóa để ẩn dòng ngay, không chờ server. --}}
+<li {{ $attributes->class('grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 border-b border-lh-border py-6 data-cart-removing:hidden sm:grid-cols-[auto_minmax(0,1fr)_auto_8rem] sm:gap-x-6') }}>
     @if ($imageUrl)
         <img src="{{ $imageUrl }}" alt="" loading="lazy" class="row-span-2 aspect-[174/200] w-24 rounded-sm bg-lh-sage-100 object-cover sm:row-span-1 sm:w-32">
     @else
