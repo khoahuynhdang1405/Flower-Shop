@@ -1,10 +1,14 @@
 @php
-    /*
-     * TODO: dữ liệu mẫu theo docs/designs/storefront/03-hoa-theo-mua.png — chỉ dựng giao diện.
+    /**
+     * @var \Illuminate\Support\Carbon $today
+     * @var \App\Enums\Season $currentSeason  mùa hiện tại theo tháng (SeasonController)
+     *
+     * TODO: giá và sản phẩm của mùa là dữ liệu mẫu theo docs/designs/storefront/03-hoa-theo-mua.png.
      * Khi nối DB: mùa = categories (type = season), sản phẩm của mùa lấy theo bộ sưu tập; "giá từ" = giá size thấp nhất.
-     * Mùa đang vào mùa và tháng trên tiêu đề hiện theo thiết kế (tháng 10).
      */
-    $currentSeason = 'autumn';
+    $season = $currentSeason->value;
+    // vi dùng :month (Tháng 11), en dùng :month_name (November).
+    $monthParams = ['month' => $today->month, 'month_name' => $today->copy()->locale('en')->monthName];
     $seasonPrices = ['spring' => 620000, 'summer' => 550000, 'autumn' => 590000, 'winter' => 650000];
     $seasonProducts = [
         ['name' => 'Thu dịu dàng', 'slug' => 'thu-diu-dang', 'composition' => 'Hồng đào · Cúc mẫu đơn · Bình gốm', 'price' => 890000, 'badge' => __('seasons.products.badge')],
@@ -29,14 +33,14 @@
         <x-flower-image name="hero-hoa-theo-mua" :alt="__('seasons.hero.image_alt')" class="aspect-[4/3] lg:aspect-auto lg:h-[520px]" />
 
         <div class="flex flex-col justify-center px-4 py-12 sm:px-8 lg:px-14 lg:py-16 xl:px-[72px]">
-            <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('seasons.hero.eyebrow') }}</p>
+            <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('seasons.hero.eyebrow', $monthParams) }}</p>
             <h1 id="season-hero-title" class="mt-5 font-serif text-[38px] leading-[1.15] sm:text-5xl">
-                {{ __('seasons.hero.title_line_1') }}<br>{{ __('seasons.hero.title_line_2') }}
+                {{ __("seasons.hero.{$season}.title_line_1") }}<br>{{ __("seasons.hero.{$season}.title_line_2") }}
             </h1>
-            <p class="mt-6 max-w-[500px] text-[15px] leading-relaxed text-lh-muted">{{ __('seasons.hero.body') }}</p>
-            <p class="mt-5 text-sm">{{ __('seasons.hero.collection', ['price' => $money($seasonPrices[$currentSeason])]) }}</p>
+            <p class="mt-6 max-w-[500px] text-[15px] leading-relaxed text-lh-muted">{{ __("seasons.hero.{$season}.body") }}</p>
+            <p class="mt-5 text-sm">{{ __("seasons.hero.{$season}.collection", ['price' => $money($seasonPrices[$season])]) }}</p>
             <a href="#season-products-title" class="{{ $button }} mt-7 self-start bg-lh-primary text-white hover:bg-lh-primary-dark">
-                {{ __('seasons.hero.cta') }}
+                {{ __("seasons.hero.{$season}.cta") }}
                 <x-lucide-arrow-right class="size-4 stroke-[1.5]" aria-hidden="true" />
             </a>
         </div>
@@ -49,15 +53,15 @@
         </x-storefront.section-heading>
 
         <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list">
-            @foreach (__('seasons.seasons.items') as $season => $item)
+            @foreach (__('seasons.seasons.items') as $itemSeason => $item)
                 @php
-                    $isCurrent = $season === $currentSeason;
+                    $isCurrent = $itemSeason === $season;
                 @endphp
                 <li>
                     {{-- TODO: trỏ tới trang bộ sưu tập của từng mùa khi có. --}}
                     <a href="#" class="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary"
                         @if ($isCurrent) aria-current="true" @endif>
-                        <x-flower-image :name="'mua-'.$season" class="aspect-[4/3] rounded-sm transition-opacity group-hover:opacity-95" />
+                        <x-flower-image :name="'mua-'.$itemSeason"class="aspect-[4/3] rounded-sm transition-opacity group-hover:opacity-95" />
                         <p @class(['mt-4 text-[11px]', 'font-semibold text-lh-primary' => $isCurrent, 'text-lh-muted' => ! $isCurrent])>
                             {{ $item['months'] }}
                             @if ($isCurrent)
@@ -69,7 +73,7 @@
                             <x-lucide-arrow-up-right class="size-4 shrink-0 stroke-[1.5] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" />
                         </span>
                         <span class="mt-2 block text-xs text-lh-muted">{{ $item['body'] }}</span>
-                        <span class="mt-3 block text-xs font-medium">{{ __('seasons.seasons.from', ['price' => $money($seasonPrices[$season])]) }}</span>
+                        <span class="mt-3 block text-xs font-medium">{{ __('seasons.seasons.from', ['price' => $money($seasonPrices[$itemSeason])]) }}</span>
                     </a>
                 </li>
             @endforeach
@@ -80,7 +84,7 @@
     <section aria-labelledby="season-products-title" class="{{ $container }} pb-16 lg:pb-20">
         <div class="border-t border-lh-border pt-14">
             <x-storefront.section-heading id="season-products-title" class="scroll-mt-6" :eyebrow="__('seasons.products.eyebrow')"
-                :title="__('seasons.products.title')" :description="__('seasons.products.description')">
+                :title="__('seasons.products.title', $monthParams)" :description="__('seasons.products.descriptions.'.$season)">
                 <x-slot:aside>{{ __('seasons.products.count', ['count' => count($seasonProducts)]) }}</x-slot:aside>
             </x-storefront.section-heading>
 
