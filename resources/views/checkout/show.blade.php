@@ -120,7 +120,8 @@
                         <x-form.input name="card_receiver" :label="__('checkout.card.receiver')" maxlength="100" :disabled="! $isGift" />
                         <div class="md:col-span-2">
                             <x-form.textarea name="card_message" :label="__('checkout.card.message')" :hint="__('checkout.card.note')"
-                                :placeholder="__('checkout.card.message_placeholder')" rows="3" maxlength="500" :disabled="! $isGift" />
+                                :placeholder="__('checkout.card.message_placeholder')" rows="3" maxlength="500" counter :disabled="! $isGift"
+                                class="field-sizing-content min-h-[86px] max-h-[186px] resize-y supports-[field-sizing:content]:resize-none" />
                         </div>
                     </div>
                 </x-storefront.checkout-section>

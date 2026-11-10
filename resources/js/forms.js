@@ -2,6 +2,7 @@
  * Hành vi chung cho form (lắng nghe ở document để vẫn chạy sau khi <body> được thay):
  * - Nút ẩn/hiện mật khẩu: [data-password-toggle] aria-controls="<id ô mật khẩu>".
  * - Form [data-busy-form]: khi gửi, khóa nút submit và đổi nhãn để tránh bấm hai lần.
+ * - Bộ đếm ký tự cho ô có [data-char-count].
  */
 document.addEventListener('click', (event) => {
     const toggle = event.target.closest('[data-password-toggle]');
@@ -37,6 +38,26 @@ document.addEventListener('submit', (event) => {
     button.setAttribute('aria-busy', 'true');
     button.querySelector('[data-button-label]').textContent = button.dataset.busyLabel;
 });
+
+/**
+ * Bộ đếm ký tự: ô [data-char-count="<id bộ đếm>"] cập nhật "đã gõ/tối đa", còn ≤ 10% thì gắn data-near-limit.
+ * Đếm theo value.length để khớp cách maxlength của trình duyệt tính.
+ */
+const syncCharCount = (field) => {
+    const counter = document.getElementById(field.dataset.charCount);
+    const max = Number(counter.dataset.max);
+
+    counter.textContent = `${field.value.length}/${max}`;
+    counter.toggleAttribute('data-near-limit', max - field.value.length <= max * 0.1);
+};
+
+document.addEventListener('input', (event) => {
+    if (event.target.matches?.('[data-char-count]')) {
+        syncCharCount(event.target);
+    }
+});
+
+document.querySelectorAll('[data-char-count]').forEach(syncCharCount);
 
 /**
  * Form [data-confirm="<câu hỏi>"]: hỏi lại trước khi gửi (vd. xóa bản ghi).

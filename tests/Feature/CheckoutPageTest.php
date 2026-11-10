@@ -98,6 +98,29 @@ class CheckoutPageTest extends TestCase
         $this->assertSame(['08:00-10:00', '10:00-12:00', '14:00-16:00', '16:00-18:00'], $requiredSlots[1]);
     }
 
+    public function test_card_message_shows_how_many_of_500_characters_are_used(): void
+    {
+        [$whisper, $medium] = $this->whisper();
+        $this->post(route('cart.flowers.store'), ['product_id' => $whisper->id, 'size' => $medium->id, 'quantity' => 1]);
+
+        $response = $this->withSession(['_old_input' => ['card_message' => 'Chúc Trang một ngày thật dịu dàng.']])
+            ->get(route('checkout'))
+            ->assertSeeTextInOrder(['Người gửi', 'Người nhận', 'Lời nhắn', 'Chúc Trang một ngày thật dịu dàng.', 'Lời nhắn sẽ được giữ riêng tư', '34/500'])
+            ->assertSee('data-char-count="card_message-counter"', false);
+
+        $this->assertMatchesRegularExpression('/data-max="500"\s*>34\/500</', $response->getContent());
+    }
+
+    public function test_card_message_counter_is_highlighted_within_the_last_10_percent(): void
+    {
+        [$whisper, $medium] = $this->whisper();
+        $this->post(route('cart.flowers.store'), ['product_id' => $whisper->id, 'size' => $medium->id, 'quantity' => 1]);
+
+        $response = $this->withSession(['_old_input' => ['card_message' => str_repeat('a', 450)]])->get(route('checkout'));
+
+        $this->assertMatchesRegularExpression('/data-max="500"\s+data-near-limit\s*>450\/500</', $response->getContent());
+    }
+
     public function test_chosen_date_and_time_slot_are_kept_after_a_failed_submit(): void
     {
         [$whisper, $medium] = $this->whisper();
