@@ -1,7 +1,7 @@
 /**
  * Trang thanh toán (resources/views/checkout/show.blade.php), chỉ phía trình duyệt:
  * - "Tôi là người nhận": tên + SĐT người nhận lấy theo người đặt (chỉ đọc), ẩn khối thiệp.
- * - Ô "Người gửi" / "Người nhận" trên thiệp tự điền theo tên, cho tới khi khách tự sửa.
+ * - Ô "Người gửi" / "Người nhận" trên thiệp tự điền tên gọi (hai chữ cuối của họ tên), cho tới khi khách tự sửa.
  * - Khối "Lịch hẹn", nhãn phí giao theo quận, ghi chú phương thức thanh toán cập nhật ngay.
  * - Hôm nay: khóa khung giờ đã bắt đầu; hết khung giờ thì ngày giao sớm nhất là ngày mai.
  * - Gửi form: kiểm tra dữ liệu; TODO: chưa có route lưu đơn nên chỉ báo cho khách, không gửi đi.
@@ -49,13 +49,16 @@ if (root) {
         });
     };
 
+    /** Tên gọi trên thiệp: hai chữ cuối của họ tên ("Huỳnh Đăng Khoa" → "Đăng Khoa"). */
+    const callName = (fullName) => fullName.trim().split(/\s+/).slice(-2).join(' ');
+
     const syncCard = () => {
         [
             ['card_sender', 'sender_name'],
             ['card_receiver', 'receiver_name'],
         ].forEach(([card, source]) => {
             if (!field(card).dataset.touched) {
-                field(card).value = field(source).value.trim();
+                field(card).value = callName(field(source).value);
             }
         });
     };
