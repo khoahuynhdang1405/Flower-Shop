@@ -17,14 +17,15 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\SeasonController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/flowers', [FlowerController::class, 'index'])->name('flowers.index');
 Route::get('/flowers/{slug}', [FlowerController::class, 'show'])->name('flowers.show');
 
-// TODO: chỉ giao diện với dữ liệu mẫu — khi nối DB thay bằng controller.
-Route::view('/seasons', 'seasons.index')->name('seasons');
+// TODO: sản phẩm của mùa vẫn là dữ liệu mẫu trong view — khi nối DB lấy theo bộ sưu tập.
+Route::get('/seasons', SeasonController::class)->name('seasons');
 
 // Giỏ hàng (lưu trong session, khách chưa đăng nhập vẫn dùng được). {size} bỏ trống = sản phẩm chưa có size.
 Route::prefix('cart')->name('cart.')->group(function () {

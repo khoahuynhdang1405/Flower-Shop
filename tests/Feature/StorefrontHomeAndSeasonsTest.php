@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductSize;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class StorefrontHomeAndSeasonsTest extends TestCase
@@ -105,25 +106,46 @@ class StorefrontHomeAndSeasonsTest extends TestCase
     public function test_seasons_page_shows_current_season_and_its_flowers(): void
     {
         app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 8, 31));
 
         $this->get(route('seasons'))
             ->assertOk()
+            ->assertSeeText('Hoa theo mùa · Tháng 8')
             ->assertSeeText('Thu ghé qua,')
             ->assertSeeText('Bộ sưu tập Dịu dàng mùa thu · Từ 590.000 VNĐ')
-            ->assertSeeTextInOrder(['Tháng 7 – 10', 'Đang vào mùa', 'Thu dịu dàng'])
+            ->assertSeeTextInOrder(['Tháng 8 – 10', 'Đang vào mùa', 'Thu dịu dàng'])
+            ->assertSeeText('Những đóa hoa của tháng 8')
             ->assertSeeText('4 thiết kế dành cho mùa này')
             ->assertSeeText('Đúng mùa hoa,')
             ->assertSee('<span aria-current="page">Hoa theo mùa</span>', false);
     }
 
-    public function test_seasons_page_renders_in_english(): void
+    public function test_seasons_page_follows_the_current_month(): void
     {
-        app()->setLocale('en');
+        app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 11, 9));
 
         $this->get(route('seasons'))
             ->assertOk()
-            ->assertSeeText('Autumn drops by,')
+            ->assertSeeText('Hoa theo mùa · Tháng 11')
+            ->assertSeeText('Đông về chậm rãi,')
+            ->assertSeeText('Bộ sưu tập An lành mùa đông · Từ 650.000 VNĐ')
+            ->assertSeeTextInOrder(['Tháng 11 – 1', 'Đang vào mùa', 'Đông an lành'])
+            ->assertSeeText('Những đóa hoa của tháng 11')
+            ->assertDontSeeText('Thu ghé qua,');
+    }
+
+    public function test_seasons_page_renders_in_english(): void
+    {
+        app()->setLocale('en');
+        $this->travelTo(Carbon::create(2026, 11, 9));
+
+        $this->get(route('seasons'))
+            ->assertOk()
+            ->assertSeeText('Seasonal flowers · November')
+            ->assertSeeText('Winter slows down,')
             ->assertSeeText('In season now')
+            ->assertSeeText('November’s flowers')
             ->assertSeeText('From 650,000 VND');
     }
 }
