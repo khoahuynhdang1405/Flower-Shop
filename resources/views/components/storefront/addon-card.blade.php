@@ -1,5 +1,5 @@
 @props([
-    /** @var array{id: int|string, name: string, price: int, is_free: bool, note: ?string, image: string} $addon */
+    /** @var array{id: int, name: string, price: int, is_free: bool, image_url: ?string} $addon  image_url null = khung giữ chỗ */
     'addon',
     'checked' => false,
 ])
@@ -15,12 +15,15 @@
     Trạng thái chọn vẽ bằng has-checked; resources/js/addon-picker.js đọc data-name / data-price để cập nhật dòng tóm tắt.
 --}}
 <label class="group flex cursor-pointer flex-col rounded-md border border-lh-border bg-lh-surface p-3 transition-colors hover:border-lh-sage-200 has-checked:border-lh-addon-accent has-checked:bg-lh-addon-selected has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-lh-primary motion-reduce:transition-none">
-    <x-flower-image :name="$addon['image']" :alt="$addon['name']" class="aspect-[278/158] rounded-sm" />
+    @if ($addon['image_url'])
+        <img src="{{ $addon['image_url'] }}" alt="" loading="lazy" class="aspect-[278/158] w-full rounded-sm bg-lh-sage-100 object-cover">
+    @else
+        <x-flower-image name="" class="aspect-[278/158] rounded-sm" />
+    @endif
 
     <span class="mt-3 text-[15px] text-lh-primary-dark">{{ $addon['name'] }}</span>
-    <span class="mt-1 text-[13px] text-lh-addon-muted">
-        {{ $priceText }}@if ($addon['note']) · {{ $addon['note'] }}@endif
-    </span>
+    {{-- TODO: dòng phụ "Hộp 6 viên" / "Lời nhắn riêng của bạn" chưa có cột trong bảng addons. --}}
+    <span class="mt-1 text-[13px] text-lh-addon-muted">{{ $priceText }}</span>
 
     <span class="mt-4 flex items-center gap-2 text-[13px] text-lh-primary-dark">
         <input type="checkbox" name="addons[]" value="{{ $addon['id'] }}" @checked($checked)

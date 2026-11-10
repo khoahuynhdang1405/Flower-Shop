@@ -31,4 +31,13 @@ interface CartRepositoryInterface
     public function putAddon(int $addonId, int $quantity): void;
 
     public function forgetAddon(int $addonId): void;
+
+    /**
+     * Mã ưu đãi khách đã nhập ở giỏ (chưa chắc còn dùng được — kiểm tra lại mỗi lần tính tiền).
+     */
+    public function promotionCode(): ?string;
+
+    public function putPromotionCode(string $code): void;
+
+    public function forgetPromotionCode(): void;
 }

@@ -9,6 +9,11 @@ use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Cart\CartAddonController;
+use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Cart\CartFlowerController;
+use App\Http\Controllers\Cart\CartPromotionController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
@@ -20,6 +25,30 @@ Route::get('/flowers/{slug}', [FlowerController::class, 'show'])->name('flowers.
 
 // TODO: chỉ giao diện với dữ liệu mẫu — khi nối DB thay bằng controller.
 Route::view('/seasons', 'seasons.index')->name('seasons');
+
+// Giỏ hàng (lưu trong session, khách chưa đăng nhập vẫn dùng được). {size} bỏ trống = sản phẩm chưa có size.
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'show'])->name('show');
+
+    Route::controller(CartFlowerController::class)->prefix('flowers')->name('flowers.')->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::patch('/{product}/{size?}', 'update')->whereNumber(['product', 'size'])->name('update');
+        Route::delete('/{product}/{size?}', 'destroy')->whereNumber(['product', 'size'])->name('destroy');
+    });
+
+    Route::controller(CartAddonController::class)->prefix('addons')->name('addons.')->group(function () {
+        Route::patch('/{addon}', 'update')->whereNumber('addon')->name('update');
+        Route::delete('/{addon}', 'destroy')->whereNumber('addon')->name('destroy');
+    });
+
+    Route::controller(CartPromotionController::class)->prefix('promotion')->name('promotion.')->group(function () {
+        Route::post('/', 'store')->name('store');
+        Route::delete('/', 'destroy')->name('destroy');
+    });
+});
+
+// TODO: mới có giao diện — nút "Đặt hoa" chưa gửi đơn (chưa có route lưu orders / order_delivery_details).
+Route::get('/checkout', CheckoutController::class)->name('checkout');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');

@@ -29,6 +29,30 @@ return [
     'free_shipping_from' => 800000,
 
     /*
+    | Phí giao nội thành TP.HCM (VNĐ) khi tạm tính (trước ưu đãi) chưa tới ngưỡng miễn phí. Mọi quận cùng một mức.
+    */
+
+    'shipping_fee' => 25000,
+
+    /*
+    | Tiệm chỉ giao trong TP.HCM: ô Tỉnh / Thành phố ở trang thanh toán cố định giá trị này.
+    */
+
+    'city' => 'TP. Hồ Chí Minh',
+
+    /*
+    | Các khung giờ giao hoa (order_delivery_details.time_slot lưu đúng chuỗi này).
+    */
+
+    'delivery_time_slots' => ['08:00-10:00', '10:00-12:00', '14:00-16:00', '16:00-18:00'],
+
+    /*
+    | Khách được hẹn ngày giao xa nhất bao nhiêu ngày kể từ hôm nay.
+    */
+
+    'delivery_max_days_ahead' => 90,
+
+    /*
     | Quận/Huyện TP.HCM cho ô chọn địa chỉ giao hoa mặc định (users.default_shipping_district).
     | Giá trị lưu vào DB chính là tên hiển thị.
     */

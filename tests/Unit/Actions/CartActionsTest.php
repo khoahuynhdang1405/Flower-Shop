@@ -7,6 +7,7 @@ namespace Tests\Unit\Actions;
 use App\Actions\Cart\AddAddonToCartAction;
 use App\Actions\Cart\AddFlowerToCartAction;
 use App\Actions\Cart\CalculateCartSubtotalAction;
+use App\Actions\Cart\ListCartLinesAction;
 use App\Actions\Cart\RemoveAddonFromCartAction;
 use App\Actions\Cart\RemoveFlowerFromCartAction;
 use App\Actions\Cart\UpdateCartAddonQuantityAction;
@@ -158,8 +159,8 @@ class CartActionsTest extends TestCase
     {
         $this->cart->shouldReceive('flowers')->andReturn([]);
         $this->cart->shouldReceive('addons')->andReturn([]);
-        $this->products->shouldReceive('findForSaleWithSizes')->with([])->andReturn(new Collection);
-        $this->addons->shouldReceive('findActiveByIds')->with([])->andReturn(new Collection);
+        $this->products->shouldNotReceive('findForSaleWithSizes');
+        $this->addons->shouldNotReceive('findActiveByIds');
 
         $this->assertSame(0, $this->subtotal()->execute());
     }
@@ -237,7 +238,7 @@ class CartActionsTest extends TestCase
 
     private function subtotal(): CalculateCartSubtotalAction
     {
-        return new CalculateCartSubtotalAction($this->products, $this->addons, $this->cart);
+        return new CalculateCartSubtotalAction(new ListCartLinesAction($this->products, $this->addons, $this->cart));
     }
 
     /**
@@ -251,12 +252,15 @@ class CartActionsTest extends TestCase
             $sizePrices,
         );
 
-        return (new Product)->forceFill(['id' => $id, 'base_price' => $basePrice])->setRelation('sizes', new Collection($sizes));
+        return (new Product)
+            ->forceFill(['id' => $id, 'name' => "Hoa {$id}", 'slug' => "hoa-{$id}", 'base_price' => $basePrice])
+            ->setRelation('sizes', new Collection($sizes))
+            ->setRelation('primaryImage', null);
     }
 
     private function addon(int $id, int $price, bool $isFree = false): Addon
     {
-        return (new Addon)->forceFill(['id' => $id, 'price' => $price, 'is_free' => $isFree]);
+        return (new Addon)->forceFill(['id' => $id, 'name' => "Quà {$id}", 'price' => $price, 'is_free' => $isFree]);
     }
 
     private function assertValidationErrorOn(string $field, callable $callback): void

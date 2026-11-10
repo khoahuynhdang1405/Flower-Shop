@@ -16,4 +16,11 @@ interface AddonRepositoryInterface
      * @return Collection<int, Addon>
      */
     public function findActiveByIds(array $ids): Collection;
+
+    /**
+     * Toàn bộ quà kèm khách còn chọn được, món tính tiền trước, thiệp miễn phí cuối.
+     *
+     * @return Collection<int, Addon>
+     */
+    public function findAllActive(): Collection;
 }

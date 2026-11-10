@@ -9,13 +9,16 @@ use Illuminate\Contracts\Session\Session;
 
 /**
  * Giỏ hàng lưu trong session:
- * cart.flowers = ["{product_id}:{size_id|0}" => số lượng], cart.addons = [addon_id => số lượng].
+ * cart.flowers = ["{product_id}:{size_id|0}" => số lượng], cart.addons = [addon_id => số lượng],
+ * cart.promotion_code = mã ưu đãi đã nhập.
  */
 final class SessionCartRepository implements CartRepositoryInterface
 {
     private const FLOWERS = 'cart.flowers';
 
     private const ADDONS = 'cart.addons';
+
+    private const PROMOTION_CODE = 'cart.promotion_code';
 
     public function __construct(private Session $session) {}
 
@@ -64,6 +67,21 @@ final class SessionCartRepository implements CartRepositoryInterface
     public function forgetAddon(int $addonId): void
     {
         $this->session->forget(self::ADDONS.'.'.$addonId);
+    }
+
+    public function promotionCode(): ?string
+    {
+        return $this->session->get(self::PROMOTION_CODE);
+    }
+
+    public function putPromotionCode(string $code): void
+    {
+        $this->session->put(self::PROMOTION_CODE, $code);
+    }
+
+    public function forgetPromotionCode(): void
+    {
+        $this->session->forget(self::PROMOTION_CODE);
     }
 
     private function flowerKey(int $productId, ?int $sizeId): string
