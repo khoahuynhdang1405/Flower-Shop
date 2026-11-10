@@ -12,8 +12,6 @@
     $row = 'flex items-baseline justify-between gap-4 text-[15px]';
     $darkButton = 'inline-flex items-center justify-center gap-2 rounded-sm bg-lh-addon-accent text-white transition-colors hover:bg-lh-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary';
     $input = 'h-12 w-full min-w-0 rounded-sm border border-lh-border bg-lh-surface px-4 text-[15px] text-lh-primary-dark placeholder:text-lh-addon-muted focus-visible:border-lh-addon-accent focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-lh-addon-accent';
-    // TODO: trang thanh toán chưa có — nút trỏ tạm về "#".
-    $checkoutUrl = Route::has('checkout') ? route('checkout') : '#';
 @endphp
 
 {{-- Khối "Gói ghém đơn hoa": mã ưu đãi, tạm tính / ưu đãi / phí giao, tổng dự kiến, nút thanh toán. --}}
@@ -115,7 +113,7 @@
         <x-money :amount="$summary->total" class="font-serif text-2xl leading-none whitespace-nowrap text-lh-primary-dark lining-nums tabular-nums sm:text-[34px]" />
     </div>
 
-    <a href="{{ $checkoutUrl }}" class="{{ $darkButton }} mt-6 h-14 w-full px-6 text-base font-medium">
+    <a href="{{ route('checkout') }}" class="{{ $darkButton }} mt-6 h-14 w-full px-6 text-base font-medium">
         {{ __('cart.summary.checkout') }}
         <x-lucide-arrow-right class="size-5 stroke-[1.5]" aria-hidden="true" />
     </a>

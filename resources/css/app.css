@@ -24,6 +24,7 @@
     --color-lh-sage-200: #cbd8c6;
     --color-lh-border: #dce1d7;
     --color-lh-blush: #f1e4df; /* Nền hồng khối hoa theo mùa (Trang chủ, Hoa theo mùa) */
+    --color-lh-blush-card: #f2e6de; /* Nền khối "Những điều muốn gửi gắm" (Thanh toán) */
 
     --color-lh-warning-bg: #f5ebd9;
     --color-lh-warning-fg: #926b35;

@@ -13,6 +13,7 @@ use App\Http\Controllers\Cart\CartAddonController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Cart\CartFlowerController;
 use App\Http\Controllers\Cart\CartPromotionController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
@@ -45,6 +46,9 @@ Route::prefix('cart')->name('cart.')->group(function () {
         Route::delete('/', 'destroy')->name('destroy');
     });
 });
+
+// TODO: mới có giao diện — nút "Đặt hoa" chưa gửi đơn (chưa có route lưu orders / order_delivery_details).
+Route::get('/checkout', CheckoutController::class)->name('checkout');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');

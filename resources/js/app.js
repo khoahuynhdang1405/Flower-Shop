@@ -2,6 +2,8 @@ import './addon-picker';
 import './admin-drawer';
 import './cart';
 import './catalog-filters';
+import './checkout';
+import './date-picker';
 import './dropdowns';
 import './filter-chips';
 import './forms';
