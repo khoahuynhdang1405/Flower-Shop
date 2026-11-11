@@ -16,8 +16,5 @@
     },
     "optionalDependencies": {
         "@laravel/multiplex": "^0.4.1"
-    },
-    "dependencies": {
-        "vnpay": "^2.5.2"
     }
 }
