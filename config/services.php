@@ -41,4 +41,31 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    /*
+    | Cổng VNPAY (thanh toán qua QR ngân hàng). Mặc định trỏ sandbox; tài khoản thử đăng ký tại
+    | https://sandbox.vnpayment.vn/devreg. Lên production chỉ đổi VNPAY_URL và bộ khóa thật.
+    */
+
+    'vnpay' => [
+        'tmn_code' => env('VNPAY_TMN_CODE'),
+        'hash_secret' => env('VNPAY_HASH_SECRET'),
+        'url' => env('VNPAY_URL') ?: 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
+        'version' => '2.1.0',
+        // Bỏ trống = khách tự chọn phương thức trên trang VNPAY (sandbox thử bằng thẻ NCB); "VNPAYQR" = chỉ mở QR.
+        'bank_code' => env('VNPAY_BANK_CODE') ?: null,
+        'expire_minutes' => 15,
+    ],
+
+    /*
+    | Cổng MoMo (quét QR bằng ví MoMo). Mặc định trỏ sandbox; lên production đổi MOMO_ENDPOINT và bộ khóa thật.
+    */
+
+    'momo' => [
+        'partner_code' => env('MOMO_PARTNER_CODE'),
+        'access_key' => env('MOMO_ACCESS_KEY'),
+        'secret_key' => env('MOMO_SECRET_KEY'),
+        'endpoint' => env('MOMO_ENDPOINT') ?: 'https://test-payment.momo.vn/v2/gateway/api/create',
+        'request_type' => 'captureWallet',
+    ],
+
 ];

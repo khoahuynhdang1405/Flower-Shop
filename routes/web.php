@@ -17,7 +17,10 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SeasonController;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -48,8 +51,23 @@ Route::prefix('cart')->name('cart.')->group(function () {
     });
 });
 
-// TODO: mới có giao diện — nút "Đặt hoa" chưa gửi đơn (chưa có route lưu orders / order_delivery_details).
-Route::get('/checkout', CheckoutController::class)->name('checkout');
+// Đặt hoa cần đăng nhập: khách vãng lai được đưa tới /login, đăng nhập xong quay lại trang thanh toán (intended).
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', CheckoutController::class)->name('checkout');
+    Route::post('/checkout', [OrderController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
+
+    // Trang xác nhận đơn và thanh toán lại: chỉ trình duyệt đã đặt đơn mới mở được (PlacedOrderRequest).
+    Route::prefix('orders/{order}')->whereNumber('order')->name('orders.')->controller(OrderController::class)->group(function () {
+        Route::get('/', 'show')->name('confirmation');
+        Route::post('/payment', 'pay')->middleware('throttle:10,1')->name('payment');
+    });
+});
+
+// Cổng thanh toán gửi kết quả về: trình duyệt khách quay lại (return) và cổng gọi ngầm (IPN, không có CSRF).
+Route::prefix('payment/{method}')->whereIn('method', ['vnpay', 'momo'])->name('payment.')->controller(PaymentController::class)->group(function () {
+    Route::get('/return', 'return')->name('return');
+    Route::match(['get', 'post'], '/ipn', 'ipn')->withoutMiddleware(ValidateCsrfToken::class)->name('ipn');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');

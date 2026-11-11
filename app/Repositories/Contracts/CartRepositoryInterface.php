@@ -40,4 +40,9 @@ interface CartRepositoryInterface
     public function putPromotionCode(string $code): void;
 
     public function forgetPromotionCode(): void;
+
+    /**
+     * Bỏ toàn bộ giỏ (hoa, quà kèm, mã ưu đãi), vd. sau khi đặt đơn.
+     */
+    public function clear(): void;
 }

@@ -79,7 +79,6 @@ return [
         'total_note' => 'VAT and delivery included.',
         'submit' => 'Place order · :amount',
         'terms' => 'By placing your order, you agree to Lá & Hoa’s terms of purchase and policies.',
-        'pending' => 'We are still finishing online ordering. Your details look good — please call the shop to place your order for now.',
     ],
 
     'appointment' => [
