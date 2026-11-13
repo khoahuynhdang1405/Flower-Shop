@@ -4,7 +4,7 @@
  * - Ô "Người gửi" / "Người nhận" trên thiệp tự điền tên gọi (hai chữ cuối của họ tên), cho tới khi khách tự sửa.
  * - Khối "Lịch hẹn", nhãn phí giao theo quận, ghi chú phương thức thanh toán cập nhật ngay.
  * - Hôm nay: khóa khung giờ đã bắt đầu; hết khung giờ thì ngày giao sớm nhất là ngày mai.
- * - Gửi form: kiểm tra dữ liệu; TODO: chưa có route lưu đơn nên chỉ báo cho khách, không gửi đi.
+ * - Gửi form: kiểm tra dữ liệu, hợp lệ thì gửi đơn (OrderController@store) và khóa nút "Đặt hoa".
  */
 const root = document.querySelector('[data-checkout]');
 
@@ -163,17 +163,21 @@ if (root) {
     form.addEventListener('change', syncAll);
 
     form.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const status = root.querySelector('[data-checkout-status]');
-
-        status.textContent = '';
-
         if (!form.reportValidity()) {
+            event.preventDefault();
+
             return;
         }
 
-        status.textContent = status.dataset.message;
+        // Nút "Đặt hoa" nằm ngoài form (form="checkout-form"): khóa lại để khách không gửi đơn hai lần.
+        root.querySelector('[data-checkout-submit]').disabled = true;
+    });
+
+    // Khách bấm Back từ trang VNPAY/MoMo (trang lấy lại từ bộ nhớ đệm): mở lại nút.
+    window.addEventListener('pageshow', (event) => {
+        if (event.persisted) {
+            root.querySelector('[data-checkout-submit]').disabled = false;
+        }
     });
 
     syncAll();

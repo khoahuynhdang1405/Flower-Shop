@@ -83,12 +83,10 @@
     </div>
     <p class="mt-3 text-xs text-lh-addon-muted">{{ __('checkout.summary.total_note') }}</p>
 
-    <button type="submit" form="{{ $form }}"
-        class="mt-6 inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-sm bg-lh-addon-accent px-6 text-base font-medium text-white transition-colors hover:bg-lh-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary">
+    <button type="submit" form="{{ $form }}" data-checkout-submit
+        class="mt-6 inline-flex h-14 w-full cursor-pointer items-center justify-center gap-2 rounded-sm bg-lh-addon-accent px-6 text-base font-medium text-white transition-colors hover:bg-lh-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary disabled:cursor-wait disabled:opacity-70">
         {{ __('checkout.summary.submit', ['amount' => $money($summary->total)]) }}
         <x-lucide-arrow-right class="size-5 stroke-[1.5]" aria-hidden="true" />
     </button>
     <p class="mt-4 text-xs leading-relaxed text-lh-addon-muted">{{ __('checkout.summary.terms') }}</p>
-    <p class="mt-4 rounded-sm bg-lh-surface px-4 py-3 text-[13px] leading-relaxed text-lh-primary-dark empty:hidden" role="status" data-checkout-status
-        data-message="{{ __('checkout.summary.pending') }}"></p>
 </section>

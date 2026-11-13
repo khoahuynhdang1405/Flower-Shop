@@ -22,6 +22,20 @@ class CheckoutPageTest extends TestCase
 
         $this->withoutVite();
         app()->setLocale('vi');
+        $this->actingAs(User::factory()->create());
+    }
+
+    public function test_guest_is_sent_to_login_and_returns_to_checkout_after_signing_in(): void
+    {
+        $this->app['auth']->forgetGuards();
+        $user = User::factory()->create();
+        [$whisper, $medium] = $this->whisper();
+        $this->post(route('cart.flowers.store'), ['product_id' => $whisper->id, 'size' => $medium->id, 'quantity' => 1]);
+
+        $this->get(route('checkout'))->assertRedirect(route('login'));
+
+        $this->post(route('login.store'), ['email' => $user->email, 'password' => 'password'])
+            ->assertRedirect(route('checkout'));
     }
 
     public function test_empty_cart_goes_back_to_the_cart_page(): void

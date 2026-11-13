@@ -6,7 +6,7 @@
      *
      * Bảng màu trang (Figma): 2F5142 → lh-addon-accent, 737C72 → lh-addon-muted, EDF1E8 → lh-addon-selected,
      * F2E6DE → lh-blush-card; 263F34 / DCE1D6 / FAF8F3 lệch 1 đơn vị so với lh-primary-dark / lh-border / lh-cream nên dùng token sẵn có.
-     * Tên ô nhập trùng tên cột order_delivery_details / orders.payment_method để nối backend sau.
+     * Tên ô nhập trùng tên cột order_delivery_details / orders.payment_method (PlaceOrderRequest).
      */
     $container = 'mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-20 xl:px-[120px]';
     $phonePattern = '(0|\+84)[\s.\-]?[35789]([\s.\-]?[0-9]){8}';
@@ -33,8 +33,7 @@
         </div>
 
         <div class="mt-10 grid items-start gap-10 lg:mt-12 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-12 xl:grid-cols-[minmax(0,1fr)_445px] xl:gap-14">
-            {{-- TODO: chưa có route lưu đơn — resources/js/checkout.js chặn gửi, chỉ kiểm tra dữ liệu và báo cho khách. --}}
-            <form id="checkout-form" method="POST" action="#" novalidate class="space-y-6" data-checkout-form>
+            <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}" novalidate class="space-y-6" data-checkout-form>
                 @csrf
 
                 {{-- 01 · Người đặt --}}

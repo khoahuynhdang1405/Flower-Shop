@@ -84,6 +84,11 @@ final class SessionCartRepository implements CartRepositoryInterface
         $this->session->forget(self::PROMOTION_CODE);
     }
 
+    public function clear(): void
+    {
+        $this->session->forget('cart');
+    }
+
     private function flowerKey(int $productId, ?int $sizeId): string
     {
         return $productId.':'.($sizeId ?? 0);

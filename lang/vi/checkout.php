@@ -79,7 +79,6 @@ return [
         'total_note' => 'Đã bao gồm VAT và phí giao hoa.',
         'submit' => 'Đặt hoa · :amount',
         'terms' => 'Bằng việc đặt hoa, bạn đồng ý với điều khoản mua hàng và chính sách của Lá & Hoa.',
-        'pending' => 'Tiệm đang hoàn thiện bước gửi đơn. Thông tin của bạn đã hợp lệ, bạn vui lòng gọi tiệm để đặt hoa trong lúc chờ nhé.',
     ],
 
     'appointment' => [
