@@ -7,9 +7,11 @@ namespace App\Http\Controllers;
 use App\Actions\Order\PlaceOrderAction;
 use App\Actions\Order\ShowOrderConfirmationAction;
 use App\Actions\Order\StartOrderPaymentAction;
+use App\Actions\Order\TrackOrderAction;
 use App\Enums\PaymentStatus;
 use App\Http\Requests\Storefront\PlacedOrderRequest;
 use App\Http\Requests\Storefront\PlaceOrderRequest;
+use App\Http\Requests\Storefront\TrackOrderRequest;
 use App\Models\Order;
 use App\Payments\PaymentGatewayException;
 use Illuminate\Http\Request;
@@ -18,7 +20,7 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Đặt hoa (bước 2/3 → 3/3), trang xác nhận đơn và thanh toán lại qua VNPAY/MoMo.
+ * Đặt hoa (bước 2/3 → 3/3), trang xác nhận đơn, thanh toán lại qua VNPAY/MoMo và tra cứu đơn.
  */
 class OrderController extends Controller
 {
@@ -49,6 +51,21 @@ class OrderController extends Controller
         abort_unless($order->payment_method->isOnline() && $order->payment_status !== PaymentStatus::Paid, 404);
 
         return $this->redirectToGateway($order, $request, $startPayment);
+    }
+
+    /**
+     * Tra cứu & theo dõi đơn: chỉ form khi chưa nhập, có mã + SĐT thì hiện hành trình đơn (hoặc báo không tìm thấy).
+     */
+    public function track(TrackOrderRequest $request, TrackOrderAction $trackOrder): View
+    {
+        if (! $request->hasLookup()) {
+            return view('orders.track', ['order' => null, 'searched' => false]);
+        }
+
+        return view('orders.track', [
+            'order' => $trackOrder->execute((int) $request->user()->id, $request->orderCode(), $request->phone()),
+            'searched' => true,
+        ]);
     }
 
     /**

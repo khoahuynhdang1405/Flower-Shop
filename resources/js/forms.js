@@ -3,7 +3,21 @@
  * - Nút ẩn/hiện mật khẩu: [data-password-toggle] aria-controls="<id ô mật khẩu>".
  * - Form [data-busy-form]: khi gửi, khóa nút submit và đổi nhãn để tránh bấm hai lần.
  * - Bộ đếm ký tự cho ô có [data-char-count].
+ * - select[data-auto-submit]: đổi lựa chọn là gửi form chứa nó (bộ lọc GET ở trang admin).
+ * - Nút [data-print]: mở hộp thoại in của trình duyệt (lịch cắm hoa).
  */
+document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-print]')) {
+        window.print();
+    }
+});
+
+document.addEventListener('change', (event) => {
+    if (event.target.matches('select[data-auto-submit]')) {
+        event.target.form?.requestSubmit();
+    }
+});
+
 document.addEventListener('click', (event) => {
     const toggle = event.target.closest('[data-password-toggle]');
 

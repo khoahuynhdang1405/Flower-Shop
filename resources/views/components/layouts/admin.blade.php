@@ -23,7 +23,7 @@
 
     <x-admin.sidebar :order-count="$orderCount" />
 
-    <div class="flex min-h-dvh flex-col lg:pl-56">
+    <div class="flex min-h-dvh flex-col lg:pl-56 print:pl-0">
         <x-admin.header :fallback-page="$title" />
 
         <main id="main-content" tabindex="-1" class="flex-1 px-4 pt-8 pb-10 focus:outline-none sm:px-6 lg:px-8 lg:pt-10">

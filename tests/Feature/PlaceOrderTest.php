@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\DTOs\Order\AdminOrderFilters;
+use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Addon;
@@ -14,6 +16,9 @@ use App\Models\Promotion;
 use App\Models\User;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Eloquent\OrderRepository;
+use Carbon\CarbonInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -355,6 +360,41 @@ class PlaceOrderTest extends TestCase
             public function markPaymentFailed(Order $order): void
             {
                 $this->orders->markPaymentFailed($order);
+            }
+
+            public function findForTracking(int $userId, string $orderCode, array $senderPhones): ?Order
+            {
+                return $this->orders->findForTracking($userId, $orderCode, $senderPhones);
+            }
+
+            public function paginateForAdmin(AdminOrderFilters $filters, int $perPage): LengthAwarePaginator
+            {
+                return $this->orders->paginateForAdmin($filters, $perPage);
+            }
+
+            public function countByStatus(AdminOrderFilters $filters): array
+            {
+                return $this->orders->countByStatus($filters);
+            }
+
+            public function countByStatusCreatedBetween(CarbonInterface $from, CarbonInterface $to): array
+            {
+                return $this->orders->countByStatusCreatedBetween($from, $to);
+            }
+
+            public function countCreatedBetween(CarbonInterface $from, CarbonInterface $to): int
+            {
+                return $this->orders->countCreatedBetween($from, $to);
+            }
+
+            public function findForFloristSchedule(CarbonInterface $deliveryDate): Collection
+            {
+                return $this->orders->findForFloristSchedule($deliveryDate);
+            }
+
+            public function transitionStatus(Order $order, OrderStatus $from, OrderStatus $to): bool
+            {
+                return $this->orders->transitionStatus($order, $from, $to);
             }
         };
     }

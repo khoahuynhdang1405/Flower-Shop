@@ -149,8 +149,7 @@
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">
-                    {{-- TODO: trang Tra cứu đơn hàng (08) chưa có route. --}}
-                    <a href="#"
+                    <a href="{{ route('orders.track', ['code' => $order->order_code, 'phone' => $delivery->sender_phone]) }}"
                         class="inline-flex h-14 items-center justify-center gap-3 rounded-sm bg-lh-addon-accent px-6 text-base font-medium text-white transition-colors hover:bg-lh-primary-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary">
                         {{ __('order.confirmation.track') }}
                         <x-lucide-arrow-right class="size-5 stroke-[1.5]" aria-hidden="true" />

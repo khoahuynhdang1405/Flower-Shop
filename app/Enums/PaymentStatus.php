@@ -18,4 +18,17 @@ enum PaymentStatus: string
     {
         return __('order.payment_statuses.'.$this->value);
     }
+
+    /**
+     * Tone của x-admin.badge.
+     */
+    public function badgeTone(): string
+    {
+        return match ($this) {
+            self::Pending => 'warning',
+            self::Paid => 'success',
+            self::Failed => 'danger',
+            self::Refunded => 'neutral',
+        };
+    }
 }
