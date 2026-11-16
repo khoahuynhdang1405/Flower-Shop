@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Repositories\Contracts;
 
+use App\DTOs\Order\AdminOrderFilters;
+use App\Enums\OrderStatus;
 use App\Models\Order;
+use Carbon\CarbonInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 interface OrderRepositoryInterface
 {
@@ -38,9 +43,52 @@ interface OrderRepositoryInterface
     public function findWithDetailsById(int $id): ?Order;
 
     /**
+     * Đơn của một tài khoản khớp mã đơn + SĐT người đặt, kèm thông tin giao, các món và nhật ký (mới nhất trước).
+     *
+     * @param  list<string>  $senderPhones  các cách viết của cùng một số (0… / +84…)
+     */
+    public function findForTracking(int $userId, string $orderCode, array $senderPhones): ?Order;
+
+    /**
      * Đánh dấu đã thanh toán nếu đơn chưa ở trạng thái đó; trả về false khi một lần gọi khác đã làm trước.
      */
     public function markPaymentPaid(Order $order, ?string $transactionRef): bool;
 
     public function markPaymentFailed(Order $order): void;
+
+    /**
+     * Danh sách đơn cho trang quản trị, mới nhất trước, kèm thông tin giao và món hoa.
+     *
+     * @return LengthAwarePaginator<int, Order>
+     */
+    public function paginateForAdmin(AdminOrderFilters $filters, int $perPage): LengthAwarePaginator;
+
+    /**
+     * Số đơn theo từng trạng thái, áp dụng tìm kiếm + lọc thanh toán nhưng bỏ qua tab.
+     *
+     * @return array<string, int> order_status => số đơn
+     */
+    public function countByStatus(AdminOrderFilters $filters): array;
+
+    /**
+     * Số đơn theo từng trạng thái trong số các đơn đặt trong khoảng thời gian.
+     *
+     * @return array<string, int> order_status => số đơn
+     */
+    public function countByStatusCreatedBetween(CarbonInterface $from, CarbonInterface $to): array;
+
+    public function countCreatedBetween(CarbonInterface $from, CarbonInterface $to): int;
+
+    /**
+     * Đơn thợ cắm cần làm cho một ngày giao: bỏ đơn đã hủy và đơn VNPAY/MoMo chưa thanh toán.
+     * Sắp theo khung giờ rồi id, kèm thông tin giao và mọi món (hoa trước, quà kèm sau).
+     *
+     * @return Collection<int, Order>
+     */
+    public function findForFloristSchedule(CarbonInterface $deliveryDate): Collection;
+
+    /**
+     * Đổi trạng thái nếu đơn vẫn đang ở $from; trả về false khi một lần gọi khác đã đổi trước.
+     */
+    public function transitionStatus(Order $order, OrderStatus $from, OrderStatus $to): bool;
 }

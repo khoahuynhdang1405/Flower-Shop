@@ -13,7 +13,7 @@
     $initials = mb_strtoupper(mb_substr($nameParts[0], 0, 1).(count($nameParts) > 1 ? mb_substr(end($nameParts), 0, 1) : ''));
 @endphp
 
-<header class="sticky top-0 z-20 flex h-19 items-center gap-3 border-b border-lh-border bg-lh-surface px-4 sm:px-6 lg:px-8">
+<header class="sticky top-0 z-20 flex h-19 items-center gap-3 border-b border-lh-border bg-lh-surface px-4 sm:px-6 lg:px-8 print:hidden">
     <button type="button" data-admin-drawer-toggle aria-controls="admin-sidebar" aria-expanded="false"
         class="-ml-2 grid size-10 place-items-center rounded text-lh-heading hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary lg:hidden">
         <x-lucide-menu class="size-5 stroke-[1.5]" aria-hidden="true" />

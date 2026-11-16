@@ -4,6 +4,7 @@ use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -56,6 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', CheckoutController::class)->name('checkout');
     Route::post('/checkout', [OrderController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
 
+    // Tra cứu đơn: chỉ tìm trong đơn của tài khoản đang đăng nhập (TrackOrderAction).
+    Route::get('/orders/track', [OrderController::class, 'track'])->middleware('throttle:30,1')->name('orders.track');
+
     // Trang xác nhận đơn và thanh toán lại: chỉ trình duyệt đã đặt đơn mới mở được (PlacedOrderRequest).
     Route::prefix('orders/{order}')->whereNumber('order')->name('orders.')->controller(OrderController::class)->group(function () {
         Route::get('/', 'show')->name('confirmation');
@@ -103,6 +107,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
 
         Route::get('/', DashboardController::class)->name('dashboard');
+
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
+        Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');
+        Route::post('/orders/{order}/advance', [AdminOrderController::class, 'advance'])->name('orders.advance');
 
         // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng ProductController.
         Route::view('/products', 'admin.products.index')->name('products');

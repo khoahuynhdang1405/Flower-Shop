@@ -14,7 +14,7 @@
 <div data-admin-drawer-overlay hidden class="fixed inset-0 z-30 bg-lh-primary-dark/50 lg:hidden"></div>
 
 <aside id="admin-sidebar" data-admin-drawer
-    class="fixed inset-y-0 left-0 z-40 flex w-56 flex-col overflow-y-auto bg-lh-primary-dark px-5 pt-7 pb-10 text-white
+    class="fixed inset-y-0 left-0 z-40 flex w-56 flex-col overflow-y-auto bg-lh-primary-dark px-5 pt-7 pb-10 text-white print:hidden
         transition-[translate,visibility] duration-200 ease-out max-lg:data-open:transition-[translate] motion-reduce:transition-none
         max-lg:invisible max-lg:-translate-x-full max-lg:data-open:visible max-lg:data-open:translate-x-0">
 

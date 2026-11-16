@@ -1,5 +1,6 @@
 @props([
-    // success: Đang hiển thị / Đang áp dụng · warning: Sắp diễn ra · neutral: Bản nháp / Tạm dừng / Đã kết thúc.
+    // success: Đang hiển thị / Đang áp dụng · warning: Sắp diễn ra · neutral: Bản nháp / Tạm dừng / Đã kết thúc
+    // · danger: Thanh toán thất bại.
     'tone' => 'success',
 ])
 
@@ -8,4 +9,5 @@
     'bg-lh-sage-50 text-lh-primary' => $tone === 'success',
     'bg-lh-warning-bg text-lh-amber' => $tone === 'warning',
     'bg-lh-canvas text-lh-muted' => $tone === 'neutral',
+    'bg-lh-blush-card text-lh-danger' => $tone === 'danger',
 ]) }}>{{ $slot }}</span>
