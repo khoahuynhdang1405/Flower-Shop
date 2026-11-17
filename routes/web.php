@@ -3,6 +3,7 @@
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductImageController;
@@ -111,6 +112,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
         Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');
         Route::post('/orders/{order}/advance', [AdminOrderController::class, 'advance'])->name('orders.advance');
+
+        // Tên route danh sách giữ "admin.customers" cho menu (config/admin.php).
+        Route::controller(CustomerController::class)->prefix('customers')->name('customers')->group(function () {
+            Route::get('/', 'index');
+            Route::get('/{customer}', 'show')->whereNumber('customer')->name('.show');
+            Route::put('/{customer}', 'update')->whereNumber('customer')->name('.update');
+        });
 
         // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng ProductController.
         Route::view('/products', 'admin.products.index')->name('products');
