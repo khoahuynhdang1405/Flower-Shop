@@ -12,6 +12,7 @@ use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Repositories\Contracts\ProductImageRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\PromotionRepositoryInterface;
+use App\Repositories\Contracts\SubscriberRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\AddonRepository;
 use App\Repositories\Eloquent\CategoryRepository;
@@ -20,6 +21,7 @@ use App\Repositories\Eloquent\PostRepository;
 use App\Repositories\Eloquent\ProductImageRepository;
 use App\Repositories\Eloquent\ProductRepository;
 use App\Repositories\Eloquent\PromotionRepository;
+use App\Repositories\Eloquent\SubscriberRepository;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Session\SessionCartRepository;
 use Illuminate\Support\ServiceProvider;
@@ -43,5 +45,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
         $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(SubscriberRepositoryInterface::class, SubscriberRepository::class);
     }
 }

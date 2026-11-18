@@ -19,6 +19,7 @@
         'list' => 'lucide-list',
         'link' => 'lucide-link',
         'image' => 'lucide-image-plus',
+        'note' => 'lucide-sticky-note',
     ];
 @endphp
 
@@ -52,16 +53,10 @@
         @endunless
 
         <div class="{{ $card }} flex flex-col gap-6 px-6 py-8 sm:px-8">
-            <div>
-                <x-form.input name="title" :label="__('admin.posts.editor.title')" marker :value="$post->title" required maxlength="255"
-                    :placeholder="__('admin.posts.editor.title_placeholder')" />
-                <p class="mt-2 text-xs break-all text-lh-muted">
-                    {{ __('admin.posts.editor.link_hint', ['url' => $isNew ? route('posts.index').'/…' : route('posts.show', $post->slug)]) }}
-                </p>
-            </div>
+            <x-form.input name="title" :label="__('admin.posts.editor.title')" marker :value="$post->title" required maxlength="255"
+                :placeholder="__('admin.posts.editor.title_placeholder')" />
 
-            <x-form.textarea name="summary" :label="__('admin.posts.editor.summary')" :value="$post->summary" rows="3" maxlength="500" counter
-                :hint="__('admin.posts.editor.summary_hint')" />
+            <x-form.textarea name="summary" :label="__('admin.posts.editor.summary')" :value="$post->summary" rows="3" maxlength="500" counter />
 
             {{-- Trình soạn Markdown: resources/js/post-editor.js (thanh công cụ, đếm chữ, xem trước, chèn ảnh). --}}
             <div data-post-editor data-preview-url="{{ route('admin.posts.preview') }}" data-upload-url="{{ route('admin.posts.images') }}"
@@ -69,7 +64,7 @@
                 data-words-per-minute="{{ App\Models\Post::WORDS_PER_MINUTE }}"
                 data-label-loading="{{ __('admin.posts.editor.preview_loading') }}" data-label-empty="{{ __('admin.posts.editor.preview_empty') }}"
                 data-label-error="{{ __('admin.posts.editor.preview_error') }}" data-label-uploading="{{ __('admin.posts.editor.uploading') }}"
-                data-label-upload-failed="{{ __('admin.posts.editor.upload_failed') }}">
+                data-label-upload-failed="{{ __('admin.posts.editor.upload_failed') }}" data-note-template="{{ __('admin.posts.editor.note_template') }}">
                 <div class="mb-2 flex flex-wrap items-end justify-between gap-3">
                     <label for="content" class="block text-sm font-medium text-lh-heading">
                         {{ __('admin.posts.editor.content') }}
@@ -108,9 +103,24 @@
                     </div>
                 </div>
 
-                <div class="mt-2 flex flex-wrap justify-between gap-x-6 gap-y-1 text-xs text-lh-muted">
-                    <p class="font-mono">{{ __('admin.posts.editor.guide') }}</p>
-                    <p data-editor-stats aria-live="polite"></p>
+                <div class="relative mt-2">
+                    <p data-editor-stats class="absolute top-0 right-0 text-xs text-lh-muted" aria-live="polite"></p>
+                    <details class="group text-xs">
+                        <summary class="inline-flex cursor-pointer list-none items-center gap-1.5 rounded text-lh-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary [&::-webkit-details-marker]:hidden">
+                            <x-lucide-circle-help class="size-3.5 stroke-[1.75]" aria-hidden="true" />
+                            {{ __('admin.posts.editor.format_help.title') }}
+                            <x-lucide-chevron-down class="size-3.5 stroke-[1.75] transition-transform group-open:rotate-180 motion-reduce:transition-none" aria-hidden="true" />
+                        </summary>
+                        <div class="mt-3 rounded border border-lh-border bg-lh-canvas px-4 py-3">
+                            <p class="text-lh-muted">{{ __('admin.posts.editor.format_help.intro') }}</p>
+                            <dl class="mt-3 grid gap-x-6 gap-y-2.5 sm:grid-cols-[max-content_minmax(0,1fr)]">
+                                @foreach (__('admin.posts.editor.format_help.items') as [$syntax, $result])
+                                    <dt><code class="rounded bg-lh-surface px-1.5 py-0.5 font-mono text-[12px] whitespace-pre text-lh-heading">{{ $syntax }}</code></dt>
+                                    <dd class="text-lh-heading">{{ $result }}</dd>
+                                @endforeach
+                            </dl>
+                        </div>
+                    </details>
                 </div>
                 <p data-editor-message class="mt-2 text-xs text-lh-muted" aria-live="polite"></p>
                 @if ($contentError)

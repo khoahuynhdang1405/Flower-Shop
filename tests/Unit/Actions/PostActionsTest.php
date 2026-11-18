@@ -52,6 +52,17 @@ class PostActionsTest extends TestCase
         $this->assertStringContainsString('<figure><img src="/storage/posts/content/a.jpg" alt="Góc nhỏ dễ chịu" loading="lazy"><figcaption>Góc nhỏ dễ chịu</figcaption></figure>', $content->html);
     }
 
+    public function test_render_turns_reminder_block_into_escaped_note_box(): void
+    {
+        $html = (new RenderPostContentAction)->execute("Mở đầu.\n\n:::ghi-nho Nhớ ba điều nhỏ thôi\n- Cắt gốc xéo\n- Thay nước <b>mỗi</b> ngày\n:::\n\nKết.")->html;
+
+        $this->assertStringContainsString('<aside class="post-note"><p class="post-note-title">Nhớ ba điều nhỏ thôi</p><ul><li>', $html);
+        $this->assertStringContainsString('<span>Cắt gốc xéo</span>', $html);
+        $this->assertStringContainsString('<span>Thay nước &lt;b&gt;mỗi&lt;/b&gt; ngày</span>', $html);
+        $this->assertStringContainsString('<p>Kết.</p>', $html);
+        $this->assertStringNotContainsString(':::', $html);
+    }
+
     public function test_show_throws_not_found_for_missing_posts(): void
     {
         $this->posts->expects('findPublishedBySlug')->with('khong-co')->andReturn(null);

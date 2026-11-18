@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Jobs\SendNewsletterWelcomeEmailJob;
 use App\Models\Subscriber;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -60,20 +62,26 @@ class RegisterTest extends TestCase
         $this->assertDatabaseCount('subscribers', 0);
     }
 
-    public function test_newsletter_opt_in_creates_subscriber(): void
+    public function test_newsletter_opt_in_creates_subscriber_and_sends_the_welcome_code(): void
     {
+        Bus::fake([SendNewsletterWelcomeEmailJob::class]);
+
         $this->post(route('register.store'), $this->validData(['newsletter' => '1']));
 
-        $this->assertTrue(Subscriber::where('email', 'minhanh@example.com')->exists());
+        $subscriber = Subscriber::where('email', 'minhanh@example.com')->sole();
+        $this->assertSame('CHAOHOA', $subscriber->coupon_given);
+        Bus::assertDispatched(SendNewsletterWelcomeEmailJob::class, fn (SendNewsletterWelcomeEmailJob $job): bool => $job->subscriberId === $subscriber->id);
     }
 
     public function test_existing_subscriber_is_not_duplicated(): void
     {
-        Subscriber::create(['email' => 'minhanh@example.com']);
+        Bus::fake([SendNewsletterWelcomeEmailJob::class]);
+        Subscriber::factory()->create(['email' => 'minhanh@example.com']);
 
         $this->post(route('register.store'), $this->validData(['newsletter' => '1']))->assertRedirect('/');
 
         $this->assertDatabaseCount('subscribers', 1);
+        Bus::assertNotDispatched(SendNewsletterWelcomeEmailJob::class);
     }
 
     public function test_terms_must_be_accepted(): void

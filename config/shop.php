@@ -29,6 +29,12 @@ return [
     'free_shipping_from' => 800000,
 
     /*
+    | Mã chào mừng gửi cho người đăng ký nhận tin (docs/design-vs-db-gaps.md #5), lưu vào subscribers.coupon_given.
+    */
+
+    'welcome_coupon' => 'CHAOHOA',
+
+    /*
     | Phí giao nội thành TP.HCM (VNĐ) khi tạm tính (trước ưu đãi) chưa tới ngưỡng miễn phí. Mọi quận cùng một mức.
     */
 
