@@ -125,4 +125,9 @@
             </ul>
         </section>
     @endif
+
+    {{-- Đã đăng nhập thì không mời nhận tin nữa. --}}
+    @guest
+        <x-storefront.newsletter />
+    @endguest
 </x-layouts.storefront>

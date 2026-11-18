@@ -20,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FlowerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostController;
@@ -36,6 +37,9 @@ Route::get('/seasons', SeasonController::class)->name('seasons');
 
 Route::get('/journal', [PostController::class, 'index'])->name('posts.index');
 Route::get('/journal/{slug}', [PostController::class, 'show'])->name('posts.show');
+
+// Khối nhận tin cuối Trang chủ chỉ dành cho khách chưa đăng nhập.
+Route::post('/newsletter', [NewsletterController::class, 'store'])->middleware(['guest', 'throttle:5,1'])->name('newsletter.store');
 
 // Giỏ hàng (lưu trong session, khách chưa đăng nhập vẫn dùng được). {size} bỏ trống = sản phẩm chưa có size.
 Route::prefix('cart')->name('cart.')->group(function () {
