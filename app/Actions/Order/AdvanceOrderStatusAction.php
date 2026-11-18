@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace App\Actions\Order;
 
+use App\Actions\Customer\UpgradeCustomerGroupAction;
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Đưa đơn sang bước kế tiếp (Chờ xác nhận → Đang chuẩn bị → Sẵn sàng giao → Đang giao → Hoàn thành)
- * và ghi nhật ký kèm nhân viên thực hiện. Trả về false khi đơn không còn bước kế hoặc đã được người khác đổi.
+ * và ghi nhật ký kèm nhân viên thực hiện. Đơn của khách có tài khoản vừa hoàn thành thì xét nâng nhóm khách.
+ * Trả về false khi đơn không còn bước kế hoặc đã được người khác đổi.
  */
 final class AdvanceOrderStatusAction
 {
-    public function __construct(private OrderRepositoryInterface $orders) {}
+    public function __construct(
+        private OrderRepositoryInterface $orders,
+        private UpgradeCustomerGroupAction $upgradeCustomerGroup,
+    ) {}
 
     public function execute(Order $order, int $adminId): bool
     {
@@ -36,6 +42,10 @@ final class AdvanceOrderStatusAction
                 'title' => __('order.status_logs.'.$next->value, locale: 'vi'),
                 'description' => __('order.status_logs.'.$next->value.'_description', locale: 'vi'),
             ]);
+
+            if ($next === OrderStatus::Completed && $order->user_id !== null) {
+                $this->upgradeCustomerGroup->execute($order->user_id);
+            }
 
             return true;
         });
