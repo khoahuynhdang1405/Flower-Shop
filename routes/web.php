@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductImageController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Auth\GoogleController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SeasonController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +32,9 @@ Route::get('/flowers/{slug}', [FlowerController::class, 'show'])->name('flowers.
 
 // TODO: sản phẩm của mùa vẫn là dữ liệu mẫu trong view — khi nối DB lấy theo bộ sưu tập.
 Route::get('/seasons', SeasonController::class)->name('seasons');
+
+Route::get('/journal', [PostController::class, 'index'])->name('posts.index');
+Route::get('/journal/{slug}', [PostController::class, 'show'])->name('posts.show');
 
 // Giỏ hàng (lưu trong session, khách chưa đăng nhập vẫn dùng được). {size} bỏ trống = sản phẩm chưa có size.
 Route::prefix('cart')->name('cart.')->group(function () {
@@ -111,6 +116,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
         Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');
         Route::post('/orders/{order}/advance', [AdminOrderController::class, 'advance'])->name('orders.advance');
+
+        // Tên route danh sách giữ "admin.posts" cho menu (config/admin.php).
+        Route::post('/posts/preview', [AdminPostController::class, 'preview'])->name('posts.preview');
+        Route::post('/posts/images', [AdminPostController::class, 'uploadImage'])->middleware('throttle:30,1')->name('posts.images');
+        Route::resource('posts', AdminPostController::class)->except('show')->names(['index' => 'posts']);
 
         // TODO: chỉ giao diện với dữ liệu mẫu — khi làm backend thay bằng ProductController.
         Route::view('/products', 'admin.products.index')->name('products');
