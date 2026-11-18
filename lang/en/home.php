@@ -36,4 +36,10 @@ return [
         'none' => 'Lá is picking out the loveliest bouquets — please check back soon.',
     ],
 
+    'journal' => [
+        'eyebrow' => 'Flower stories & gentle days',
+        'title' => 'Visit Lá’s little corner',
+        'view_all' => 'Read more flower stories',
+    ],
+
 ];

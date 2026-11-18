@@ -104,4 +104,25 @@
             </ul>
         @endif
     </section>
+
+    {{-- Ghé góc nhỏ của Lá: 3 bài mới nhất; ẩn khi chưa có bài nào được đăng. --}}
+    @if ($latestPosts->isNotEmpty())
+        <section aria-labelledby="journal-title" class="{{ $container }} pb-16 lg:pb-24">
+            <x-storefront.section-heading id="journal-title" :eyebrow="__('home.journal.eyebrow')" :title="__('home.journal.title')">
+                <x-slot:aside>
+                    <a href="{{ route('posts.index') }}"
+                        class="inline-flex items-center gap-2 rounded text-sm text-lh-heading underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary">
+                        {{ __('home.journal.view_all') }}
+                        <x-lucide-arrow-up-right class="size-4 stroke-[1.5]" aria-hidden="true" />
+                    </a>
+                </x-slot:aside>
+            </x-storefront.section-heading>
+
+            <ul class="mt-8 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3" role="list">
+                @foreach ($latestPosts as $post)
+                    <li><x-storefront.post-card :post="$post" /></li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
 </x-layouts.storefront>

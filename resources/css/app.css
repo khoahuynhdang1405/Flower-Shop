@@ -23,7 +23,7 @@
     --color-lh-sage-100: #d5dfd0;
     --color-lh-sage-200: #cbd8c6;
     --color-lh-border: #dce1d7;
-    --color-lh-blush: #f1e4df; /* Nền hồng khối hoa theo mùa (Trang chủ, Hoa theo mùa) */
+    --color-lh-blush: #f1e4df; /* Nền hồng khối hoa theo mùa (Trang chủ, Hoa theo mùa), khối ghi nhớ trong bài Góc nhỏ */
     --color-lh-blush-card: #f2e6de; /* Nền khối "Những điều muốn gửi gắm" (Thanh toán) */
 
     --color-lh-warning-bg: #f5ebd9;
@@ -185,6 +185,52 @@
         & hr {
             margin-block: 2.5rem;
             border-color: var(--color-lh-border);
+        }
+    }
+}
+
+/*
+ * Khối ghi nhớ trong bài Góc nhỏ (":::ghi-nho" — hộp hồng "Nhớ ba điều nhỏ thôi" trong thiết kế bài viết).
+ */
+@layer components {
+    .post-content .post-note {
+        margin-block: 2.5rem;
+        border-radius: 0.25rem;
+        background: var(--color-lh-blush);
+        padding: 1.5rem 1.75rem;
+
+        & .post-note-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            line-height: 1.4;
+            color: var(--color-lh-heading);
+        }
+
+        & ul {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 2.5rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        & li {
+            margin-top: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--color-lh-heading);
+        }
+
+        & .post-note-icon {
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+            stroke-width: 1.5;
+            color: var(--color-lh-primary);
         }
     }
 }

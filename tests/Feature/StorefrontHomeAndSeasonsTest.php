@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Actions\Product\ListFeaturedProductsAction;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductSize;
@@ -89,6 +90,31 @@ class StorefrontHomeAndSeasonsTest extends TestCase
             ->assertOk()
             ->assertSeeText('Lá đang chọn những bó hoa đẹp nhất, bạn ghé lại sau một chút nhé.')
             ->assertDontSee('data-filter-item', false);
+    }
+
+    public function test_home_page_shows_three_latest_published_posts(): void
+    {
+        app()->setLocale('vi');
+        Post::factory()->create(['title' => 'Bài cũ nhất', 'created_at' => now()->subDays(5)]);
+        Post::factory()->create(['title' => 'Mỗi màu hoa hồng, một lời muốn nói', 'created_at' => now()->subDays(3)]);
+        Post::factory()->create(['title' => 'Một góc nhà, một bình hoa, một niềm vui', 'created_at' => now()->subDays(2)]);
+        Post::factory()->create(['title' => 'Để hoa tươi lâu hơn, thương lâu hơn', 'created_at' => now()->subDay()]);
+        Post::factory()->draft()->create(['title' => 'Bản nháp chưa đăng']);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSeeText('Ghé góc nhỏ của Lá')
+            ->assertSee('href="'.route('posts.index').'"', false)
+            ->assertSeeTextInOrder(['Để hoa tươi lâu hơn, thương lâu hơn', 'Một góc nhà, một bình hoa, một niềm vui', 'Mỗi màu hoa hồng, một lời muốn nói'])
+            ->assertDontSeeText('Bài cũ nhất')
+            ->assertDontSeeText('Bản nháp chưa đăng');
+    }
+
+    public function test_home_page_hides_journal_section_without_published_posts(): void
+    {
+        Post::factory()->draft()->create();
+
+        $this->get(route('home'))->assertOk()->assertDontSee('id="journal-title"', false);
     }
 
     public function test_home_page_renders_in_english(): void

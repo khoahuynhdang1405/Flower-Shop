@@ -22,6 +22,13 @@ interface PostRepositoryInterface
     public function findPublishedBySlug(string $slug): ?Post;
 
     /**
+     * Các bài đã đăng mới nhất (khối "Ghé góc nhỏ của Lá" ở Trang chủ).
+     *
+     * @return Collection<int, Post>
+     */
+    public function findLatestPublished(int $limit): Collection;
+
+    /**
      * Các bài đã đăng mới nhất, trừ bài đang đọc.
      *
      * @return Collection<int, Post>

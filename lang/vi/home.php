@@ -36,4 +36,10 @@ return [
         'none' => 'Lá đang chọn những bó hoa đẹp nhất, bạn ghé lại sau một chút nhé.',
     ],
 
+    'journal' => [
+        'eyebrow' => 'Chuyện hoa & những ngày dịu dàng',
+        'title' => 'Ghé góc nhỏ của Lá',
+        'view_all' => 'Đọc thêm chuyện Hoa',
+    ],
+
 ];

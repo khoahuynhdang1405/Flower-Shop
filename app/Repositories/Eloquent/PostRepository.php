@@ -30,6 +30,11 @@ final class PostRepository implements PostRepositoryInterface
         return Post::query()->where('slug', $slug)->where('is_published', true)->with('author')->first();
     }
 
+    public function findLatestPublished(int $limit): Collection
+    {
+        return Post::query()->where('is_published', true)->latest()->orderByDesc('id')->limit($limit)->get();
+    }
+
     public function findLatestPublishedExcept(int $postId, int $limit): Collection
     {
         return Post::query()

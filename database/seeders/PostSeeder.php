@@ -65,6 +65,12 @@ class PostSeeder extends Seeder
                 Hoa thích nơi mát, thoáng và có ánh sáng gián tiếp. Tránh đặt bình ở cửa sổ có nắng gắt, cạnh bếp nóng hoặc ngay dưới luồng gió máy lạnh.
 
                 Và khi vài cánh hoa bắt đầu rơi, bạn có thể giữ một bông để ép trong trang sách. Hoa không ở lại mãi, nhưng cảm giác được nhớ đến thì có.
+
+                :::ghi-nho Nhớ ba điều nhỏ thôi
+                - Cắt gốc xéo
+                - Thay nước mỗi ngày
+                - Đặt ở nơi mát
+                :::
                 MD,
             ],
             [

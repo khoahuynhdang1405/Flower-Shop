@@ -1,6 +1,7 @@
 /**
  * Khung soạn thảo bài Góc nhỏ (Admin › Chuyện Hoa), trong [data-post-editor]:
- * - [data-editor-tool] chèn cú pháp Markdown quanh đoạn đang chọn trong textarea [data-editor-input];
+ * - [data-editor-tool] chèn cú pháp Markdown quanh đoạn đang chọn trong textarea [data-editor-input]
+ *   (công cụ "note" chèn mẫu khối ghi nhớ :::ghi-nho từ data-note-template);
  * - [data-editor-stats] đếm chữ + phút đọc (data-stats-template, :words / :minutes);
  * - tab [data-editor-tab] "Viết" / "Xem trước": nội dung gửi lên data-preview-url, server trả HTML đã lọc an toàn
  *   (cùng cách hiển thị với trang khách);
@@ -35,6 +36,7 @@ const tools = {
     quote: (textarea) => prefixLines(textarea, '> '),
     list: (textarea) => prefixLines(textarea, '- '),
     link: (textarea) => wrapSelection(textarea, '[', '](https://)'),
+    note: (textarea, editor) => insertAtCursor(textarea, `\n\n${editor.dataset.noteTemplate}\n\n`),
 };
 
 const updateStats = (editor) => {
@@ -150,7 +152,7 @@ document.addEventListener('click', (event) => {
             return;
         }
 
-        tools[tool.dataset.editorTool](textarea);
+        tools[tool.dataset.editorTool](textarea, editor);
         changed(textarea);
     }
 
