@@ -24,15 +24,22 @@
         @endif
         <p class="mt-4 mb-5 text-[13px]">{{ __('admin.collections.products', ['count' => (int) $category->products_count]) }}</p>
 
-        <div class="mt-auto flex items-center justify-between gap-4 border-t border-lh-border pt-4 text-sm">
-            <a href="{{ route('admin.collections.edit', $category) }}" class="{{ $footerLink }}"
-                aria-label="{{ __('admin.list.edit_item', ['name' => $category->name]) }}">
-                <x-lucide-pencil class="size-[18px] stroke-[1.5]" aria-hidden="true" />
-                {{ __('admin.list.edit') }}
+        <div class="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-t border-lh-border pt-4 text-sm">
+            <div class="flex items-center gap-5">
+                <a href="{{ route('admin.collections.edit', $category) }}" class="{{ $footerLink }}"
+                    aria-label="{{ __('admin.list.edit_item', ['name' => $category->name]) }}">
+                    <x-lucide-pencil class="size-[18px] stroke-[1.5]" aria-hidden="true" />
+                    {{ __('admin.list.edit') }}
+                </a>
+                <x-admin.delete-button :action="route('admin.collections.destroy', $category)"
+                    :label="__('admin.list.delete_item', ['name' => $category->name])"
+                    :confirm="__('admin.collections.confirm_delete', ['name' => $category->name])" />
+            </div>
+            <a href="{{ route('admin.collections.products', $category) }}" class="{{ $footerLink }}"
+                aria-label="{{ __('admin.collection_products.view_item', ['name' => $category->name]) }}">
+                {{ __('admin.collection_products.view') }}
+                <x-lucide-arrow-right class="size-4 stroke-[1.5]" aria-hidden="true" />
             </a>
-            <x-admin.delete-button :action="route('admin.collections.destroy', $category)"
-                :label="__('admin.list.delete_item', ['name' => $category->name])"
-                :confirm="__('admin.collections.confirm_delete', ['name' => $category->name])" />
         </div>
     </div>
 </li>

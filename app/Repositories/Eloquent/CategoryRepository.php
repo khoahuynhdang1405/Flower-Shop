@@ -6,6 +6,7 @@ namespace App\Repositories\Eloquent;
 
 use App\Enums\CategoryType;
 use App\Models\Category;
+use App\Models\Product;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,5 +30,15 @@ final class CategoryRepository implements CategoryRepositoryInterface
             ->where('is_active', true)
             ->orderBy('id')
             ->get();
+    }
+
+    public function attachProducts(Category $collection, array $productIds): int
+    {
+        return count($collection->linkedProducts()->syncWithoutDetaching($productIds)['attached']);
+    }
+
+    public function detachProduct(Category $collection, Product $product): bool
+    {
+        return $collection->linkedProducts()->detach($product->id) > 0;
     }
 }

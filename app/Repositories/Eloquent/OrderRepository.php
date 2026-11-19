@@ -122,18 +122,58 @@ final class OrderRepository implements OrderRepositoryInterface
         return Order::query()->whereBetween('created_at', [$from, $to])->count();
     }
 
+    public function countInStatus(OrderStatus $status): int
+    {
+        return Order::query()->where('order_status', $status)->count();
+    }
+
+    public function summarizeCompletedOrdersByDay(CarbonInterface $from, CarbonInterface $to): array
+    {
+        return Order::query()
+            ->join('order_status_logs as completion', 'completion.order_id', '=', 'orders.id')
+            ->where('completion.status', OrderStatus::Completed)
+            ->where('orders.order_status', OrderStatus::Completed)
+            ->whereBetween('completion.created_at', [$from, $to])
+            ->selectRaw('date(completion.created_at) as day, sum(orders.total_amount) as revenue, count(distinct orders.id) as orders_count')
+            ->groupByRaw('date(completion.created_at)')
+            ->get()
+            ->mapWithKeys(fn (Order $day): array => [
+                substr((string) $day->getAttribute('day'), 0, 10) => [
+                    'revenue' => (int) round((float) $day->getAttribute('revenue')),
+                    'orders' => (int) $day->getAttribute('orders_count'),
+                ],
+            ])
+            ->all();
+    }
+
+    public function sumFlowersToDeliver(CarbonInterface $deliveryDate, array $timeSlots): int
+    {
+        $query = $this->schedulableQuery($deliveryDate)
+            ->whereIn('delivery.time_slot', $timeSlots)
+            ->where('orders.order_status', '!=', OrderStatus::Completed)
+            ->join('order_items as items', 'items.order_id', '=', 'orders.id')
+            ->where('items.item_type', CartItemType::Flower);
+
+        return (int) $query->sum('items.quantity');
+    }
+
+    public function findLatestWithSummary(int $limit): Collection
+    {
+        return Order::query()
+            ->with([
+                'deliveryDetail',
+                'items' => fn (HasMany $items) => $items->where('item_type', CartItemType::Flower)->orderBy('id'),
+            ])
+            ->latest()
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get();
+    }
+
     public function findForFloristSchedule(CarbonInterface $deliveryDate): Collection
     {
-        $onlineMethods = array_values(array_filter(PaymentMethod::cases(), fn (PaymentMethod $method): bool => $method->isOnline()));
-
-        return Order::query()
+        return $this->schedulableQuery($deliveryDate)
             ->select('orders.*')
-            ->join('order_delivery_details as delivery', 'delivery.order_id', '=', 'orders.id')
-            ->whereDate('delivery.delivery_date', $deliveryDate->toDateString())
-            ->where('orders.order_status', '!=', OrderStatus::Cancelled)
-            ->where(fn (Builder $payable) => $payable
-                ->where('orders.payment_status', PaymentStatus::Paid)
-                ->orWhereNotIn('orders.payment_method', $onlineMethods))
             ->with([
                 'deliveryDetail',
                 'items' => fn (HasMany $items) => $items->orderByRaw('item_type = ? desc', [CartItemType::Flower->value])->orderBy('id'),
@@ -176,6 +216,24 @@ final class OrderRepository implements OrderRepositoryInterface
                         ->whereLike('sender_name', $pattern)
                         ->orWhereLike('sender_phone', $pattern)));
             });
+    }
+
+    /**
+     * Đơn cần giao trong ngày: bỏ đơn đã hủy và đơn VNPAY/MoMo chưa thanh toán.
+     *
+     * @return Builder<Order>
+     */
+    private function schedulableQuery(CarbonInterface $deliveryDate): Builder
+    {
+        $onlineMethods = array_values(array_filter(PaymentMethod::cases(), fn (PaymentMethod $method): bool => $method->isOnline()));
+
+        return Order::query()
+            ->join('order_delivery_details as delivery', 'delivery.order_id', '=', 'orders.id')
+            ->whereDate('delivery.delivery_date', $deliveryDate->toDateString())
+            ->where('orders.order_status', '!=', OrderStatus::Cancelled)
+            ->where(fn (Builder $payable) => $payable
+                ->where('orders.payment_status', PaymentStatus::Paid)
+                ->orWhereNotIn('orders.payment_method', $onlineMethods));
     }
 
     /**

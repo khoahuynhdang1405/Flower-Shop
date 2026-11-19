@@ -4,6 +4,7 @@ import './cart';
 import './catalog-filters';
 import './checkout';
 import './copy-link';
+import './dashboard-chart';
 import './date-picker';
 import './dropdowns';
 import './filter-chips';

@@ -3,8 +3,10 @@
 use App\Http\Controllers\Account\ProfileController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CollectionProductController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardRevenueController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductImageController;
@@ -117,6 +119,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
 
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('/dashboard/revenue', DashboardRevenueController::class)->middleware('throttle:60,1')->name('dashboard.revenue');
 
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
         Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');
@@ -148,6 +151,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Tên route trang danh sách giữ "admin.collections" / "admin.promotions" cho menu (config/admin.php).
         Route::resource('collections', CategoryController::class)->except('show')->names(['index' => 'collections']);
+
+        // Sản phẩm của bộ sưu tập: Theo mùa / Theo dịp thêm/bỏ qua pivot category_product, Kiểu hoa chỉ xem.
+        Route::prefix('collections/{collection}/products')->name('collections.products')
+            ->controller(CollectionProductController::class)->group(function () {
+                Route::get('/', 'index');
+                Route::post('/', 'store')->name('.store');
+                Route::delete('/{product}', 'destroy')->whereNumber('product')->name('.destroy');
+            });
         Route::resource('promotions', PromotionController::class)->except('show')->names(['index' => 'promotions']);
     });
 });
