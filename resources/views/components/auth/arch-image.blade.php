@@ -1,4 +1,4 @@
-@props(['name', 'alt'])
+@props(['name', 'alt', 'aspect' => 'aspect-[520/480]'])
 
 @php
     $file = collect(['webp', 'jpg', 'jpeg', 'png'])
@@ -7,7 +7,7 @@
 @endphp
 
 {{-- Ảnh trong khung vòm như thiết kế đăng nhập/đăng ký --}}
-<x-arch-frame :attributes="$attributes->class('aspect-[520/480]')">
+<x-arch-frame :attributes="$attributes->class($aspect)">
     @if ($file)
         <img src="{{ asset($file) }}" alt="{{ $alt }}" class="size-full object-cover" fetchpriority="high">
     @else

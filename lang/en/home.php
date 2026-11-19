@@ -27,6 +27,46 @@ return [
         ],
     ],
 
+    'occasions' => [
+        'eyebrow' => 'What brings you to Lá?',
+        'title' => 'Every occasion, a way to show love.',
+        'view' => 'See flowers for :name',
+    ],
+
+    'season' => [
+        'cta' => [
+            'spring' => 'Visit the spring garden',
+            'summer' => 'Visit the summer garden',
+            'autumn' => 'Visit the autumn garden',
+            'winter' => 'Visit the winter garden',
+        ],
+    ],
+
+    'intro' => [
+        'eyebrow' => 'Hello, we are Lá & Hoa',
+        'title_line_1' => 'A small flower shop.',
+        'title_line_2' => 'So much love.',
+        'body_1' => 'Lá began with a simple joy: watching someone smile as they receive flowers. We believe a beautiful bouquet is not only in its petals, but in the story sent along with it.',
+        'body_2' => 'So every design is chosen by season, softly coloured and wrapped by hand. No two bouquets are exactly alike — just as every message of love is one of a kind.',
+        'caption' => 'From our hands, to your heart.',
+        'image_alt' => 'The florist arranging a white bouquet among shelves of flowers',
+        'detail_alt' => 'Hands tying a ribbon around a pink rose bouquet',
+        'cta' => 'Read Lá’s story',
+    ],
+
+    'consult' => [
+        'eyebrow' => 'One bouquet, one story of your own',
+        'title' => 'You tell the story. Lá picks the flowers.',
+        'body' => 'A colour they love, a memory only you know. Let’s make a bouquet meant for no one else.',
+        'cta' => 'Message Lá for advice',
+        'steps_label' => 'Three steps to choose flowers with Lá',
+        'steps' => [
+            ['title' => 'Tell Lá', 'body' => 'Who it’s for, the occasion and the colours you love.'],
+            ['title' => 'Pick something lovely together', 'body' => 'Lá suggests flowers, wrapping and a budget that suits you.'],
+            ['title' => 'Let Lá send your love', 'body' => 'See a photo before delivery, with a handwritten note.'],
+        ],
+    ],
+
     'featured' => [
         'eyebrow' => 'Chosen with the heart',
         'title' => 'Our most-loved bouquets',

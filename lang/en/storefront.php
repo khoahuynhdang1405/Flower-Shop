@@ -63,4 +63,7 @@ return [
         'staff' => 'Staff sign in',
     ],
 
+    // Đọc cho trình đọc màn hình ở nút mở Zalo.
+    'opens_zalo' => '(opens Zalo in a new tab)',
+
 ];

@@ -2,6 +2,11 @@
     /**
      * @var Illuminate\Database\Eloquent\Collection<int, App\Models\Product> $featuredProducts
      * @var Illuminate\Support\Collection<int, App\Models\Category> $featuredCategories
+     * @var Illuminate\Database\Eloquent\Collection<int, App\Models\Category> $occasions  dịp gửi đang hiển thị (tối đa 4)
+     * @var Illuminate\Support\Carbon $today
+     * @var App\Enums\Season $currentSeason
+     *
+     * Khối đánh giá khách "Niềm vui nở từ những điều nhỏ" chưa làm: chờ bảng reviews (docs/design-vs-db-gaps.md #1).
      *
      * Thành phần hoa ("Hồng vàng · Cúc tana · Lá bạc") và nhãn "Được yêu thích / Thiết kế mới" chưa có cột
      * (docs/design-vs-db-gaps.md #5): dòng phụ tạm hiện tên danh mục, chưa có nhãn.
@@ -68,6 +73,32 @@
         </ul>
     </section>
 
+    {{-- Mỗi dịp, một cách gửi thương: dịp gửi đang hiển thị (categories type = occasion), bấm vào mở Tất cả hoa đã lọc dịp đó. --}}
+    @if ($occasions->isNotEmpty())
+        <section aria-labelledby="occasions-title" class="{{ $container }} pt-16 lg:pt-24">
+            <x-storefront.section-heading id="occasions-title" :eyebrow="__('home.occasions.eyebrow')" :title="__('home.occasions.title')" />
+
+            <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list">
+                @foreach ($occasions as $occasion)
+                    <li>
+                        <a href="{{ route('flowers.index', ['occasion' => [$occasion->slug]]) }}"
+                            aria-label="{{ __('home.occasions.view', ['name' => $occasion->name]) }}"
+                            class="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary">
+                            <x-flower-image :name="'dip-'.$occasion->slug" class="aspect-[420/320] rounded-sm transition-opacity group-hover:opacity-95" />
+                            <span class="mt-5 flex items-center justify-between gap-3">
+                                <span class="font-serif text-2xl">{{ $occasion->name }}</span>
+                                <x-lucide-arrow-up-right class="size-4 shrink-0 stroke-[1.5] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" />
+                            </span>
+                            @if (filled($occasion->description))
+                                <span class="mt-3 block text-sm text-lh-muted">{{ $occasion->description }}</span>
+                            @endif
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
+
     {{-- Những bó hoa được thương nhất --}}
     <section aria-labelledby="featured-title" data-filter-group class="{{ $container }} py-16 lg:py-24">
         <x-storefront.section-heading id="featured-title" :eyebrow="__('home.featured.eyebrow')" :title="__('home.featured.title')">
@@ -105,9 +136,66 @@
         @endif
     </section>
 
+    {{-- Banner mùa hiện tại --}}
+    <x-storefront.season-banner :season="$currentSeason" :today="$today" id="home-season-title"
+        :href="route('seasons')" :cta="__('home.season.cta.'.$currentSeason->value)" />
+
+    {{-- Một tiệm hoa nhỏ. Thật nhiều thương yêu. --}}
+    <section aria-labelledby="intro-title" class="{{ $container }} grid items-center gap-12 py-16 lg:grid-cols-[minmax(0,800fr)_minmax(0,830fr)] lg:gap-[136px] lg:py-24">
+        <figure class="relative mx-auto w-full max-w-[640px] pb-10 sm:pb-0">
+            <div class="w-[78%]">
+                <x-auth.arch-image name="gioi-thieu-tiem" :alt="__('home.intro.image_alt')" aspect="aspect-[520/510]" />
+            </div>
+            <x-flower-image name="gioi-thieu-goi-hoa" :alt="__('home.intro.detail_alt')"
+                class="absolute right-0 bottom-0 aspect-[275/330] w-[42%] rounded-sm border-[6px] border-lh-cream" />
+            <figcaption class="mt-4 ml-6 pr-[46%] font-serif text-lg text-lh-heading italic">{{ __('home.intro.caption') }}</figcaption>
+        </figure>
+
+        <div>
+            <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('home.intro.eyebrow') }}</p>
+            <h2 id="intro-title" class="mt-5 font-serif text-3xl leading-tight sm:text-[44px]">
+                {{ __('home.intro.title_line_1') }}<br>{{ __('home.intro.title_line_2') }}
+            </h2>
+            <p class="mt-7 max-w-[540px] text-[15px] leading-relaxed text-lh-muted">{{ __('home.intro.body_1') }}</p>
+            <p class="mt-5 max-w-[540px] text-[15px] leading-relaxed text-lh-muted">{{ __('home.intro.body_2') }}</p>
+            <a href="{{ route('story') }}" class="{{ $button }} mt-8 border border-lh-primary text-lh-heading hover:bg-lh-sage-50">
+                {{ __('home.intro.cta') }}
+                <x-lucide-arrow-right class="size-4 stroke-[1.5]" aria-hidden="true" />
+            </a>
+        </div>
+    </section>
+
+    {{-- Bạn kể chuyện. Lá chọn hoa. --}}
+    <section aria-labelledby="consult-title" class="bg-lh-sage-50">
+        <div class="{{ $container }} py-14 lg:py-16">
+            <div class="grid gap-6 lg:grid-cols-2 lg:items-center lg:gap-16">
+                <div>
+                    <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('home.consult.eyebrow') }}</p>
+                    <h2 id="consult-title" class="mt-3 font-serif text-3xl leading-tight sm:text-[40px]">{{ __('home.consult.title') }}</h2>
+                </div>
+                <div class="flex flex-col gap-5">
+                    <p class="text-[15px] leading-relaxed text-lh-muted">{{ __('home.consult.body') }}</p>
+                    <x-storefront.consult-button>{{ __('home.consult.cta') }}</x-storefront.consult-button>
+                </div>
+            </div>
+
+            <ol aria-label="{{ __('home.consult.steps_label') }}" class="mt-10 grid gap-8 border-t border-lh-border pt-10 md:grid-cols-3" role="list">
+                @foreach (__('home.consult.steps') as $step)
+                    <li class="flex gap-4">
+                        <span class="font-serif text-4xl leading-none text-lh-primary tabular-nums" aria-hidden="true">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
+                        <div>
+                            <h3 class="font-serif text-2xl leading-tight">{{ $step['title'] }}</h3>
+                            <p class="mt-3 text-sm text-lh-muted">{{ $step['body'] }}</p>
+                        </div>
+                    </li>
+                @endforeach
+            </ol>
+        </div>
+    </section>
+
     {{-- Ghé góc nhỏ của Lá: 3 bài mới nhất; ẩn khi chưa có bài nào được đăng. --}}
     @if ($latestPosts->isNotEmpty())
-        <section aria-labelledby="journal-title" class="{{ $container }} pb-16 lg:pb-24">
+        <section aria-labelledby="journal-title" class="{{ $container }} py-16 lg:py-24">
             <x-storefront.section-heading id="journal-title" :eyebrow="__('home.journal.eyebrow')" :title="__('home.journal.title')">
                 <x-slot:aside>
                     <a href="{{ route('posts.index') }}"
