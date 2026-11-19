@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Actions\Category\ListHomeOccasionsAction;
 use App\Actions\Product\ListFeaturedProductsAction;
 use App\Models\Category;
 use App\Models\Post;
@@ -115,6 +116,44 @@ class StorefrontHomeAndSeasonsTest extends TestCase
         Post::factory()->draft()->create();
 
         $this->get(route('home'))->assertOk()->assertDontSee('id="journal-title"', false);
+    }
+
+    public function test_home_page_shows_active_occasions_linking_to_filtered_flowers(): void
+    {
+        app()->setLocale('vi');
+        Category::factory()->create(['name' => 'Sinh nhật', 'slug' => 'sinh-nhat', 'description' => 'Thêm rực rỡ cho tuổi mới']);
+        Category::factory()->create(['name' => 'Tình yêu', 'slug' => 'tinh-yeu']);
+        Category::factory()->hidden()->create(['name' => 'Dịp đang ẩn']);
+        Category::factory()->season()->create(['name' => 'Dịu dàng mùa thu']);
+        Category::factory()->count(3)->create();
+
+        $response = $this->get(route('home'))
+            ->assertOk()
+            ->assertSeeTextInOrder(['Mỗi dịp, một cách gửi thương.', 'Sinh nhật', 'Thêm rực rỡ cho tuổi mới', 'Tình yêu'])
+            ->assertSee('href="'.e(route('flowers.index', ['occasion' => ['sinh-nhat']])).'"', false)
+            ->assertDontSeeText('Dịp đang ẩn');
+
+        $this->assertSame(ListHomeOccasionsAction::LIMIT, substr_count($response->getContent(), 'aria-label="Xem hoa cho dịp'));
+    }
+
+    public function test_home_page_hides_occasions_without_active_occasions(): void
+    {
+        $this->get(route('home'))->assertOk()->assertDontSee('id="occasions-title"', false);
+    }
+
+    public function test_home_page_shows_season_banner_intro_and_consult_blocks(): void
+    {
+        app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 10, 7));
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSeeTextInOrder(['Hoa theo mùa · Tháng 10', 'Thu ghé qua,', 'Bộ sưu tập Dịu dàng mùa thu · Từ 590.000 VNĐ', 'Ghé vườn hoa mùa thu'])
+            ->assertSeeTextInOrder(['Một tiệm hoa nhỏ.', 'Thật nhiều thương yêu.', 'Đọc câu chuyện của Lá'])
+            ->assertSee('href="'.route('story').'"', false)
+            ->assertSeeTextInOrder(['Bạn kể chuyện. Lá chọn hoa.', 'Nhắn Lá tư vấn riêng', 'Kể Lá nghe', 'Cùng chọn điều xinh', 'Để Lá gửi thương'])
+            ->assertSee('href="https://zalo.me/0378599249"', false)
+            ->assertDontSeeText('Niềm vui nở từ những điều nhỏ');
     }
 
     public function test_home_page_renders_in_english(): void

@@ -15,6 +15,20 @@ enum Season: string
     case Autumn = 'autumn';
     case Winter = 'winter';
 
+    /**
+     * Giá "từ" của bộ sưu tập mùa (VNĐ) trên banner mùa và trang Hoa theo mùa.
+     * TODO: dữ liệu mẫu theo docs/designs/storefront/03-hoa-theo-mua.png; khi nối DB lấy giá size thấp nhất trong bộ sưu tập mùa.
+     */
+    public function startingPrice(): int
+    {
+        return match ($this) {
+            self::Spring => 620000,
+            self::Summer => 550000,
+            self::Autumn => 590000,
+            self::Winter => 650000,
+        };
+    }
+
     public static function fromMonth(int $month): self
     {
         // Dời mốc về tháng 2 (đầu xuân) để tháng 1 rơi vào cuối mùa đông.

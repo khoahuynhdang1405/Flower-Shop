@@ -27,6 +27,46 @@ return [
         ],
     ],
 
+    'occasions' => [
+        'eyebrow' => 'Điều gì đưa bạn đến với Lá?',
+        'title' => 'Mỗi dịp, một cách gửi thương.',
+        'view' => 'Xem hoa cho dịp :name',
+    ],
+
+    'season' => [
+        'cta' => [
+            'spring' => 'Ghé vườn hoa mùa xuân',
+            'summer' => 'Ghé vườn hoa mùa hạ',
+            'autumn' => 'Ghé vườn hoa mùa thu',
+            'winter' => 'Ghé vườn hoa mùa đông',
+        ],
+    ],
+
+    'intro' => [
+        'eyebrow' => 'Chào bạn, chúng mình là Lá & Hoa',
+        'title_line_1' => 'Một tiệm hoa nhỏ.',
+        'title_line_2' => 'Thật nhiều thương yêu.',
+        'body_1' => 'Lá bắt đầu từ niềm vui giản dị: nhìn một người mỉm cười khi nhận hoa. Chúng mình tin một bó hoa đẹp không chỉ nằm ở những cánh hoa, mà ở câu chuyện được gửi cùng.',
+        'body_2' => 'Vì thế, mỗi thiết kế đều được chọn hoa theo mùa, phối màu thật nhẹ và gói riêng bằng tay. Không có hai bó hoa giống hệt nhau — như mỗi lời thương đều là duy nhất.',
+        'caption' => 'Từ đôi tay, đến trái tim.',
+        'image_alt' => 'Cô chủ tiệm cắm một bó hoa trắng giữa những kệ hoa',
+        'detail_alt' => 'Đôi tay buộc ruy băng cho một bó hồng phấn',
+        'cta' => 'Đọc câu chuyện của Lá',
+    ],
+
+    'consult' => [
+        'eyebrow' => 'Một bó hoa, một câu chuyện riêng',
+        'title' => 'Bạn kể chuyện. Lá chọn hoa.',
+        'body' => 'Một màu hoa người ấy thích, một kỷ niệm chỉ bạn biết. Cùng Lá làm nên bó hoa không dành cho ai khác.',
+        'cta' => 'Nhắn Lá tư vấn riêng',
+        'steps_label' => 'Ba bước cùng Lá chọn hoa',
+        'steps' => [
+            ['title' => 'Kể Lá nghe', 'body' => 'Người nhận, dịp đặc biệt và những màu sắc bạn yêu.'],
+            ['title' => 'Cùng chọn điều xinh', 'body' => 'Lá gợi ý hoa, kiểu gói và ngân sách phù hợp với bạn.'],
+            ['title' => 'Để Lá gửi thương', 'body' => 'Xem ảnh bó hoa trước khi giao, kèm lời nhắn viết tay.'],
+        ],
+    ],
+
     'featured' => [
         'eyebrow' => 'Được chọn bằng trái tim',
         'title' => 'Những bó hoa được thương nhất',

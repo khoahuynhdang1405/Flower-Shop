@@ -37,6 +37,8 @@ Route::get('/flowers/{slug}', [FlowerController::class, 'show'])->name('flowers.
 // TODO: sản phẩm của mùa vẫn là dữ liệu mẫu trong view — khi nối DB lấy theo bộ sưu tập.
 Route::get('/seasons', SeasonController::class)->name('seasons');
 
+Route::view('/our-story', 'story')->name('story');
+
 Route::get('/journal', [PostController::class, 'index'])->name('posts.index');
 Route::get('/journal/{slug}', [PostController::class, 'show'])->name('posts.show');
 

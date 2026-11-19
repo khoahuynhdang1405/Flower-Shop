@@ -63,4 +63,7 @@ return [
         'staff' => 'Dành cho nhân viên tiệm',
     ],
 
+    // Đọc cho trình đọc màn hình ở nút mở Zalo.
+    'opens_zalo' => '(mở Zalo trong thẻ mới)',
+
 ];

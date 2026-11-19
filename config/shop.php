@@ -12,6 +12,9 @@ return [
 
     'email' => env('SHOP_EMAIL', 'lavahoa@gmail.com'),
 
+    // Nút "Nhắn Lá để tư vấn riêng" (Trang chủ, Câu chuyện của Lá) mở Zalo của tiệm.
+    'zalo_url' => env('SHOP_ZALO_URL', 'https://zalo.me/0378599249'),
+
     'address' => '24 Nguyễn Văn Thủ, phường Tân Định, TP.HCM',
 
     'opening_hours' => '08:00 – 20:00',
