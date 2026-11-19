@@ -32,6 +32,15 @@ interface ProductRepositoryInterface
      */
     public function findFeaturedForSale(int $limit): Collection;
 
+    public function countAll(): int;
+
+    public function countActive(): int;
+
+    /**
+     * Sản phẩm đang bán còn tồn kho không quá $threshold (gồm cả đã hết).
+     */
+    public function countActiveWithStockAtMost(int $threshold): int;
+
     /**
      * Sản phẩm đang bán cho trang "Tất cả hoa", lọc theo kiểu hoa, dịp gửi, sắc hoa và khoảng giá hiển thị
      * (giá size mặc định, chưa có size thì base_price), mới nhất trước, kèm dữ liệu thẻ sản phẩm.

@@ -38,6 +38,21 @@ final class ProductRepository implements ProductRepositoryInterface
             ->get();
     }
 
+    public function countAll(): int
+    {
+        return Product::query()->count();
+    }
+
+    public function countActive(): int
+    {
+        return Product::query()->where('is_active', true)->count();
+    }
+
+    public function countActiveWithStockAtMost(int $threshold): int
+    {
+        return Product::query()->where('is_active', true)->where('stock', '<=', $threshold)->count();
+    }
+
     public function paginateForCatalog(CatalogFilterData $filters, int $perPage): LengthAwarePaginator
     {
         return Product::query()

@@ -79,6 +79,31 @@ interface OrderRepositoryInterface
 
     public function countCreatedBetween(CarbonInterface $from, CarbonInterface $to): int;
 
+    public function countInStatus(OrderStatus $status): int;
+
+    /**
+     * Doanh thu theo ngày hoàn thành: tổng total_amount của đơn đã Hoàn thành, nhóm theo ngày ghi nhật ký "completed".
+     * Ngày không có đơn không xuất hiện trong kết quả.
+     *
+     * @return array<string, int> 'Y-m-d' => doanh thu (VNĐ)
+     */
+    public function sumCompletedRevenueByDay(CarbonInterface $from, CarbonInterface $to): array;
+
+    /**
+     * Số bó hoa (tổng số lượng dòng hoa) cần giao trong ngày ở các khung giờ cho trước,
+     * bỏ đơn đã hủy/đã hoàn thành và đơn VNPAY/MoMo chưa thanh toán.
+     *
+     * @param  list<string>  $timeSlots
+     */
+    public function sumFlowersToDeliver(CarbonInterface $deliveryDate, array $timeSlots): int;
+
+    /**
+     * Đơn mới nhất cho Tổng quan, kèm thông tin giao và các dòng hoa.
+     *
+     * @return Collection<int, Order>
+     */
+    public function findLatestWithSummary(int $limit): Collection;
+
     /**
      * Đơn thợ cắm cần làm cho một ngày giao: bỏ đơn đã hủy và đơn VNPAY/MoMo chưa thanh toán.
      * Sắp theo khung giờ rồi id, kèm thông tin giao và mọi món (hoa trước, quà kèm sau).

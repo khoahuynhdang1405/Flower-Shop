@@ -387,6 +387,26 @@ class PlaceOrderTest extends TestCase
                 return $this->orders->countCreatedBetween($from, $to);
             }
 
+            public function countInStatus(OrderStatus $status): int
+            {
+                return $this->orders->countInStatus($status);
+            }
+
+            public function sumCompletedRevenueByDay(CarbonInterface $from, CarbonInterface $to): array
+            {
+                return $this->orders->sumCompletedRevenueByDay($from, $to);
+            }
+
+            public function sumFlowersToDeliver(CarbonInterface $deliveryDate, array $timeSlots): int
+            {
+                return $this->orders->sumFlowersToDeliver($deliveryDate, $timeSlots);
+            }
+
+            public function findLatestWithSummary(int $limit): Collection
+            {
+                return $this->orders->findLatestWithSummary($limit);
+            }
+
             public function findForFloristSchedule(CarbonInterface $deliveryDate): Collection
             {
                 return $this->orders->findForFloristSchedule($deliveryDate);
