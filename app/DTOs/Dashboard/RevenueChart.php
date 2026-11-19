@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\DTOs\Dashboard;
 
 /**
- * Biểu đồ "Doanh thu 7 ngày qua": các ngày theo thứ tự cũ → mới (ngày cuối là hôm nay)
- * và tổng của 7 ngày liền trước để so sánh.
+ * Biểu đồ Tổng quan: các ngày theo thứ tự cũ → mới (ngày cuối là hôm nay)
+ * và tổng của khoảng liền trước cùng độ dài để so sánh.
  */
 final readonly class RevenueChart
 {
@@ -16,6 +16,7 @@ final readonly class RevenueChart
     public function __construct(
         public array $days,
         public int $previousTotal,
+        public int $previousOrders,
     ) {}
 
     public function total(): int
@@ -23,9 +24,9 @@ final readonly class RevenueChart
         return array_sum(array_map(fn (RevenueDay $day): int => $day->amount, $this->days));
     }
 
-    public function highest(): int
+    public function totalOrders(): int
     {
-        return max(array_map(fn (RevenueDay $day): int => $day->amount, $this->days));
+        return array_sum(array_map(fn (RevenueDay $day): int => $day->orders, $this->days));
     }
 
     public function today(): RevenueDay
@@ -39,11 +40,19 @@ final readonly class RevenueChart
     }
 
     /**
-     * % thay đổi của 7 ngày này so với 7 ngày trước; null khi kỳ trước không có doanh thu.
+     * % thay đổi doanh thu so với khoảng trước; null khi khoảng trước không có doanh thu.
      */
     public function changePercent(): ?float
     {
         return self::percentChange($this->total(), $this->previousTotal);
+    }
+
+    /**
+     * % thay đổi số đơn so với khoảng trước; null khi khoảng trước không có đơn.
+     */
+    public function ordersChangePercent(): ?float
+    {
+        return self::percentChange($this->totalOrders(), $this->previousOrders);
     }
 
     /**

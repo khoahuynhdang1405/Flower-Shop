@@ -82,12 +82,12 @@ interface OrderRepositoryInterface
     public function countInStatus(OrderStatus $status): int;
 
     /**
-     * Doanh thu theo ngày hoàn thành: tổng total_amount của đơn đã Hoàn thành, nhóm theo ngày ghi nhật ký "completed".
-     * Ngày không có đơn không xuất hiện trong kết quả.
+     * Thống kê đơn đã Hoàn thành theo ngày hoàn thành (ngày ghi nhật ký "completed"): doanh thu (tổng total_amount)
+     * và số đơn. Ngày không có đơn không xuất hiện trong kết quả.
      *
-     * @return array<string, int> 'Y-m-d' => doanh thu (VNĐ)
+     * @return array<string, array{revenue: int, orders: int}> 'Y-m-d' => thống kê ngày đó
      */
-    public function sumCompletedRevenueByDay(CarbonInterface $from, CarbonInterface $to): array;
+    public function summarizeCompletedOrdersByDay(CarbonInterface $from, CarbonInterface $to): array;
 
     /**
      * Số bó hoa (tổng số lượng dòng hoa) cần giao trong ngày ở các khung giờ cho trước,

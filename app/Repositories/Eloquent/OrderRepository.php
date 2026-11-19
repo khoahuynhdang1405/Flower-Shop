@@ -10,7 +10,6 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
-use App\Models\OrderStatusLog;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -128,18 +127,22 @@ final class OrderRepository implements OrderRepositoryInterface
         return Order::query()->where('order_status', $status)->count();
     }
 
-    public function sumCompletedRevenueByDay(CarbonInterface $from, CarbonInterface $to): array
+    public function summarizeCompletedOrdersByDay(CarbonInterface $from, CarbonInterface $to): array
     {
-        return OrderStatusLog::query()
-            ->toBase()
-            ->join('orders', 'orders.id', '=', 'order_status_logs.order_id')
-            ->where('order_status_logs.status', OrderStatus::Completed)
+        return Order::query()
+            ->join('order_status_logs as completion', 'completion.order_id', '=', 'orders.id')
+            ->where('completion.status', OrderStatus::Completed)
             ->where('orders.order_status', OrderStatus::Completed)
-            ->whereBetween('order_status_logs.created_at', [$from, $to])
-            ->selectRaw('date(order_status_logs.created_at) as day, sum(orders.total_amount) as revenue')
-            ->groupByRaw('date(order_status_logs.created_at)')
-            ->pluck('revenue', 'day')
-            ->mapWithKeys(fn (mixed $revenue, mixed $day): array => [substr((string) $day, 0, 10) => (int) round((float) $revenue)])
+            ->whereBetween('completion.created_at', [$from, $to])
+            ->selectRaw('date(completion.created_at) as day, sum(orders.total_amount) as revenue, count(distinct orders.id) as orders_count')
+            ->groupByRaw('date(completion.created_at)')
+            ->get()
+            ->mapWithKeys(fn (Order $day): array => [
+                substr((string) $day->getAttribute('day'), 0, 10) => [
+                    'revenue' => (int) round((float) $day->getAttribute('revenue')),
+                    'orders' => (int) $day->getAttribute('orders_count'),
+                ],
+            ])
             ->all();
     }
 

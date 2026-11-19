@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CollectionProductController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DashboardRevenueController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\ProductImageController;
@@ -118,6 +119,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'destroy'])->name('logout');
 
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('/dashboard/revenue', DashboardRevenueController::class)->middleware('throttle:60,1')->name('dashboard.revenue');
 
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
         Route::get('/orders/schedule', [AdminOrderController::class, 'schedule'])->name('orders.schedule');

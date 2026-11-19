@@ -94,10 +94,50 @@ class AdminDashboardTest extends TestCase
             ->assertSeeTextInOrder(['Doanh thu', '12.450.000 VNĐ', '+24,5% so với hôm qua'])
             ->assertSeeTextInOrder(['Doanh thu 7 ngày qua', 'Đơn vị: triệu VNĐ', '27.450.000 VNĐ'])
             ->assertSeeText('Tăng 174,5% so với 7 ngày trước')
-            ->assertSeeTextInOrder(['5', '0', '0', '0', '0', '10', '12,45'])
-            ->assertSeeTextInOrder(['01/10', '02/10', '03/10', '04/10', '05/10', '06/10', '07/10'])
-            ->assertSeeTextInOrder(['07/10/2026 (hôm nay)', '12.450.000 VNĐ'])
+            ->assertSeeTextInOrder(['01/10/2026', '5.000.000 VNĐ', '1', '02/10/2026', '0 VNĐ', '0'])
+            ->assertSeeTextInOrder(['07/10/2026 (hôm nay)', '12.450.000 VNĐ', '1'])
+            ->assertSee('data-revenue-chart', false)
+            ->assertSee('data-url="'.route('admin.dashboard.revenue').'"', false)
             ->assertDontSeeText('777.000 VNĐ');
+    }
+
+    public function test_revenue_api_returns_daily_revenue_and_orders_for_chart_js(): void
+    {
+        $this->travelTo(Carbon::parse('2026-10-07 15:00:00'));
+        $this->completedOrder(12450000, '2026-10-07 10:00:00');
+        $this->completedOrder(690000, '2026-10-07 11:00:00');
+        $this->completedOrder(5000000, '2026-10-01 09:00:00');
+        $this->completedOrder(9999000, '2026-09-30 09:00:00');
+
+        $this->getJson(route('admin.dashboard.revenue', ['range' => 7]))
+            ->assertOk()
+            ->assertJsonPath('data.days', 7)
+            ->assertJsonPath('data.labels', ['01/10', '02/10', '03/10', '04/10', '05/10', '06/10', '07/10'])
+            ->assertJsonPath('data.revenue', [5000000, 0, 0, 0, 0, 0, 13140000])
+            ->assertJsonPath('data.orders', [1, 0, 0, 0, 0, 0, 2])
+            ->assertJsonPath('data.totals', ['revenue' => 18140000, 'orders' => 3])
+            ->assertJsonPath('data.changes.orders', 200);
+    }
+
+    public function test_revenue_api_returns_thirty_days_and_compares_with_the_thirty_before(): void
+    {
+        $this->travelTo(Carbon::parse('2026-10-07 15:00:00'));
+        $this->completedOrder(9999000, '2026-09-30 09:00:00');
+        $this->completedOrder(1000000, '2026-09-01 09:00:00');
+
+        $response = $this->getJson(route('admin.dashboard.revenue', ['range' => 30]))->assertOk();
+
+        $this->assertCount(30, $response->json('data.labels'));
+        $this->assertSame('08/09', $response->json('data.labels.0'));
+        $response->assertJsonPath('data.totals.revenue', 9999000)->assertJsonPath('data.changes.revenue', 899.9);
+    }
+
+    public function test_revenue_api_rejects_unknown_ranges_and_guests(): void
+    {
+        $this->getJson(route('admin.dashboard.revenue', ['range' => 90]))->assertUnprocessable()->assertJsonValidationErrors('range');
+
+        auth('admin')->logout();
+        $this->getJson(route('admin.dashboard.revenue'))->assertUnauthorized();
     }
 
     public function test_cards_compare_orders_and_customers_with_yesterday(): void

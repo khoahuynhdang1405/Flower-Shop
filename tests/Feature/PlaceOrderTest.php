@@ -392,9 +392,9 @@ class PlaceOrderTest extends TestCase
                 return $this->orders->countInStatus($status);
             }
 
-            public function sumCompletedRevenueByDay(CarbonInterface $from, CarbonInterface $to): array
+            public function summarizeCompletedOrdersByDay(CarbonInterface $from, CarbonInterface $to): array
             {
-                return $this->orders->sumCompletedRevenueByDay($from, $to);
+                return $this->orders->summarizeCompletedOrdersByDay($from, $to);
             }
 
             public function sumFlowersToDeliver(CarbonInterface $deliveryDate, array $timeSlots): int
