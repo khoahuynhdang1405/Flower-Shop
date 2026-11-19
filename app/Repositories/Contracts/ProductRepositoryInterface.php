@@ -6,6 +6,7 @@ namespace App\Repositories\Contracts;
 
 use App\DTOs\Product\CatalogFilterData;
 use App\Enums\FlowerColor;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +32,27 @@ interface ProductRepositoryInterface
      * @return Collection<int, Product>
      */
     public function findFeaturedForSale(int $limit): Collection;
+
+    /**
+     * Sản phẩm có kiểu hoa chính là danh mục này (products.category_id), theo tên, kèm dữ liệu dòng bảng.
+     *
+     * @return Collection<int, Product>
+     */
+    public function findByPrimaryCategory(Category $category): Collection;
+
+    /**
+     * Sản phẩm gắn vào bộ sưu tập qua pivot category_product, theo tên, kèm dữ liệu dòng bảng.
+     *
+     * @return Collection<int, Product>
+     */
+    public function findLinkedToCollection(Category $collection): Collection;
+
+    /**
+     * Sản phẩm chưa có trong bộ sưu tập để chọn thêm, tìm theo tên, theo tên.
+     *
+     * @return LengthAwarePaginator<int, Product>
+     */
+    public function paginateNotLinkedToCollection(Category $collection, ?string $search, int $perPage): LengthAwarePaginator;
 
     public function countAll(): int;
 

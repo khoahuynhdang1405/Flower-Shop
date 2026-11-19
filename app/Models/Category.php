@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
@@ -50,15 +51,35 @@ class Category extends Model
     }
 
     /**
-     * Kèm số sản phẩm (products_count). Chưa có model Product nên đếm thẳng trên bảng products.
+     * Sản phẩm được gắn vào bộ sưu tập Theo mùa / Theo dịp qua pivot category_product.
+     *
+     * @return BelongsToMany<Product, $this>
+     */
+    public function linkedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
+    /**
+     * Kèm số sản phẩm (products_count): Kiểu hoa đếm theo products.category_id,
+     * Theo mùa / Theo dịp đếm theo pivot category_product.
      *
      * @param  Builder<Category>  $query
      */
     public function scopeWithProductsCount(Builder $query): void
     {
-        $query->addSelect([
-            'products_count' => DB::table('products')->selectRaw('count(*)')->whereColumn('products.category_id', 'categories.id'),
-        ]);
+        $flowerType = CategoryType::FlowerType->value;
+
+        if ($query->getQuery()->columns === null) {
+            $query->select('categories.*');
+        }
+
+        $query->addSelect(DB::raw(
+            "case when categories.type = '{$flowerType}'"
+            .' then (select count(*) from products where products.category_id = categories.id)'
+            .' else (select count(*) from category_product where category_product.category_id = categories.id)'
+            .' end as products_count'
+        ));
     }
 
     public function hasProducts(): bool

@@ -183,11 +183,7 @@
                             <tr class="border-t border-lh-border">
                                 <td class="{{ $cell }}">
                                     <div class="flex items-center gap-4">
-                                        @if ($product->primaryImage)
-                                            <img src="{{ $product->primaryImage->url }}" alt="" loading="lazy" class="size-[58px] shrink-0 rounded object-cover">
-                                        @else
-                                            <x-flower-image :name="$product->slug" class="size-[58px] shrink-0 rounded" />
-                                        @endif
+                                        <x-admin.product-thumb :product="$product" />
                                         <p class="text-[15px] font-semibold">{{ $product->name }}</p>
                                     </div>
                                 </td>

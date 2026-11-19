@@ -45,7 +45,8 @@ class Product extends Model
     }
 
     /**
-     * Các dịp gửi thương (categories.type = occasion) qua pivot category_product.
+     * Bộ sưu tập Theo mùa / Theo dịp gắn qua pivot category_product. Bộ lọc "Dịp gửi" ở Tất cả hoa
+     * tự giới hạn type = occasion khi dùng quan hệ này.
      *
      * @return BelongsToMany<Category, $this>
      */

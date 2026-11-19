@@ -8,6 +8,7 @@ use App\DTOs\Product\CatalogFilterData;
 use App\Enums\CategoryType;
 use App\Enums\FlowerColor;
 use App\Enums\PriceRange;
+use App\Models\Category;
 use App\Models\Product;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -36,6 +37,34 @@ final class ProductRepository implements ProductRepositoryInterface
             ->latest('id')
             ->limit($limit)
             ->get();
+    }
+
+    public function findByPrimaryCategory(Category $category): Collection
+    {
+        return Product::query()
+            ->where('category_id', $category->id)
+            ->with(['category', 'defaultSize', 'primaryImage'])
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function findLinkedToCollection(Category $collection): Collection
+    {
+        return $collection->linkedProducts()
+            ->with(['category', 'defaultSize', 'primaryImage'])
+            ->orderBy('products.name')
+            ->get();
+    }
+
+    public function paginateNotLinkedToCollection(Category $collection, ?string $search, int $perPage): LengthAwarePaginator
+    {
+        return Product::query()
+            ->whereDoesntHave('occasions', fn (Builder $linked) => $linked->whereKey($collection->id))
+            ->when($search, fn (Builder $query, string $term) => $query->whereLike('name', '%'.$term.'%'))
+            ->with(['category', 'defaultSize', 'primaryImage'])
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function countAll(): int

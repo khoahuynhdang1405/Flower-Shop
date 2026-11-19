@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\Contracts;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 
 interface CategoryRepositoryInterface
@@ -22,4 +23,17 @@ interface CategoryRepositoryInterface
      * @return Collection<int, Category>
      */
     public function findActiveOccasions(): Collection;
+
+    /**
+     * Gắn sản phẩm vào bộ sưu tập (pivot category_product), bỏ qua sản phẩm đã có.
+     *
+     * @param  list<int>  $productIds
+     * @return int số sản phẩm vừa được gắn thêm
+     */
+    public function attachProducts(Category $collection, array $productIds): int;
+
+    /**
+     * Gỡ sản phẩm khỏi bộ sưu tập; false khi sản phẩm vốn không có trong bộ sưu tập.
+     */
+    public function detachProduct(Category $collection, Product $product): bool;
 }

@@ -90,15 +90,15 @@ Table product_sizes {
 }
 
 Table category_product {
-  category_id bigint [not null, note: 'categories.type = occasion']
-  product_id bigint [not null]
+  category_id bigint [not null, note: 'categories.type = season | occasion; xóa danh mục thì xóa liên kết (cascade)']
+  product_id bigint [not null, note: 'xóa sản phẩm thì xóa liên kết (cascade)']
 
   indexes {
     (category_id, product_id) [pk]
     product_id
   }
 
-  Note: 'Một sản phẩm thuộc nhiều dịp gửi thương (bộ lọc Tất cả hoa). Kiểu hoa vẫn ở products.category_id.'
+  Note: 'Một sản phẩm thuộc nhiều bộ sưu tập Theo mùa / Theo dịp (admin thêm/bỏ ở Bộ sưu tập › Xem chi tiết; dịp dùng cho bộ lọc Tất cả hoa). Kiểu hoa (flower_type) vẫn ở products.category_id, không đi qua bảng này.'
 }
 
 Table product_colors {
