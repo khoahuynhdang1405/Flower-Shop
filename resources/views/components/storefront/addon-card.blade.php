@@ -1,5 +1,5 @@
 @props([
-    /** @var array{id: int, name: string, price: int, is_free: bool, image_url: ?string} $addon  image_url null = khung giữ chỗ */
+    /** @var array{id: int, name: string, price: int, is_free: bool, image_url: ?string} $addon  image_url null = ảnh tĩnh public/images/flowers/qua-{slug tên}, chưa có thì khung giữ chỗ */
     'addon',
     'checked' => false,
 ])
@@ -18,7 +18,7 @@
     @if ($addon['image_url'])
         <img src="{{ $addon['image_url'] }}" alt="" loading="lazy" class="aspect-[278/158] w-full rounded-sm bg-lh-sage-100 object-cover">
     @else
-        <x-flower-image name="" class="aspect-[278/158] rounded-sm" />
+        <x-flower-image :name="'qua-'.Str::slug($addon['name'])" class="aspect-[278/158] rounded-sm" />
     @endif
 
     <span class="mt-3 text-[15px] text-lh-primary-dark">{{ $addon['name'] }}</span>
