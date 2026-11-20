@@ -103,7 +103,6 @@ return [
     'menu' => [
         ['key' => 'home', 'url' => '/'],
         ['key' => 'all_flowers', 'route' => 'flowers.index'],
-        ['key' => 'occasions', 'route' => 'occasions.index'],
         ['key' => 'our_story', 'route' => 'story'],
         ['key' => 'journal', 'route' => 'posts.index'],
     ],

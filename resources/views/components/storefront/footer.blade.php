@@ -1,6 +1,6 @@
 @php
     $columns = [
-        'explore' => ['all_flowers', 'occasions', 'custom', 'our_story'],
+        'explore' => ['all_flowers', 'custom', 'our_story'],
         'support' => ['how_to_order', 'shipping', 'returns', 'faq'],
     ];
     $link = 'rounded text-sm text-white/80 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';

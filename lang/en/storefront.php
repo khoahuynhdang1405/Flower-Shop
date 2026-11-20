@@ -25,7 +25,6 @@ return [
     'menu' => [
         'home' => 'Home',
         'all_flowers' => 'All flowers',
-        'occasions' => 'By occasion',
         'our_story' => 'Lá’s story',
         'journal' => 'Little corner',
     ],
@@ -42,7 +41,6 @@ return [
         'daily' => 'Every day · :hours',
         'links' => [
             'all_flowers' => 'All flowers',
-            'occasions' => 'By occasion',
             'custom' => 'Custom designs',
             'our_story' => 'Lá’s story',
             'how_to_order' => 'How to order',
