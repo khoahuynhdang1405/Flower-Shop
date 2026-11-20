@@ -25,7 +25,6 @@ return [
     'menu' => [
         'home' => 'Trang chủ',
         'all_flowers' => 'Tất cả hoa',
-        'occasions' => 'Hoa theo dịp',
         'our_story' => 'Câu chuyện của Lá',
         'journal' => 'Góc nhỏ',
     ],
@@ -42,7 +41,6 @@ return [
         'daily' => 'Mỗi ngày · :hours',
         'links' => [
             'all_flowers' => 'Tất cả hoa',
-            'occasions' => 'Hoa theo dịp',
             'custom' => 'Hoa thiết kế riêng',
             'our_story' => 'Câu chuyện của Lá',
             'how_to_order' => 'Hướng dẫn đặt hoa',
