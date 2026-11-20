@@ -2,6 +2,7 @@
     /**
      * @var \Illuminate\Support\Carbon $today
      * @var \App\Enums\Season $currentSeason  mùa hiện tại theo tháng (SeasonController)
+     * @var array<string, string|null> $seasonCovers  giá trị Season => ảnh chính bộ sưu tập mùa (null: ảnh tĩnh)
      *
      * TODO: giá và sản phẩm của mùa là dữ liệu mẫu theo docs/designs/storefront/03-hoa-theo-mua.png.
      * Khi nối DB: mùa = categories (type = season), sản phẩm của mùa lấy theo bộ sưu tập; "giá từ" = giá size thấp nhất.
@@ -28,7 +29,7 @@
     </div>
 
     {{-- Hero mùa hiện tại --}}
-    <x-storefront.season-banner :season="$currentSeason" :today="$today" id="season-hero-title" heading-tag="h1"
+    <x-storefront.season-banner :season="$currentSeason" :today="$today" id="season-hero-title" heading-tag="h1" :image-url="$seasonCovers[$season]"
         href="#season-products-title" :cta="__('seasons.hero.'.$season.'.cta')" />
 
     {{-- 4 mùa --}}
@@ -46,7 +47,7 @@
                     {{-- TODO: trỏ tới trang bộ sưu tập của từng mùa khi có. --}}
                     <a href="#" class="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary"
                         @if ($isCurrent) aria-current="true" @endif>
-                        <x-flower-image :name="'mua-'.$itemSeason"class="aspect-[4/3] rounded-sm transition-opacity group-hover:opacity-95" />
+                        <x-cover-image :url="$seasonCovers[$itemSeason]" :name="'mua-'.$itemSeason" class="aspect-[4/3] rounded-sm transition-opacity group-hover:opacity-95" />
                         <p @class(['mt-4 text-[11px]', 'font-semibold text-lh-primary' => $isCurrent, 'text-lh-muted' => ! $isCurrent])>
                             {{ $item['months'] }}
                             @if ($isCurrent)

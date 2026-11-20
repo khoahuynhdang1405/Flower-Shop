@@ -29,6 +29,20 @@ enum Season: string
         };
     }
 
+    /**
+     * Slug bộ sưu tập Theo mùa (categories.type = season) của mùa này; ảnh chính của bộ sưu tập
+     * hiện ở banner mùa và thẻ mùa. Tên bộ sưu tập khớp lang seasons.hero.{mùa}.collection.
+     */
+    public function collectionSlug(): string
+    {
+        return match ($this) {
+            self::Spring => 'trong-treo-mua-xuan',
+            self::Summer => 'ruc-ro-mua-ha',
+            self::Autumn => 'diu-dang-mua-thu',
+            self::Winter => 'an-lanh-mua-dong',
+        };
+    }
+
     public static function fromMonth(int $month): self
     {
         // Dời mốc về tháng 2 (đầu xuân) để tháng 1 rơi vào cuối mùa đông.

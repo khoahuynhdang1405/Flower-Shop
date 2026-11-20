@@ -6,6 +6,8 @@
     'headingTag' => 'h2',
     'href',
     'cta',
+    // Ảnh chính bộ sưu tập mùa (ListSeasonCoversAction); null thì dùng ảnh tĩnh.
+    'imageUrl' => null,
 ])
 
 @php
@@ -22,7 +24,7 @@
 @endphp
 
 <section aria-labelledby="{{ $id }}" {{ $attributes->class('grid bg-lh-blush lg:grid-cols-2') }}>
-    <x-flower-image name="hero-hoa-theo-mua" :alt="__('seasons.hero.image_alt')" class="aspect-[4/3] lg:aspect-auto lg:h-[520px]" />
+    <x-cover-image :url="$imageUrl" name="hero-hoa-theo-mua" :alt="__('seasons.hero.image_alt')" class="aspect-[4/3] lg:aspect-auto lg:h-[520px]" />
 
     <div class="flex flex-col justify-center px-4 py-12 sm:px-8 lg:px-14 lg:py-16 xl:px-[72px]">
         <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('seasons.hero.eyebrow', $monthParams) }}</p>

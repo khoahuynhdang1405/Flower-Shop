@@ -41,4 +41,34 @@ final class CategoryRepository implements CategoryRepositoryInterface
     {
         return $collection->linkedProducts()->detach($product->id) > 0;
     }
+
+    public function create(array $attributes): Category
+    {
+        return Category::create($attributes);
+    }
+
+    public function update(Category $collection, array $attributes): void
+    {
+        $collection->update($attributes);
+    }
+
+    public function delete(Category $collection): void
+    {
+        $collection->delete();
+    }
+
+    public function hasPrimaryProducts(Category $collection): bool
+    {
+        return $collection->products()->exists();
+    }
+
+    public function findActiveSeasonsBySlugs(array $slugs): Collection
+    {
+        return Category::query()
+            ->where('type', CategoryType::Season)
+            ->where('is_active', true)
+            ->whereIn('slug', $slugs)
+            ->get()
+            ->keyBy('slug');
+    }
 }

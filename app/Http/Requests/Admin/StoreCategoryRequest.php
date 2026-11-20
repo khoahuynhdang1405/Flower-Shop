@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\DTOs\Collection\CollectionData;
 use App\Enums\CategoryType;
 use App\Models\Category;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -13,6 +14,8 @@ use Illuminate\Validation\Validator;
 
 class StoreCategoryRequest extends FormRequest
 {
+    public const MAX_COVER_KILOBYTES = 4096;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -65,6 +68,8 @@ class StoreCategoryRequest extends FormRequest
             'type' => ['required', Rule::enum(CategoryType::class)],
             'description' => ['nullable', 'string', 'max:2000'],
             'is_active' => ['boolean'],
+            'cover_image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_COVER_KILOBYTES],
+            'remove_cover' => ['boolean'],
         ];
     }
 
@@ -79,7 +84,24 @@ class StoreCategoryRequest extends FormRequest
             'slug.unique' => __('admin.collections.form.slug_taken'),
             'type.required' => __('admin.collections.form.type_required'),
             'type.enum' => __('admin.collections.form.type_required'),
+            'cover_image.image' => __('admin.collections.form.cover_type'),
+            'cover_image.mimes' => __('admin.collections.form.cover_type'),
+            'cover_image.max' => __('admin.collections.form.cover_size', ['max' => self::MAX_COVER_KILOBYTES / 1024]),
+            'cover_image.uploaded' => __('admin.collections.form.cover_size', ['max' => self::MAX_COVER_KILOBYTES / 1024]),
         ];
+    }
+
+    public function toData(): CollectionData
+    {
+        return new CollectionData(
+            name: $this->validated('name'),
+            slug: $this->validated('slug'),
+            type: CategoryType::from($this->validated('type')),
+            description: $this->validated('description'),
+            isActive: $this->boolean('is_active'),
+            cover: $this->file('cover_image'),
+            removeCover: $this->boolean('remove_cover'),
+        );
     }
 
     protected function uniqueSlug(): Unique

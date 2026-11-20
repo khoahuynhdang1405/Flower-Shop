@@ -195,6 +195,13 @@ return [
             'name_required' => 'Bạn nhập tên bộ sưu tập nhé.',
             'slug_taken' => 'Tên này đã có bộ sưu tập khác dùng, bạn đặt tên khác nhé.',
             'type_required' => 'Bạn chọn loại bộ sưu tập nhé.',
+            'cover' => 'Ảnh chính',
+            'cover_hint' => 'Ảnh hiện trên thẻ bộ sưu tập, ở Trang chủ (dịp gửi) và trang Hoa theo mùa. JPG, PNG hoặc WebP, tối đa :mb MB.',
+            'choose_cover' => 'Chọn ảnh chính',
+            'remove_cover' => 'Gỡ ảnh chính hiện tại',
+            'cover_type' => 'Bạn chọn ảnh JPG, PNG hoặc WebP nhé.',
+            'cover_size' => 'Ảnh không quá :max MB.',
+            'current_cover_alt' => 'Ảnh chính hiện tại của :name',
         ],
     ],
 
