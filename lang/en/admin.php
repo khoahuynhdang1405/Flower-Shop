@@ -195,6 +195,13 @@ return [
             'name_required' => 'Please enter a collection name.',
             'slug_taken' => 'Another collection already uses this name. Please choose a different one.',
             'type_required' => 'Please choose a collection type.',
+            'cover' => 'Main image',
+            'cover_hint' => 'Shown on the collection card, on the home page (occasions) and on the seasonal page. JPG, PNG or WebP, up to :mb MB.',
+            'choose_cover' => 'Choose a main image',
+            'remove_cover' => 'Remove the current main image',
+            'cover_type' => 'Only JPG, PNG or WebP images, please.',
+            'cover_size' => 'Images must be :max MB or smaller.',
+            'current_cover_alt' => 'Current main image of :name',
         ],
     ],
 

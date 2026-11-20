@@ -6,16 +6,18 @@ use App\Enums\CategoryType;
 use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 /**
- * Danh mục / bộ sưu tập hoa (Admin › Bộ sưu tập).
+ * Danh mục / bộ sưu tập hoa (Admin › Bộ sưu tập). cover_image là đường dẫn ảnh chính trên disk public.
  */
-#[Fillable(['name', 'slug', 'type', 'description', 'is_active'])]
+#[Fillable(['name', 'slug', 'type', 'description', 'cover_image', 'is_active'])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
@@ -38,6 +40,16 @@ class Category extends Model
             'type' => CategoryType::class,
             'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * URL ảnh chính; null khi chưa có ảnh (giao diện tự dùng ảnh tĩnh / khung giữ chỗ).
+     *
+     * @return Attribute<?string, never>
+     */
+    protected function coverUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->cover_image ? Storage::disk('public')->url($this->cover_image) : null);
     }
 
     /**
@@ -80,10 +92,5 @@ class Category extends Model
             .' else (select count(*) from category_product where category_product.category_id = categories.id)'
             .' end as products_count'
         ));
-    }
-
-    public function hasProducts(): bool
-    {
-        return DB::table('products')->where('category_id', $this->id)->exists();
     }
 }

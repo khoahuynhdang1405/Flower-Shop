@@ -9,8 +9,8 @@
 <li data-list-item data-search="{{ $category->name }} {{ $category->slug }}" data-type="{{ $category->type->value }}"
     data-status="{{ $status }}"
     class="flex flex-col overflow-hidden rounded-md border border-lh-border bg-lh-surface">
-    {{-- Ảnh bìa: public/images/flowers/{slug}.webp|jpg (chưa có cột ảnh bìa — docs/design-vs-db-gaps.md #2). --}}
-    <x-flower-image :name="$category->slug" :alt="__('admin.collections.cover_alt', ['name' => $category->name])" class="aspect-[491/253] w-full" />
+    {{-- Ảnh chính tải lên ở form (categories.cover_image); chưa có thì public/images/flowers/{slug}.webp|jpg. --}}
+    <x-cover-image :url="$category->cover_url" :name="$category->slug" :alt="__('admin.collections.cover_alt', ['name' => $category->name])" class="aspect-[491/253] w-full" />
 
     <div class="flex flex-1 flex-col px-6 pt-6 pb-5">
         <div class="flex items-center justify-between gap-3">

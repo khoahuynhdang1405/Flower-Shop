@@ -36,4 +36,29 @@ interface CategoryRepositoryInterface
      * Gỡ sản phẩm khỏi bộ sưu tập; false khi sản phẩm vốn không có trong bộ sưu tập.
      */
     public function detachProduct(Category $collection, Product $product): bool;
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    public function create(array $attributes): Category;
+
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    public function update(Category $collection, array $attributes): void;
+
+    public function delete(Category $collection): void;
+
+    /**
+     * Còn sản phẩm nhận bộ sưu tập này làm kiểu hoa chính (products.category_id) hay không.
+     */
+    public function hasPrimaryProducts(Category $collection): bool;
+
+    /**
+     * Bộ sưu tập Theo mùa đang hiển thị có slug thuộc danh sách, kèm khóa là slug.
+     *
+     * @param  list<string>  $slugs
+     * @return Collection<string, Category>
+     */
+    public function findActiveSeasonsBySlugs(array $slugs): Collection;
 }

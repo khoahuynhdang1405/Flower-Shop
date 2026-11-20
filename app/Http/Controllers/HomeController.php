@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\Category\ListHomeOccasionsAction;
+use App\Actions\Category\ListSeasonCoversAction;
 use App\Actions\Post\ListLatestPostsAction;
 use App\Actions\Product\ListFeaturedProductsAction;
 use App\Enums\Season;
@@ -20,9 +21,11 @@ class HomeController extends Controller
         ListFeaturedProductsAction $listFeaturedProducts,
         ListLatestPostsAction $listLatestPosts,
         ListHomeOccasionsAction $listOccasions,
+        ListSeasonCoversAction $listSeasonCovers,
     ): View {
         $featuredProducts = $listFeaturedProducts->execute();
         $today = now();
+        $currentSeason = Season::fromMonth($today->month);
 
         return view('home', [
             'occasions' => $listOccasions->execute(),
@@ -30,7 +33,8 @@ class HomeController extends Controller
             // Chip lọc chỉ gồm các danh mục đang có sản phẩm nổi bật.
             'featuredCategories' => $featuredProducts->pluck('category')->unique('id')->values(),
             'today' => $today,
-            'currentSeason' => Season::fromMonth($today->month),
+            'currentSeason' => $currentSeason,
+            'seasonCoverUrl' => $listSeasonCovers->execute()[$currentSeason->value],
             'latestPosts' => $listLatestPosts->execute(),
         ]);
     }

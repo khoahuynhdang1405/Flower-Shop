@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Collection\CreateCollectionAction;
+use App\Actions\Collection\DeleteCollectionAction;
+use App\Actions\Collection\UpdateCollectionAction;
 use App\Enums\CategoryType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
@@ -42,9 +45,9 @@ class CategoryController extends Controller
         return view('admin.collections.create', ['category' => new Category]);
     }
 
-    public function store(StoreCategoryRequest $request): RedirectResponse
+    public function store(StoreCategoryRequest $request, CreateCollectionAction $createCollection): RedirectResponse
     {
-        $category = Category::create($request->validated());
+        $category = $createCollection->execute($request->toData());
 
         return redirect()->route('admin.collections')
             ->with('status', __('admin.collections.flash.created', ['name' => $category->name]));
@@ -55,25 +58,22 @@ class CategoryController extends Controller
         return view('admin.collections.edit', ['category' => $collection]);
     }
 
-    public function update(UpdateCategoryRequest $request, Category $collection): RedirectResponse
+    public function update(UpdateCategoryRequest $request, Category $collection, UpdateCollectionAction $updateCollection): RedirectResponse
     {
-        $collection->update($request->validated());
+        $updateCollection->execute($collection, $request->toData());
 
         return redirect()->route('admin.collections')
             ->with('status', __('admin.collections.flash.updated', ['name' => $collection->name]));
     }
 
     /**
-     * Không xóa bộ sưu tập còn sản phẩm: khóa ngoại products.category_id đang để cascade,
-     * xóa sẽ kéo theo toàn bộ sản phẩm. Gợi ý ẩn bộ sưu tập thay vì xóa.
+     * Bộ sưu tập còn sản phẩm (kiểu hoa chính) thì không xóa, gợi ý ẩn đi (DeleteCollectionAction).
      */
-    public function destroy(Category $collection): RedirectResponse
+    public function destroy(Category $collection, DeleteCollectionAction $deleteCollection): RedirectResponse
     {
-        if ($collection->hasProducts()) {
+        if (! $deleteCollection->execute($collection)) {
             return back()->with('error', __('admin.collections.flash.has_products', ['name' => $collection->name]));
         }
-
-        $collection->delete();
 
         return redirect()->route('admin.collections')
             ->with('status', __('admin.collections.flash.deleted', ['name' => $collection->name]));

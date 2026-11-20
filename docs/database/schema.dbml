@@ -60,6 +60,7 @@ Table categories {
   slug varchar(255) [unique, not null]
   type varchar(50) [default: 'occasion', note: 'season, occasion, flower_type']
   description text
+  cover_image varchar(255) [note: 'Ảnh chính bộ sưu tập, đường dẫn trên disk public (collections/...)']
   is_active boolean [default: true]
   created_at timestamp
   updated_at timestamp

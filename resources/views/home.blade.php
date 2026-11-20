@@ -5,6 +5,7 @@
      * @var Illuminate\Database\Eloquent\Collection<int, App\Models\Category> $occasions  dịp gửi đang hiển thị (tối đa 4)
      * @var Illuminate\Support\Carbon $today
      * @var App\Enums\Season $currentSeason
+     * @var string|null $seasonCoverUrl  ảnh chính bộ sưu tập mùa hiện tại
      *
      * Khối đánh giá khách "Niềm vui nở từ những điều nhỏ" chưa làm: chờ bảng reviews (docs/design-vs-db-gaps.md #1).
      *
@@ -84,7 +85,7 @@
                         <a href="{{ route('flowers.index', ['occasion' => [$occasion->slug]]) }}"
                             aria-label="{{ __('home.occasions.view', ['name' => $occasion->name]) }}"
                             class="group block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lh-primary">
-                            <x-flower-image :name="'dip-'.$occasion->slug" class="aspect-[420/320] rounded-sm transition-opacity group-hover:opacity-95" />
+                            <x-cover-image :url="$occasion->cover_url" :name="'dip-'.$occasion->slug" class="aspect-[420/320] rounded-sm transition-opacity group-hover:opacity-95" />
                             <span class="mt-5 flex items-center justify-between gap-3">
                                 <span class="font-serif text-2xl">{{ $occasion->name }}</span>
                                 <x-lucide-arrow-up-right class="size-4 shrink-0 stroke-[1.5] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none" aria-hidden="true" />
@@ -137,7 +138,7 @@
     </section>
 
     {{-- Banner mùa hiện tại --}}
-    <x-storefront.season-banner :season="$currentSeason" :today="$today" id="home-season-title"
+    <x-storefront.season-banner :season="$currentSeason" :today="$today" id="home-season-title" :image-url="$seasonCoverUrl"
         :href="route('seasons')" :cta="__('home.season.cta.'.$currentSeason->value)" />
 
     {{-- Một tiệm hoa nhỏ. Thật nhiều thương yêu. --}}

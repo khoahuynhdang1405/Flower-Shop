@@ -183,6 +183,7 @@ Khóa chính kép (`role_id`, `permission_id`).
 | slug | VARCHAR(255) | UNIQUE, NOT NULL | vd. `hoa-theo-mua` |
 | type | VARCHAR(50) | NOT NULL, DEFAULT 'occasion' | `season`, `occasion`, `flower_type` |
 | description | TEXT | NULLABLE | Mô tả danh mục |
+| cover_image | VARCHAR(255) | NULLABLE | Ảnh chính (ảnh bìa) bộ sưu tập, đường dẫn trên disk public `collections/...`; hiện ở thẻ Admin › Bộ sưu tập, thẻ dịp Trang chủ, trang Hoa theo mùa |
 | is_active | TINYINT(1) | DEFAULT 1 | 1: hiển thị, 0: ẩn |
 | created_at | TIMESTAMP | NULLABLE | Thời gian tạo |
 | updated_at | TIMESTAMP | NULLABLE | Thời gian cập nhật |
