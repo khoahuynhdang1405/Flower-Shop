@@ -15,8 +15,10 @@ use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Http\Response;
 
 /**
- * MoMo Payment Gateway v2 (captureWallet = trang QR quét bằng ví MoMo): gọi API tạo giao dịch, nhận payUrl.
- * Yêu cầu và kết quả đều ký HMAC-SHA256 trên chuỗi "key=value&..." xếp khóa theo chữ cái.
+ * MoMo Payment Gateway v2: gọi API tạo giao dịch, nhận payUrl. Kiểu thanh toán (requestType) lấy từ
+ * services.momo.request_type: payWithATM (thẻ ATM), captureWallet (QR ví) hoặc payWithMethod.
+ * Yêu cầu và kết quả đều ký HMAC-SHA256 trên chuỗi "key=value&..." xếp khóa theo chữ cái;
+ * kết quả không phân biệt payType (qr / napas / credit...), chỉ dựa vào chữ ký và resultCode = 0.
  */
 final class MomoGateway implements PaymentGatewayInterface
 {
