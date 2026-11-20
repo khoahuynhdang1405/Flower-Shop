@@ -57,7 +57,9 @@ return [
     ],
 
     /*
-    | Cổng MoMo (quét QR bằng ví MoMo). Mặc định trỏ sandbox; lên production đổi MOMO_ENDPOINT và bộ khóa thật.
+    | Cổng MoMo. Mặc định trỏ sandbox; lên production đổi MOMO_ENDPOINT và bộ khóa thật.
+    | MOMO_REQUEST_TYPE: payWithATM (thẻ ATM nội địa, test được trên trình duyệt), captureWallet (quét QR bằng ví)
+    | hoặc payWithMethod (để khách tự chọn trên trang MoMo).
     */
 
     'momo' => [
@@ -65,7 +67,7 @@ return [
         'access_key' => env('MOMO_ACCESS_KEY'),
         'secret_key' => env('MOMO_SECRET_KEY'),
         'endpoint' => env('MOMO_ENDPOINT') ?: 'https://test-payment.momo.vn/v2/gateway/api/create',
-        'request_type' => 'captureWallet',
+        'request_type' => env('MOMO_REQUEST_TYPE') ?: 'payWithATM',
     ],
 
 ];

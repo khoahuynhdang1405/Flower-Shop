@@ -20,7 +20,7 @@ class MomoGatewayTest extends TestCase
 {
     private const SECRET = 'MOMOSECRET';
 
-    public function test_create_payment_sends_a_signed_capture_wallet_request_and_returns_the_pay_url(): void
+    public function test_create_payment_signs_and_sends_the_configured_request_type_and_returns_the_pay_url(): void
     {
         Http::fake(['momo.test/*' => Http::response(['resultCode' => 0, 'payUrl' => 'https://momo.test/pay/abc'])]);
 
@@ -30,10 +30,10 @@ class MomoGatewayTest extends TestCase
         Http::assertSent(function (Request $request): bool {
             $expected = hash_hmac('sha256', 'accessKey=ACCESS&amount=760000&extraData=&ipnUrl=https://shop.test/payment/momo/ipn'
                 .'&orderId=LH12T1700000000&orderInfo=Thanh toan don hoa LH-8291&partnerCode=MOMOTEST'
-                .'&redirectUrl=https://shop.test/payment/momo/return&requestId=LH12T1700000000&requestType=captureWallet', self::SECRET);
+                .'&redirectUrl=https://shop.test/payment/momo/return&requestId=LH12T1700000000&requestType=payWithATM', self::SECRET);
 
             return $request->url() === 'https://momo.test/v2/gateway/api/create'
-                && $request['requestType'] === 'captureWallet'
+                && $request['requestType'] === 'payWithATM'
                 && $request['amount'] === 760000
                 && $request['signature'] === $expected
                 && ! isset($request['accessKey']);
@@ -58,6 +58,14 @@ class MomoGatewayTest extends TestCase
         $this->assertSame('LH12T1700000000', $result->reference);
         $this->assertSame(760000, $result->amount);
         $this->assertSame('4088878653', $result->transactionRef);
+    }
+
+    public function test_verify_accepts_an_atm_card_payment(): void
+    {
+        $result = $this->gateway()->verify($this->signed($this->resultParams(['payType' => 'napas'])));
+
+        $this->assertTrue($result->isSignatureValid);
+        $this->assertTrue($result->isSuccessful);
     }
 
     public function test_verify_marks_a_declined_payment_as_unsuccessful(): void
@@ -86,7 +94,7 @@ class MomoGatewayTest extends TestCase
 
     private function gateway(): MomoGateway
     {
-        return new MomoGateway(app(Factory::class), 'MOMOTEST', 'ACCESS', self::SECRET, 'https://momo.test/v2/gateway/api/create', 'captureWallet');
+        return new MomoGateway(app(Factory::class), 'MOMOTEST', 'ACCESS', self::SECRET, 'https://momo.test/v2/gateway/api/create', 'payWithATM');
     }
 
     private function request(): PaymentRequestData
