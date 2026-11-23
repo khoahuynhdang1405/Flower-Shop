@@ -53,6 +53,11 @@ return [
     'product' => [
         'favorite' => 'Thêm “:name” vào danh sách yêu thích',
         'add_to_cart' => 'Thêm “:name” vào giỏ hoa',
+        'sold_out' => 'Tạm hết',
+        'added' => 'Lá đã thêm “:name” vào giỏ cho bạn.',
+        'add_failed' => 'Lá chưa thêm được bó hoa này, bạn thử lại giúp Lá nhé.',
+        'view_cart' => 'Xem giỏ',
+        'close_toast' => 'Đóng thông báo',
     ],
 
     'legal' => [

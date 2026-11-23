@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\Category\ListSeasonCoversAction;
+use App\Actions\Product\ListSeasonProductsAction;
 use App\Enums\Season;
 use Illuminate\View\View;
 
@@ -14,14 +15,16 @@ use Illuminate\View\View;
  */
 class SeasonController extends Controller
 {
-    public function __invoke(ListSeasonCoversAction $listSeasonCovers): View
+    public function __invoke(ListSeasonCoversAction $listSeasonCovers, ListSeasonProductsAction $listSeasonProducts): View
     {
         $today = now();
+        $currentSeason = Season::fromMonth($today->month);
 
         return view('seasons.index', [
             'today' => $today,
-            'currentSeason' => Season::fromMonth($today->month),
+            'currentSeason' => $currentSeason,
             'seasonCovers' => $listSeasonCovers->execute(),
+            'seasonProducts' => $listSeasonProducts->execute($currentSeason),
         ]);
     }
 }

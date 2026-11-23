@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Enums\CategoryType;
 use App\Enums\FlowerColor;
+use App\Enums\Season;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
@@ -38,19 +39,34 @@ class ProductSeeder extends Seeder
     ];
 
     /**
+     * Bộ sưu tập Theo mùa (slug theo Season::collectionSlug(), trang "Hoa theo mùa" hiện sản phẩm của mùa hiện tại).
+     *
+     * @var array<string, string>
+     */
+    private const SEASONS = [
+        'spring' => 'Trong trẻo mùa xuân',
+        'summer' => 'Rực rỡ mùa hạ',
+        'autumn' => 'Dịu dàng mùa thu',
+        'winter' => 'An lành mùa đông',
+    ];
+
+    /**
      * Giá size mặc định (Vừa, hoặc size duy nhất) là base_price. is_featured: hiện ở "Những bó hoa được thương nhất" (Trang chủ).
      *
-     * @var list<array{name: string, is_featured?: bool, category: string, stock: int, is_active: bool, sizes: array<string, int>, default: string, occasions: list<string>, colors: list<string>}>
+     * @var list<array{name: string, is_featured?: bool, category: string, stock: int, is_active: bool, sizes: array<string, int>, default: string, occasions: list<string>, seasons?: list<string>, colors: list<string>}>
      */
     private const PRODUCTS = [
         ['name' => 'Nắng trong veo', 'is_featured' => true, 'category' => 'bouquet', 'stock' => 18, 'is_active' => true, 'sizes' => ['Nhỏ' => 450000, 'Vừa' => 550000, 'Lớn' => 750000], 'default' => 'Vừa', 'occasions' => ['birthday', 'everyday'], 'colors' => ['yellow', 'peach']],
         ['name' => 'Lời thì thầm', 'is_featured' => true, 'category' => 'bouquet', 'stock' => 12, 'is_active' => true, 'sizes' => ['Nhỏ' => 480000, 'Vừa' => 680000, 'Lớn' => 880000], 'default' => 'Vừa', 'occasions' => ['love', 'birthday'], 'colors' => ['pink']],
-        ['name' => 'Thu dịu dàng', 'category' => 'vase', 'stock' => 3, 'is_active' => true, 'sizes' => ['Vừa' => 890000, 'Lớn' => 1190000], 'default' => 'Vừa', 'occasions' => ['everyday'], 'colors' => ['peach']],
+        ['name' => 'Thu dịu dàng', 'category' => 'vase', 'stock' => 3, 'is_active' => true, 'sizes' => ['Vừa' => 890000, 'Lớn' => 1190000], 'default' => 'Vừa', 'occasions' => ['everyday'], 'seasons' => ['autumn'], 'colors' => ['peach']],
         ['name' => 'Bình yên xanh', 'is_featured' => true, 'category' => 'basket', 'stock' => 10, 'is_active' => true, 'sizes' => ['Vừa' => 750000, 'Lớn' => 950000], 'default' => 'Vừa', 'occasions' => ['congrats'], 'colors' => ['green', 'white']],
         ['name' => 'Một ngày bình dị', 'is_featured' => true, 'category' => 'vase', 'stock' => 8, 'is_active' => true, 'sizes' => ['Nhỏ' => 490000, 'Vừa' => 590000, 'Lớn' => 790000], 'default' => 'Vừa', 'occasions' => ['everyday'], 'colors' => ['white', 'green']],
-        ['name' => 'Hồng phấn ban mai', 'category' => 'bouquet', 'stock' => 2, 'is_active' => true, 'sizes' => ['Nhỏ' => 420000, 'Vừa' => 520000], 'default' => 'Nhỏ', 'occasions' => ['love'], 'colors' => ['pink']],
-        ['name' => 'Ấm áp mùa đông', 'category' => 'basket', 'stock' => 0, 'is_active' => true, 'sizes' => ['Vừa' => 980000], 'default' => 'Vừa', 'occasions' => ['congrats'], 'colors' => ['red']],
+        ['name' => 'Hồng phấn ban mai', 'category' => 'bouquet', 'stock' => 2, 'is_active' => true, 'sizes' => ['Nhỏ' => 420000, 'Vừa' => 520000], 'default' => 'Nhỏ', 'occasions' => ['love'], 'seasons' => ['winter'], 'colors' => ['pink']],
+        ['name' => 'Ấm áp mùa đông', 'category' => 'basket', 'stock' => 0, 'is_active' => true, 'sizes' => ['Vừa' => 980000], 'default' => 'Vừa', 'occasions' => ['congrats'], 'seasons' => ['winter'], 'colors' => ['red']],
         ['name' => 'Cúc họa mi tháng mười', 'category' => 'bouquet', 'stock' => 15, 'is_active' => false, 'sizes' => ['Nhỏ' => 380000, 'Vừa' => 480000], 'default' => 'Nhỏ', 'occasions' => ['birthday'], 'colors' => ['white']],
+        ['name' => 'Một vệt nắng thu', 'category' => 'bouquet', 'stock' => 9, 'is_active' => true, 'sizes' => ['Nhỏ' => 490000, 'Vừa' => 590000, 'Lớn' => 790000], 'default' => 'Vừa', 'occasions' => ['birthday', 'congrats'], 'seasons' => ['autumn'], 'colors' => ['peach', 'yellow']],
+        ['name' => 'Hẹn với tháng Mười', 'category' => 'basket', 'stock' => 6, 'is_active' => true, 'sizes' => ['Vừa' => 720000, 'Lớn' => 920000], 'default' => 'Vừa', 'occasions' => ['congrats'], 'seasons' => ['autumn'], 'colors' => ['yellow', 'white']],
+        ['name' => 'Chiều êm', 'category' => 'vase', 'stock' => 7, 'is_active' => true, 'sizes' => ['Vừa' => 650000, 'Lớn' => 850000], 'default' => 'Vừa', 'occasions' => ['love', 'everyday'], 'seasons' => ['autumn'], 'colors' => ['pink']],
     ];
 
     /**
@@ -65,6 +81,10 @@ class ProductSeeder extends Seeder
         $occasions = collect(self::OCCASIONS)->map(fn (string $name): Category => Category::firstOrCreate(
             ['slug' => Str::slug($name)],
             ['name' => $name, 'type' => CategoryType::Occasion],
+        ));
+        $seasons = collect(self::SEASONS)->map(fn (string $name, string $season): Category => Category::firstOrCreate(
+            ['slug' => Season::from($season)->collectionSlug()],
+            ['name' => $name, 'type' => CategoryType::Season],
         ));
 
         foreach (self::PRODUCTS as $data) {
@@ -84,7 +104,11 @@ class ProductSeeder extends Seeder
                 ]);
             }
 
-            $product->occasions()->sync($occasions->only($data['occasions'])->pluck('id'));
+            // Một pivot category_product cho cả dịp và mùa.
+            $product->occasions()->sync([
+                ...$occasions->only($data['occasions'])->pluck('id'),
+                ...$seasons->only($data['seasons'] ?? [])->pluck('id'),
+            ]);
             $product->colors()->delete();
             $product->colors()->createMany(array_map(fn (string $color): array => ['color' => FlowerColor::from($color)], $data['colors']));
         }

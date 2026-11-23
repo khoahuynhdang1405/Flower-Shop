@@ -367,6 +367,11 @@ class PlaceOrderTest extends TestCase
                 return $this->orders->findForTracking($userId, $orderCode, $senderPhones);
             }
 
+            public function findByCustomer(int $userId): Collection
+            {
+                return $this->orders->findByCustomer($userId);
+            }
+
             public function paginateForAdmin(AdminOrderFilters $filters, int $perPage): LengthAwarePaginator
             {
                 return $this->orders->paginateForAdmin($filters, $perPage);

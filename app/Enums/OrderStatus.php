@@ -33,6 +33,14 @@ enum OrderStatus: string
     }
 
     /**
+     * Đơn chưa xong và chưa hủy (bộ lọc "Đang xử lý" ở trang Tài khoản).
+     */
+    public function isInProgress(): bool
+    {
+        return ! in_array($this, [self::Completed, self::Cancelled], true);
+    }
+
+    /**
      * Vị trí trên timeline 4 bước của trang tra cứu (Đã tiếp nhận · Đang cắm hoa · Đang giao · Hoàn thành);
      * null khi đơn đã hủy.
      */

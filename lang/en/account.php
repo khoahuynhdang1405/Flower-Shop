@@ -62,14 +62,12 @@ return [
         'filter_completed' => 'Completed (:count)',
         'meta' => ':code · :date · :count item(s)',
         'view' => 'View details',
+        'view_label' => 'View details of order :code',
         'reorder' => 'Order again',
         'deliver_today' => 'Delivering today, :time',
+        'deliver_on' => 'Delivering :date, :time',
         'empty' => 'No orders here yet.',
         'latest_note' => 'Order :code is paid · Lá is wrapping your flowers and writing the card.',
-        'status' => [
-            'preparing' => 'Being prepared',
-            'completed' => 'Completed',
-        ],
     ],
 
     'password' => [

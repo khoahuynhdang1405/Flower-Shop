@@ -34,6 +34,14 @@ interface ProductRepositoryInterface
     public function findFeaturedForSale(int $limit): Collection;
 
     /**
+     * Sản phẩm đang bán thuộc một bộ sưu tập (theo slug, qua pivot category_product), sản phẩm nổi bật trước,
+     * kèm danh mục, size mặc định và ảnh chính để hiện thẻ sản phẩm.
+     *
+     * @return Collection<int, Product>
+     */
+    public function findForSaleInCollection(string $collectionSlug): Collection;
+
+    /**
      * Sản phẩm có kiểu hoa chính là danh mục này (products.category_id), theo tên, kèm dữ liệu dòng bảng.
      *
      * @return Collection<int, Product>

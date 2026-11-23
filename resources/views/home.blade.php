@@ -7,7 +7,7 @@
      * @var App\Enums\Season $currentSeason
      * @var string|null $seasonCoverUrl  ảnh chính bộ sưu tập mùa hiện tại
      *
-     * Khối đánh giá khách "Niềm vui nở từ những điều nhỏ" chưa làm: chờ bảng reviews (docs/design-vs-db-gaps.md #1).
+     * Khối đánh giá khách "Niềm vui nở từ những điều nhỏ" là nội dung viết cứng, chờ bảng reviews (docs/design-vs-db-gaps.md #1).
      *
      * Thành phần hoa ("Hồng vàng · Cúc tana · Lá bạc") và nhãn "Được yêu thích / Thiết kế mới" chưa có cột
      * (docs/design-vs-db-gaps.md #5): dòng phụ tạm hiện tên danh mục, chưa có nhãn.
@@ -51,8 +51,9 @@
             <a href="{{ route('seasons') }}"
                 class="absolute right-4 bottom-4 flex items-center gap-6 rounded-sm bg-lh-surface px-5 py-4 shadow-sm transition-colors hover:bg-lh-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary sm:right-6 sm:bottom-6">
                 <span>
-                    <span class="block text-[10px] tracking-wide text-lh-muted uppercase">{{ __('home.hero.collection_eyebrow') }}</span>
-                    <span class="mt-1 block font-serif text-lg">{{ __('home.hero.collection_name') }}</span>
+                    {{-- Tháng và bộ sưu tập theo ngày hiện tại (HomeController); vi dùng :month, en dùng :month_name. --}}
+                    <span class="block text-[10px] tracking-wide text-lh-muted uppercase">{{ __('home.hero.collection_eyebrow', ['month' => $today->month, 'month_name' => $today->copy()->locale('en')->monthName]) }}</span>
+                    <span class="mt-1 block font-serif text-lg">{{ __('home.hero.collection_names.'.$currentSeason->value) }}</span>
                 </span>
                 <x-lucide-arrow-up-right class="size-4 stroke-[1.5]" aria-hidden="true" />
             </a>
@@ -129,8 +130,7 @@
             <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list" aria-live="polite">
                 @foreach ($featuredProducts as $product)
                     <li data-filter-item data-filter-value="{{ $product->category->slug }}">
-                        <x-storefront.product-card :name="$product->name" :subtitle="$product->category->name" :price="$product->display_price"
-                            :image-url="$product->primaryImage?->url" :image-name="$product->slug" :url="route('flowers.show', $product->slug)" />
+                        <x-storefront.product-card :product="$product" />
                     </li>
                 @endforeach
             </ul>
@@ -192,6 +192,23 @@
                 @endforeach
             </ol>
         </div>
+    </section>
+
+    {{-- Niềm vui nở từ những điều nhỏ: 3 lời khách gửi lại (viết cứng trong lang home.testimonials). --}}
+    <section aria-labelledby="testimonials-title" class="{{ $container }} pt-16 lg:pt-24">
+        <div class="text-center">
+            <p class="text-[11px] font-semibold tracking-wide text-lh-primary uppercase">{{ __('home.testimonials.eyebrow') }}</p>
+            <h2 id="testimonials-title" class="mt-3 font-serif text-3xl leading-tight sm:text-[40px]">{{ __('home.testimonials.title') }}</h2>
+            <p class="mt-3 text-sm text-lh-muted">{{ __('home.testimonials.rating') }}</p>
+        </div>
+
+        <ul class="mt-10 grid gap-6 lg:grid-cols-3" role="list">
+            @foreach (__('home.testimonials.items') as $testimonial)
+                <li class="flex">
+                    <x-storefront.testimonial-card class="w-full" :quote="$testimonial['quote']" :name="$testimonial['name']" :occasion="$testimonial['occasion']" />
+                </li>
+            @endforeach
+        </ul>
     </section>
 
     {{-- Ghé góc nhỏ của Lá: 3 bài mới nhất; ẩn khi chưa có bài nào được đăng. --}}

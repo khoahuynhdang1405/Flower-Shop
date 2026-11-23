@@ -13,8 +13,13 @@ return [
         'secondary_cta' => 'Explore the shop',
         'note' => 'Fresh flowers daily · Hand-wrapped · Same-day delivery',
         'image_alt' => 'A bouquet of cream roses and hydrangeas on the shop’s wooden table',
-        'collection_eyebrow' => 'October collection',
-        'collection_name' => 'Gentle autumn',
+        'collection_eyebrow' => ':month_name collection',
+        'collection_names' => [
+            'spring' => 'Clear spring',
+            'summer' => 'Bright summer',
+            'autumn' => 'Gentle autumn',
+            'winter' => 'Peaceful winter',
+        ],
     ],
 
     'promises' => [
@@ -74,6 +79,19 @@ return [
         'filter_label' => 'Filter by style',
         'all' => 'All',
         'none' => 'Lá is picking out the loveliest bouquets — please check back soon.',
+    ],
+
+    // TODO: hard-coded testimonials from the design; replace with approved reviews once the reviews table exists (docs/design-vs-db-gaps.md #1).
+    'testimonials' => [
+        'eyebrow' => 'Love notes sent back',
+        'title' => 'Joy blooms from little things.',
+        'rating' => '4.9/5 from more than 320 customers who sent love with Lá',
+        'stars_label' => ':count out of 5 stars',
+        'items' => [
+            ['quote' => 'The bouquet was even prettier than the photo. My mum kept admiring it, then asked where the shop was so she could drop by herself. Thank you, Lá, for such a gentle birthday.', 'name' => 'Đoan Trang', 'occasion' => 'Birthday flowers for mum'],
+            ['quote' => 'I only briefly described the colours she loves, and Lá understood and wrapped it just right. The handwritten card was a small detail that truly moved me.', 'name' => 'Gia Bảo', 'occasion' => 'Anniversary flowers'],
+            ['quote' => 'The flowers stayed fresh for a long time, the colours were lovely and they arrived right on time. With a vase on my desk, the whole week felt a little sweeter.', 'name' => 'Kim Chi', 'occasion' => 'A bouquet for myself'],
+        ],
     ],
 
     'journal' => [

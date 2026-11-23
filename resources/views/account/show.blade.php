@@ -1,18 +1,10 @@
 @php
-    /*
-     * TODO: đơn hàng vẫn là dữ liệu mẫu theo docs/designs/storefront/13-tai-khoan.png — thay bằng orders của khách
-     * khi làm phần đơn hàng.
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Order> $orders mới nhất trước
      */
-    $orders = [
-        ['code' => '#LH1028', 'name' => 'Lời thì thầm', 'image' => 'loi-thi-tham', 'date' => '07/10/2026', 'items' => 1, 'total' => 680000, 'status' => 'preparing', 'delivery_time' => '10:30'],
-        ['code' => '#LH0986', 'name' => 'Nắng trong veo', 'image' => 'nang-trong-veo', 'date' => '28/09/2026', 'items' => 1, 'total' => 550000, 'status' => 'completed'],
-        ['code' => '#LH0932', 'name' => 'Bình yên xanh', 'image' => 'binh-yen-xanh', 'date' => '15/09/2026', 'items' => 1, 'total' => 750000, 'status' => 'completed'],
-        ['code' => '#LH0881', 'name' => 'Một ngày bình dị', 'image' => 'mot-ngay-binh-di', 'date' => '02/09/2026', 'items' => 1, 'total' => 590000, 'status' => 'completed'],
-    ];
-
-    $preparingCount = collect($orders)->where('status', 'preparing')->count();
-    $completedCount = collect($orders)->where('status', 'completed')->count();
-    $latestPreparing = collect($orders)->firstWhere('status', 'preparing');
+    $preparingCount = $orders->filter(fn ($order) => $order->order_status->isInProgress())->count();
+    $completedCount = $orders->where('order_status', App\Enums\OrderStatus::Completed)->count();
+    $latestPreparing = $orders->first(fn ($order) => $order->order_status->isInProgress() && $order->payment_status === App\Enums\PaymentStatus::Paid);
 
     $hasPassword = filled($user->password);
 
@@ -123,10 +115,10 @@
                             <x-account.order-row :order="$order" />
                         @endforeach
                     </ul>
-                    <p data-filter-empty hidden class="border-t border-lh-border px-5 py-8 text-center text-sm text-lh-muted sm:px-7">{{ __('account.orders.empty') }}</p>
+                    <p data-filter-empty @if ($orders->isNotEmpty()) hidden @endif class="border-t border-lh-border px-5 py-8 text-center text-sm text-lh-muted sm:px-7">{{ __('account.orders.empty') }}</p>
 
                     @if ($latestPreparing)
-                        <p class="bg-lh-sage-50 px-5 py-4 text-xs sm:px-7">{{ __('account.orders.latest_note', ['code' => $latestPreparing['code']]) }}</p>
+                        <p class="bg-lh-sage-50 px-5 py-4 text-xs sm:px-7">{{ __('account.orders.latest_note', ['code' => $latestPreparing->order_code]) }}</p>
                     @endif
                 </x-account.section>
 

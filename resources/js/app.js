@@ -16,4 +16,5 @@ import './locale-switcher';
 import './post-editor';
 import './product-gallery';
 import './quantity-stepper';
+import './quick-add';
 import './size-picker';

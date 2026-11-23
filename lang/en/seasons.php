@@ -63,6 +63,7 @@ return [
         ],
         'count' => ':count designs for this season',
         'badge' => 'Most loved',
+        'empty' => 'Lá is still picking the flowers for this season, please come back in a few days.',
         'note' => 'Seasonal flowers may vary slightly with the garden and the weather. Lá always keeps the colours and spirit of the design, and checks with you before swapping any flowers.',
     ],
 

@@ -50,6 +50,13 @@ interface OrderRepositoryInterface
     public function findForTracking(int $userId, string $orderCode, array $senderPhones): ?Order;
 
     /**
+     * Mọi đơn của một tài khoản, mới nhất trước, kèm thông tin giao, các món và ảnh chính của hoa.
+     *
+     * @return Collection<int, Order>
+     */
+    public function findByCustomer(int $userId): Collection;
+
+    /**
      * Đánh dấu đã thanh toán nếu đơn chưa ở trạng thái đó; trả về false khi một lần gọi khác đã làm trước.
      */
     public function markPaymentPaid(Order $order, ?string $transactionRef): bool;
