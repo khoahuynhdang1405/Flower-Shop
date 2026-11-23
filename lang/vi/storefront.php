@@ -10,6 +10,7 @@ return [
 
     'nav' => [
         'main' => 'Điều hướng chính',
+        'menu' => 'Mở menu',
         'open' => 'Mở menu',
         'close' => 'Đóng menu',
         'account' => 'Tài khoản',

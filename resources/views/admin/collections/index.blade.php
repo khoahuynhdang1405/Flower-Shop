@@ -9,7 +9,7 @@
 
     <x-admin.flash class="mt-8" />
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.collections.stats.total')" :value="$stats['total']"
             :note="__('admin.collections.stats.total_note', ['published' => $stats['published'], 'hidden' => $stats['hidden']])" />
         <x-admin.stat-card :label="__('admin.collections.stats.season')" :value="$stats['season']"

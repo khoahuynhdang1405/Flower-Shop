@@ -14,11 +14,11 @@
         : Route::has($item['route']) && request()->routeIs($item['route'], $item['route'].'.*');
     $iconButton = 'grid size-10 place-items-center rounded-full text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary';
 @endphp
-<header class="border-b border-lh-border">
+<header class="relative border-b border-lh-border">
     <div class="mx-auto grid h-20 max-w-[1440px] grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 px-4 sm:gap-x-6 sm:px-8 lg:h-[98px] lg:grid-cols-[1fr_auto_1fr] lg:px-20">
         <x-logo />
 
-        <nav aria-label="{{ __('storefront.nav.main') }}" class="min-w-0 overflow-x-auto [scrollbar-width:none]">
+        <nav aria-label="{{ __('storefront.nav.main') }}" class="min-w-0 max-lg:hidden">
             <ul class="mx-auto flex w-max items-center gap-5 text-sm sm:gap-7 lg:gap-8 xl:gap-11">
                 @foreach (config('shop.menu') as $item)
                     <li>
@@ -32,6 +32,27 @@
         </nav>
 
         <div class="flex items-center justify-end gap-0.5 sm:gap-2">
+            {{-- Dưới lg: menu chính gập vào nút ☰, mở thành danh sách dọc ngay dưới header (details chạy được không cần JS). --}}
+            <details class="group lg:hidden" data-dropdown>
+                <summary class="{{ $iconButton }} cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    <x-lucide-menu class="size-5 stroke-[1.5] group-open:hidden" aria-hidden="true" />
+                    <x-lucide-x class="hidden size-5 stroke-[1.5] group-open:block" aria-hidden="true" />
+                    <span class="sr-only">{{ __('storefront.nav.menu') }}</span>
+                </summary>
+                <nav aria-label="{{ __('storefront.nav.main') }}" class="absolute inset-x-0 top-full z-30 border-b border-lh-border bg-lh-cream px-4 pb-4 shadow-sm sm:px-8">
+                    <ul class="flex flex-col">
+                        @foreach (config('shop.menu') as $item)
+                            <li class="border-t border-lh-border first:border-t-0">
+                                <a href="{{ $linkFor($item) }}" @if ($isActive($item)) aria-current="page" @endif
+                                    class="flex min-h-12 items-center rounded text-[15px] transition-colors hover:text-lh-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lh-primary aria-[current=page]:font-semibold aria-[current=page]:text-lh-primary">
+                                    {{ __('storefront.menu.'.$item['key']) }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+            </details>
+
             @unless ($compact)
                 {{-- TODO: trang tìm kiếm. --}}
                 <a href="#" class="{{ $iconButton }} max-sm:hidden">

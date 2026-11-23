@@ -55,7 +55,7 @@
         </x-admin.page-header>
     </x-slot:page-header>
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.products.stats.selling')" :value="$stats['selling']"
             :note="__('admin.products.stats.selling_note')" />
         <x-admin.stat-card :label="__('admin.products.stats.low_stock')" :value="$stats['low_stock']"
@@ -80,7 +80,7 @@
                 ]" />
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="relative overflow-x-auto">
             <table class="w-full min-w-[960px] text-left">
                 <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                     <tr>

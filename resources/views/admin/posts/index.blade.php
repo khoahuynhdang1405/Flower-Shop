@@ -26,7 +26,7 @@
 
     <x-admin.flash class="mt-8" />
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.posts.stats.total')" :value="$stats['total']" :note="__('admin.posts.stats.total_note')" />
         <x-admin.stat-card :label="__('admin.posts.stats.published')" :value="$stats['published']" :note="__('admin.posts.stats.published_note')" />
         <x-admin.stat-card :label="__('admin.posts.stats.drafts')" :value="$stats['drafts']" :note="__('admin.posts.stats.drafts_note')" />
@@ -64,7 +64,7 @@
                 @endif
             </div>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[900px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>

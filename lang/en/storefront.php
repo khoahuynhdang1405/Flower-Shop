@@ -10,6 +10,7 @@ return [
 
     'nav' => [
         'main' => 'Main navigation',
+        'menu' => 'Open menu',
         'open' => 'Open menu',
         'close' => 'Close menu',
         'account' => 'Account',

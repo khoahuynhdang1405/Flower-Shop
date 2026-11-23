@@ -1,59 +1,85 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Lá & Hoa
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Website thương mại điện tử cho tiệm hoa tươi **Lá & Hoa**: trang cửa hàng cho khách (chọn hoa, giỏ hàng, đặt hoa, thanh toán VNPAY/MoMo sandbox, tra cứu đơn) và trang quản trị `/admin` cho chủ tiệm và thợ cắm hoa.
 
-## About Laravel
+Laravel 13 · PHP 8.3+ · PostgreSQL · Tailwind CSS 4 + DaisyUI · Vite · Chart.js
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Yêu cầu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.3 trở lên, có các extension `pdo_pgsql`, `mbstring`, `openssl`, `fileinfo`
+- Composer 2
+- Node.js 20 trở lên và npm
+- PostgreSQL 14 trở lên
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Cài đặt
 
 ```bash
-composer require laravel/boost --dev
+# 1. Cài thư viện
+composer install
+npm install
 
-php artisan boost:install
+# 2. Tạo file cấu hình
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Mở `.env` và sửa phần cơ sở dữ liệu cho đúng máy của bạn:
 
-## Contributing
+```dotenv
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=la_va_hoa_db
+DB_USERNAME=postgres
+DB_PASSWORD=mat_khau_cua_ban
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Tạo database rỗng `la_va_hoa_db` trong PostgreSQL, sau đó:
 
-## Code of Conduct
+```bash
+# 3. Tạo bảng và dữ liệu mẫu (sản phẩm, bộ sưu tập, quà kèm, mã ưu đãi, bài viết, tài khoản mẫu)
+php artisan migrate --seed
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 4. Cho phép hiển thị ảnh tải lên trong trang quản trị
+php artisan storage:link
+```
 
-## Security Vulnerabilities
+## Chạy
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer run dev
+```
 
-## License
+Lệnh này chạy cùng lúc web server, hàng đợi (gửi email xác nhận đơn) và Vite. Mở http://localhost:8000.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Flower-Shop
+Nếu gói mã nguồn đã có sẵn thư mục `public/build`, bạn có thể chỉ chạy `php artisan serve` và `php artisan queue:work` mà không cần Vite.
+
+## Tài khoản mẫu
+
+| Vai trò | Trang đăng nhập | Email | Mật khẩu |
+|---|---|---|---|
+| Chủ tiệm (admin) | http://localhost:8000/admin/login | `admin@lavahoa.com` | xem `database/seeders/AdminSeeder.php` |
+| Thợ cắm hoa (staff) | http://localhost:8000/admin/login | `staff@lavahoa.com` | xem `database/seeders/AdminSeeder.php` |
+| Khách | http://localhost:8000/login | `khach@lavahoa.test` | xem `database/seeders/CustomerSeeder.php` |
+
+Mã ưu đãi mẫu: `CHAOHOA`.
+
+## Tùy chọn
+
+- **Đăng nhập Google:** điền `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` trong `.env`.
+- **Thanh toán VNPAY / MoMo (sandbox):** điền các biến `VNPAY_*`, `MOMO_*`. `MOMO_REQUEST_TYPE=payWithATM` cho phép thử thanh toán bằng thẻ ATM giả lập trên trình duyệt.
+- **Email:** mặc định `MAIL_MAILER=log`, nội dung email được ghi vào `storage/logs/laravel.log`.
+
+## Kiểm thử
+
+```bash
+composer run test
+```
+
+Test dùng SQLite trong bộ nhớ (`phpunit.xml`), không đụng tới database PostgreSQL. Luôn chạy `php artisan config:clear` trước khi chạy test nếu bạn đã từng chạy `php artisan config:cache` hoặc `php artisan optimize`; nếu không, test sẽ chạy trên database thật và xóa sạch dữ liệu.
+
+## Tài liệu
+
+- `docs/database/schema.dbml`, `docs/database/database-spec.md`: cấu trúc và ý nghĩa các bảng
+- `docs/designs/`: ảnh thiết kế từng màn hình
+- `docs/design-vs-db-gaps.md`: những phần thiết kế có mà database chưa hỗ trợ

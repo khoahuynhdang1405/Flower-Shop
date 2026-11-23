@@ -37,7 +37,7 @@
 
 <section aria-labelledby="revenue-title" data-revenue-chart data-url="{{ route('admin.dashboard.revenue') }}"
     data-chart='@json($data)' data-strings='@json($strings)'
-    {{ $attributes->class('rounded-md border border-lh-border bg-lh-surface px-6 py-7 sm:px-8') }}>
+    {{ $attributes->class('relative overflow-hidden rounded-md border border-lh-border bg-lh-surface px-6 py-7 sm:px-8') }}>
     <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
         <h2 id="revenue-title" class="text-xl font-semibold" data-chart-title>{{ __('admin.dashboard.revenue.title_revenue', ['days' => $days]) }}</h2>
         <p class="text-[13px] text-lh-muted" data-chart-unit>{{ __('admin.dashboard.revenue.unit_revenue') }}</p>

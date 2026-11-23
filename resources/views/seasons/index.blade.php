@@ -73,7 +73,7 @@
             @if ($seasonProducts->isEmpty())
                 <p class="mt-8 rounded-sm bg-lh-sage-50 px-5 py-6 text-sm text-lh-muted">{{ __('seasons.products.empty') }}</p>
             @else
-                <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list">
+                <ul class="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4" role="list">
                     @foreach ($seasonProducts as $product)
                         <li>
                             <x-storefront.product-card :product="$product" :badge="$product->is_featured ? __('seasons.products.badge') : null" />

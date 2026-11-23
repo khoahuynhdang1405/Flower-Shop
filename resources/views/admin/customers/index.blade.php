@@ -20,7 +20,7 @@
 
     <x-admin.flash class="mt-8" />
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.customers.stats.total')" :value="$stats['total']"
             :note="__('admin.customers.stats.total_note')" />
         <x-admin.stat-card :label="__('admin.customers.stats.new_today')" :value="$stats['newToday']"
@@ -74,7 +74,7 @@
                 @endif
             </div>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[1040px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>

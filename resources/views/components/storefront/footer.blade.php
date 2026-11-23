@@ -3,7 +3,7 @@
         'explore' => ['all_flowers', 'custom', 'our_story'],
         'support' => ['how_to_order', 'shipping', 'returns', 'faq'],
     ];
-    $link = 'rounded text-sm text-white/80 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
+    $link = 'inline-block rounded py-1.5 text-sm sm:py-0 text-white/80 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white';
     $heading = 'text-xs font-semibold tracking-wide text-white uppercase';
 @endphp
 
@@ -32,7 +32,7 @@
             @foreach ($columns as $column => $items)
                 <nav aria-labelledby="footer-{{ $column }}">
                     <h2 id="footer-{{ $column }}" class="{{ $heading }}">{{ __('storefront.footer.'.$column) }}</h2>
-                    <ul class="mt-5 flex flex-col gap-3">
+                    <ul class="mt-4 flex flex-col gap-1 sm:mt-5 sm:gap-3">
                         @foreach ($items as $item)
                             {{-- TODO: trỏ tới trang tương ứng khi có. --}}
                             <li><a href="#" class="{{ $link }}">{{ __('storefront.footer.links.'.$item) }}</a></li>
@@ -57,9 +57,9 @@
             <nav aria-label="{{ __('storefront.footer.legal') }}">
                 <ul class="flex items-center gap-3">
                     {{-- TODO: trỏ tới trang chính sách khi có. --}}
-                    <li><a href="#" class="rounded hover:text-white focus-visible:outline-2 focus-visible:outline-white">{{ __('storefront.legal.privacy') }}</a></li>
+                    <li><a href="#" class="inline-block rounded py-2 hover:text-white focus-visible:outline-2 focus-visible:outline-white sm:py-0">{{ __('storefront.legal.privacy') }}</a></li>
                     <li aria-hidden="true">·</li>
-                    <li><a href="#" class="rounded hover:text-white focus-visible:outline-2 focus-visible:outline-white">{{ __('storefront.legal.terms') }}</a></li>
+                    <li><a href="#" class="inline-block rounded py-2 hover:text-white focus-visible:outline-2 focus-visible:outline-white sm:py-0">{{ __('storefront.legal.terms') }}</a></li>
                     <li aria-hidden="true">·</li>
                     <li><a href="{{ route('admin.login') }}" class="rounded hover:text-white focus-visible:outline-2 focus-visible:outline-white">{{ __('storefront.legal.staff') }}</a></li>
                 </ul>

@@ -48,7 +48,7 @@
     </x-slot:page-header>
 
     {{-- 4 thẻ số liệu --}}
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.dashboard.stats.revenue')" icon="lucide-wallet"
             :value="$price($revenue->today()->amount).' '.__('storefront.currency')"
             :note="$todayRevenueChange === null
@@ -103,7 +103,7 @@
         @if ($recentOrders->isEmpty())
             <p class="border-t border-lh-border px-6 py-10 text-center text-sm text-lh-muted">{{ __('admin.dashboard.recent_orders.empty') }}</p>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[880px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>
@@ -165,7 +165,7 @@
         @if ($featuredProducts->isEmpty())
             <p class="border-t border-lh-border px-6 py-10 text-center text-sm text-lh-muted">{{ __('admin.dashboard.products.empty') }}</p>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[820px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>

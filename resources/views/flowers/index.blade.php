@@ -73,7 +73,7 @@
                         </a>
                     </div>
                 @else
-                    <ul class="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3" role="list">
+                    <ul class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10 xl:grid-cols-3" role="list">
                         @foreach ($products as $product)
                             <li>
                                 <x-storefront.product-card :product="$product" />

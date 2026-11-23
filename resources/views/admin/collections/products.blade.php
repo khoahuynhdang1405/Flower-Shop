@@ -50,7 +50,7 @@
                 {{ $canManage ? __('admin.collection_products.members_empty') : __('admin.collection_products.flower_type_empty') }}
             </p>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[760px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>
@@ -129,7 +129,7 @@
             @else
                 <form method="POST" action="{{ route('admin.collections.products.store', $collection) }}" novalidate>
                     @csrf
-                    <div class="overflow-x-auto">
+                    <div class="relative overflow-x-auto">
                         <table class="w-full min-w-[760px] text-left">
                             <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                                 <tr>

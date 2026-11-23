@@ -77,7 +77,7 @@
         @if ($customer->orders->isEmpty())
             <p class="border-t border-lh-border px-6 py-12 text-center text-sm text-lh-muted">{{ __('admin.customers.show.no_orders') }}</p>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[720px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>

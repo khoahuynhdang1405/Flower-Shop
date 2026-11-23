@@ -20,7 +20,7 @@
 
     <x-admin.flash class="mt-8" />
 
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-4">
         <x-admin.stat-card :label="__('admin.promotions.stats.active')" :value="$stats['active']"
             :note="__('admin.promotions.stats.active_note', ['count' => $stats['active']])" />
         <x-admin.stat-card :label="__('admin.promotions.stats.usage')" :value="$stats['usage']"
@@ -51,7 +51,7 @@
                 <p class="mt-2 text-sm text-lh-muted">{{ __('admin.promotions.empty_body') }}</p>
             </div>
         @else
-            <div class="overflow-x-auto">
+            <div class="relative overflow-x-auto">
                 <table class="w-full min-w-[900px] text-left">
                     <thead class="bg-lh-canvas text-[13px] text-lh-muted">
                         <tr>
