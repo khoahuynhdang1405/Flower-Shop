@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Actions\Order\ListCustomerOrdersAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\UpdateAddressRequest;
 use App\Http\Requests\Account\UpdatePasswordRequest;
@@ -17,13 +18,14 @@ class ProfileController extends Controller
     /**
      * Trang Tài khoản: thông tin cá nhân, địa chỉ giao mặc định, đơn hàng, đổi mật khẩu.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request, ListCustomerOrdersAction $listOrders): View
     {
         $user = $request->user();
 
         return view('account.show', [
             'user' => $user,
             'customer' => $this->customerSummary($user),
+            'orders' => $listOrders->execute((int) $user->id),
         ]);
     }
 

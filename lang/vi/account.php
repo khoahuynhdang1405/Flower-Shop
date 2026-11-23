@@ -62,14 +62,12 @@ return [
         'filter_completed' => 'Hoàn thành (:count)',
         'meta' => ':code · :date · :count sản phẩm',
         'view' => 'Xem chi tiết',
+        'view_label' => 'Xem chi tiết đơn :code',
         'reorder' => 'Đặt lại hoa',
         'deliver_today' => 'Giao hôm nay, :time',
+        'deliver_on' => 'Giao :date, :time',
         'empty' => 'Chưa có đơn nào ở mục này.',
         'latest_note' => 'Đơn :code đã thanh toán · Lá đang gói hoa và viết thiệp cho bạn.',
-        'status' => [
-            'preparing' => 'Đang chuẩn bị',
-            'completed' => 'Hoàn thành',
-        ],
     ],
 
     'password' => [

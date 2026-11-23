@@ -73,6 +73,21 @@ final class OrderRepository implements OrderRepositoryInterface
         return $order;
     }
 
+    public function findByCustomer(int $userId): Collection
+    {
+        $orders = Order::query()
+            ->where('user_id', $userId)
+            ->with(['deliveryDetail', 'items'])
+            ->latest()
+            ->orderByDesc('id')
+            ->get();
+
+        // item_id của món kèm trỏ sang bảng addons: chỉ nạp sản phẩm cho dòng hoa.
+        (new Collection($orders->flatMap->items->where('item_type', CartItemType::Flower)->all()))->load('product.primaryImage');
+
+        return $orders;
+    }
+
     public function markPaymentPaid(Order $order, ?string $transactionRef): bool
     {
         $attributes = ['payment_status' => PaymentStatus::Paid, 'transaction_ref' => $transactionRef];
