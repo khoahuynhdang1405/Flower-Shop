@@ -13,7 +13,6 @@ return [
         'secondary' => 'More links',
         'open' => 'Open menu',
         'close' => 'Close menu',
-        'orders_badge' => ':count new orders',
     ],
 
     'menu' => [

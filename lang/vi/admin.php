@@ -13,7 +13,6 @@ return [
         'secondary' => 'Liên kết khác',
         'open' => 'Mở menu',
         'close' => 'Đóng menu',
-        'orders_badge' => ':count đơn mới',
     ],
 
     'menu' => [

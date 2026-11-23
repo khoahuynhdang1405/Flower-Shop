@@ -17,7 +17,7 @@ return [
 
     'menu' => [
         ['key' => 'dashboard', 'route' => 'admin.dashboard', 'icon' => 'lucide-layout-grid'],
-        ['key' => 'orders', 'route' => 'admin.orders', 'icon' => 'lucide-shopping-bag', 'badge' => 'orders'],
+        ['key' => 'orders', 'route' => 'admin.orders', 'icon' => 'lucide-shopping-bag'],
         ['key' => 'products', 'route' => 'admin.products', 'icon' => 'brand.flower-mark'],
         ['key' => 'collections', 'route' => 'admin.collections', 'icon' => 'lucide-layers'],
         ['key' => 'customers', 'route' => 'admin.customers', 'icon' => 'lucide-users'],

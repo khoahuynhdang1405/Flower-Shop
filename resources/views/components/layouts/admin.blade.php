@@ -1,8 +1,4 @@
-@props([
-    'title',
-    // TODO: thay bằng số đơn chờ xử lý thật khi có query đơn hàng.
-    'orderCount' => 8,
-])
+@props(['title'])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="lahoa" class="bg-lh-canvas">
@@ -21,7 +17,7 @@
         {{ __('admin.skip_to_content') }}
     </a>
 
-    <x-admin.sidebar :order-count="$orderCount" />
+    <x-admin.sidebar />
 
     <div class="flex min-h-dvh flex-col lg:pl-56 print:pl-0">
         <x-admin.header :fallback-page="$title" />

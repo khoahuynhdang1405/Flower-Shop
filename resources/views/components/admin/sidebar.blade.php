@@ -1,7 +1,4 @@
-@props(['orderCount' => 0])
-
 @php
-    $badges = ['orders' => $orderCount];
     $linkFor = fn (array $item): string => isset($item['url'])
         ? url($item['url'])
         : (Route::has($item['route']) ? route($item['route']) : '#');
@@ -34,7 +31,6 @@
             @foreach (config('admin.menu') as $item)
                 @php
                     $active = $isActive($item);
-                    $badge = isset($item['badge']) ? ($badges[$item['badge']] ?? 0) : 0;
                 @endphp
                 <li>
                     <a href="{{ $linkFor($item) }}" @if ($active) aria-current="page" @endif
@@ -49,10 +45,6 @@
                                 :class="Arr::toCssClasses(['h-5 w-auto max-w-5', 'stroke-[1.5]' => str_starts_with($item['icon'], 'lucide-')])" />
                         </span>
                         <span>{{ __('admin.menu.'.$item['key']) }}</span>
-                        @if ($badge > 0)
-                            <span aria-hidden="true" class="text-xs text-white/80">{{ $badge }}</span>
-                            <span class="sr-only">({{ __('admin.nav.orders_badge', ['count' => $badge]) }})</span>
-                        @endif
                     </a>
                 </li>
             @endforeach
