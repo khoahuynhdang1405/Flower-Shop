@@ -39,6 +39,17 @@ final class ProductRepository implements ProductRepositoryInterface
             ->get();
     }
 
+    public function findForSaleInCollection(string $collectionSlug): Collection
+    {
+        return Product::query()
+            ->where('is_active', true)
+            ->whereHas('occasions', fn (Builder $collection) => $collection->where('slug', $collectionSlug))
+            ->with(['category', 'defaultSize', 'primaryImage'])
+            ->orderByDesc('is_featured')
+            ->orderBy('name')
+            ->get();
+    }
+
     public function findByPrimaryCategory(Category $category): Collection
     {
         return Product::query()

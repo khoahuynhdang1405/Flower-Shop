@@ -32,6 +32,7 @@
         <x-storefront.footer-compact />
     @else
         <x-storefront.footer />
+        <x-storefront.cart-toast />
     @endif
 </body>
 

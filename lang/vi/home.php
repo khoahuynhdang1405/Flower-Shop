@@ -13,8 +13,13 @@ return [
         'secondary_cta' => 'Khám phá tiệm',
         'note' => 'Hoa tươi mỗi ngày · Gói thủ công · Giao trong ngày',
         'image_alt' => 'Bó hoa hồng kem và cẩm tú cầu trên bàn gỗ của tiệm',
-        'collection_eyebrow' => 'Bộ sưu tập tháng 10',
-        'collection_name' => 'Dịu dàng mùa thu',
+        'collection_eyebrow' => 'Bộ sưu tập tháng :month',
+        'collection_names' => [
+            'spring' => 'Trong trẻo mùa xuân',
+            'summer' => 'Rực rỡ mùa hạ',
+            'autumn' => 'Dịu dàng mùa thu',
+            'winter' => 'An lành mùa đông',
+        ],
     ],
 
     'promises' => [
@@ -74,6 +79,19 @@ return [
         'filter_label' => 'Lọc theo kiểu hoa',
         'all' => 'Tất cả',
         'none' => 'Lá đang chọn những bó hoa đẹp nhất, bạn ghé lại sau một chút nhé.',
+    ],
+
+    // TODO: đánh giá viết cứng theo thiết kế; thay bằng đánh giá đã duyệt khi có bảng reviews (docs/design-vs-db-gaps.md #1).
+    'testimonials' => [
+        'eyebrow' => 'Những lời thương gửi lại',
+        'title' => 'Niềm vui nở từ những điều nhỏ.',
+        'rating' => '4,9/5 từ hơn 320 khách hàng đã gửi thương cùng Lá',
+        'stars_label' => ':count trên 5 sao',
+        'items' => [
+            ['quote' => 'Bó hoa còn xinh hơn cả ảnh. Mẹ mình cứ ngắm mãi, rồi hỏi tiệm ở đâu để lần sau tự ghé mua. Cảm ơn Lá vì một sinh nhật thật dịu dàng.', 'name' => 'Đoan Trang', 'occasion' => 'Hoa sinh nhật cho mẹ'],
+            ['quote' => 'Mình chỉ kể sơ về màu hoa bạn ấy thích, Lá đã hiểu và gói đúng ý. Tấm thiệp viết tay là chi tiết nhỏ mà làm mình rất xúc động.', 'name' => 'Gia Bảo', 'occasion' => 'Hoa kỷ niệm ngày yêu'],
+            ['quote' => 'Hoa tươi rất lâu, phối màu tinh tế và giao đúng giờ. Góc bàn làm việc có thêm một bình hoa, cả tuần cũng thấy dễ thương hơn.', 'name' => 'Kim Chi', 'occasion' => 'Một bó hoa cho chính mình'],
+        ],
     ],
 
     'journal' => [

@@ -3,19 +3,13 @@
      * @var \Illuminate\Support\Carbon $today
      * @var \App\Enums\Season $currentSeason  mùa hiện tại theo tháng (SeasonController)
      * @var array<string, string|null> $seasonCovers  giá trị Season => ảnh chính bộ sưu tập mùa (null: ảnh tĩnh)
+     * @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product> $seasonProducts  hoa trong bộ sưu tập của mùa hiện tại
      *
-     * TODO: giá và sản phẩm của mùa là dữ liệu mẫu theo docs/designs/storefront/03-hoa-theo-mua.png.
-     * Khi nối DB: mùa = categories (type = season), sản phẩm của mùa lấy theo bộ sưu tập; "giá từ" = giá size thấp nhất.
+     * TODO: "giá từ" của 4 thẻ mùa vẫn là số cố định trong Season::startingPrice().
      */
     $season = $currentSeason->value;
     // vi dùng :month (Tháng 11), en dùng :month_name (November).
     $monthParams = ['month' => $today->month, 'month_name' => $today->copy()->locale('en')->monthName];
-    $seasonProducts = [
-        ['name' => 'Thu dịu dàng', 'slug' => 'thu-diu-dang', 'composition' => 'Hồng đào · Cúc mẫu đơn · Bình gốm', 'price' => 890000, 'badge' => __('seasons.products.badge')],
-        ['name' => 'Một vệt nắng thu', 'slug' => 'mot-vet-nang-thu', 'composition' => 'Hồng cam · Cẩm chướng · Lá bạc', 'price' => 590000],
-        ['name' => 'Hẹn với tháng Mười', 'slug' => 'hen-voi-thang-muoi', 'composition' => 'Cúc vàng · Hồng kem · Giỏ mây', 'price' => 720000],
-        ['name' => 'Chiều êm', 'slug' => 'chieu-em', 'composition' => 'Thạch thảo · Hồng phấn · Bình gốm', 'price' => 650000],
-    ];
 
     $natureIcons = ['fresh' => 'brand.flower-mark', 'colors' => 'lucide-palette', 'gentle' => 'lucide-leaf'];
     $money = fn (int $amount): string => number_format($amount, 0, '', __('storefront.thousands_separator')).' '.__('storefront.currency');
@@ -71,17 +65,22 @@
         <div class="border-t border-lh-border pt-14">
             <x-storefront.section-heading id="season-products-title" class="scroll-mt-6" :eyebrow="__('seasons.products.eyebrow')"
                 :title="__('seasons.products.title', $monthParams)" :description="__('seasons.products.descriptions.'.$season)">
-                <x-slot:aside>{{ __('seasons.products.count', ['count' => count($seasonProducts)]) }}</x-slot:aside>
+                @if ($seasonProducts->isNotEmpty())
+                    <x-slot:aside>{{ __('seasons.products.count', ['count' => $seasonProducts->count()]) }}</x-slot:aside>
+                @endif
             </x-storefront.section-heading>
 
-            <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list">
-                @foreach ($seasonProducts as $product)
-                    <li>
-                        <x-storefront.product-card :name="$product['name']" :subtitle="$product['composition']" :price="$product['price']"
-                            :image-name="$product['slug']" :badge="$product['badge'] ?? null" :url="route('flowers.show', $product['slug'])" />
-                    </li>
-                @endforeach
-            </ul>
+            @if ($seasonProducts->isEmpty())
+                <p class="mt-8 rounded-sm bg-lh-sage-50 px-5 py-6 text-sm text-lh-muted">{{ __('seasons.products.empty') }}</p>
+            @else
+                <ul class="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4" role="list">
+                    @foreach ($seasonProducts as $product)
+                        <li>
+                            <x-storefront.product-card :product="$product" :badge="$product->is_featured ? __('seasons.products.badge') : null" />
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
 
             <p class="mt-8 text-xs text-lh-muted">{{ __('seasons.products.note') }}</p>
         </div>

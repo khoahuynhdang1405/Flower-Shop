@@ -76,8 +76,7 @@
                     <ul class="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 xl:grid-cols-3" role="list">
                         @foreach ($products as $product)
                             <li>
-                                <x-storefront.product-card :name="$product->name" :subtitle="$product->category->name" :price="$product->display_price"
-                                    :image-url="$product->primaryImage?->url" :image-name="$product->slug" :url="route('flowers.show', $product->slug)" />
+                                <x-storefront.product-card :product="$product" />
                             </li>
                         @endforeach
                     </ul>

@@ -152,8 +152,42 @@ class StorefrontHomeAndSeasonsTest extends TestCase
             ->assertSeeTextInOrder(['Một tiệm hoa nhỏ.', 'Thật nhiều thương yêu.', 'Đọc câu chuyện của Lá'])
             ->assertSee('href="'.route('story').'"', false)
             ->assertSeeTextInOrder(['Bạn kể chuyện. Lá chọn hoa.', 'Nhắn Lá tư vấn riêng', 'Kể Lá nghe', 'Cùng chọn điều xinh', 'Để Lá gửi thương'])
-            ->assertSee('href="https://zalo.me/0378599249"', false)
-            ->assertDontSeeText('Niềm vui nở từ những điều nhỏ');
+            ->assertSee('href="https://zalo.me/0378599249"', false);
+    }
+
+    public function test_home_hero_collection_follows_the_current_month_and_season(): void
+    {
+        app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 11, 23));
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSeeTextInOrder(['Bộ sưu tập tháng 11', 'An lành mùa đông'])
+            ->assertDontSeeText('Bộ sưu tập tháng 10');
+
+        $this->travelTo(Carbon::create(2026, 10, 7));
+        app()->setLocale('en');
+
+        $this->get(route('home'))->assertSeeTextInOrder(['October collection', 'Gentle autumn']);
+    }
+
+    public function test_home_page_shows_three_testimonials_after_the_consult_block(): void
+    {
+        app()->setLocale('vi');
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSeeTextInOrder([
+                'Bạn kể chuyện. Lá chọn hoa.',
+                'Những lời thương gửi lại', 'Niềm vui nở từ những điều nhỏ.', '4,9/5 từ hơn 320 khách hàng đã gửi thương cùng Lá',
+                'Bó hoa còn xinh hơn cả ảnh.', 'Đoan Trang', 'Hoa sinh nhật cho mẹ',
+                'Mình chỉ kể sơ về màu hoa bạn ấy thích', 'Gia Bảo', 'Hoa kỷ niệm ngày yêu',
+                'Hoa tươi rất lâu', 'Kim Chi', 'Một bó hoa cho chính mình',
+            ])
+            ->assertSee('aria-label="5 trên 5 sao"', false)
+            ->assertSee('>ĐT</span>', false)
+            ->assertSee('>GB</span>', false)
+            ->assertSee('>KC</span>', false);
     }
 
     public function test_home_page_renders_in_english(): void
@@ -172,6 +206,10 @@ class StorefrontHomeAndSeasonsTest extends TestCase
     {
         app()->setLocale('vi');
         $this->travelTo(Carbon::create(2026, 8, 31));
+        $autumn = Category::factory()->season()->create(['name' => 'Dịu dàng mùa thu', 'slug' => 'diu-dang-mua-thu']);
+        foreach (['Thu dịu dàng', 'Một vệt nắng thu', 'Hẹn với tháng Mười', 'Chiều êm'] as $name) {
+            Product::factory()->hasAttached($autumn, [], 'occasions')->create(['name' => $name]);
+        }
 
         $this->get(route('seasons'))
             ->assertOk()
@@ -198,6 +236,52 @@ class StorefrontHomeAndSeasonsTest extends TestCase
             ->assertSeeTextInOrder(['Tháng 11 – 1', 'Đang vào mùa', 'Đông an lành'])
             ->assertSeeText('Những đóa hoa của tháng 11')
             ->assertDontSeeText('Thu ghé qua,');
+    }
+
+    public function test_seasons_page_lists_only_active_flowers_of_the_current_season_with_quick_add(): void
+    {
+        app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 11, 9));
+        $winter = Category::factory()->season()->create(['slug' => 'an-lanh-mua-dong']);
+        $autumn = Category::factory()->season()->create(['slug' => 'diu-dang-mua-thu']);
+        $warm = Product::factory()->featured()->hasAttached($winter, [], 'occasions')->create(['name' => 'Ấm áp mùa đông', 'stock' => 4]);
+        $size = ProductSize::factory()->for($warm)->create(['is_default' => true, 'price' => 980000]);
+        Product::factory()->hasAttached($winter, [], 'occasions')->create(['name' => 'Hồng phấn ban mai', 'stock' => 0]);
+        Product::factory()->hidden()->hasAttached($winter, [], 'occasions')->create(['name' => 'Bó đã ẩn']);
+        Product::factory()->hasAttached($autumn, [], 'occasions')->create(['name' => 'Bó hoa của mùa thu']);
+
+        $this->get(route('seasons'))
+            ->assertOk()
+            ->assertSeeTextInOrder(['Được thương nhất', 'Ấm áp mùa đông', '980.000 VNĐ', 'Hồng phấn ban mai', 'Tạm hết'])
+            ->assertSeeText('2 thiết kế dành cho mùa này')
+            ->assertSee('data-quick-add data-name="Ấm áp mùa đông"', false)
+            ->assertSee('name="size" value="'.$size->id.'"', false)
+            ->assertDontSeeText('Bó đã ẩn')
+            ->assertDontSeeText('Bó hoa của mùa thu');
+    }
+
+    public function test_seasons_page_without_flowers_shows_a_gentle_note(): void
+    {
+        app()->setLocale('vi');
+        $this->travelTo(Carbon::create(2026, 11, 9));
+
+        $this->get(route('seasons'))
+            ->assertOk()
+            ->assertSeeText('Lá đang chọn những đóa hoa cho mùa này');
+    }
+
+    public function test_quick_add_from_a_product_card_puts_one_default_size_bouquet_in_the_cart(): void
+    {
+        $product = Product::factory()->featured()->create(['name' => 'Một ngày bình dị']);
+        $size = ProductSize::factory()->for($product)->create(['is_default' => true, 'price' => 590000]);
+
+        $this->get(route('home'))->assertSee('data-quick-add data-name="Một ngày bình dị"', false);
+
+        $this->postJson(route('api.cart.items.store'), ['product_id' => $product->id, 'size' => $size->id, 'quantity' => 1])
+            ->assertCreated()
+            ->assertJsonPath('data.item_count', 1);
+        $this->postJson(route('api.cart.items.store'), ['product_id' => $product->id, 'size' => $size->id, 'quantity' => 1])
+            ->assertJsonPath('data.item_count', 2);
     }
 
     public function test_seasons_page_renders_in_english(): void

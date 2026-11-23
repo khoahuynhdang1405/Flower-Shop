@@ -63,6 +63,7 @@ return [
         ],
         'count' => ':count thiết kế dành cho mùa này',
         'badge' => 'Được thương nhất',
+        'empty' => 'Lá đang chọn những đóa hoa cho mùa này, bạn ghé lại sau ít hôm nhé.',
         'note' => 'Hoa theo mùa có thể thay đổi đôi chút theo vườn và thời tiết. Lá luôn giữ sắc màu, tinh thần thiết kế và trao đổi với bạn trước khi thay hoa.',
     ],
 

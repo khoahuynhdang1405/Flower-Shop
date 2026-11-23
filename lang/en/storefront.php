@@ -53,6 +53,11 @@ return [
     'product' => [
         'favorite' => 'Add “:name” to favourites',
         'add_to_cart' => 'Add “:name” to your basket',
+        'sold_out' => 'Sold out',
+        'added' => 'Lá has added “:name” to your basket.',
+        'add_failed' => 'Lá couldn’t add this bouquet, please try again.',
+        'view_cart' => 'View basket',
+        'close_toast' => 'Close notification',
     ],
 
     'legal' => [

@@ -76,8 +76,8 @@
                 <a href="{{ route('cart.show') }}" @if (request()->routeIs('cart.show')) aria-current="page" @endif data-cart-count
                     class="flex h-10 items-center gap-1.5 rounded-full px-2 text-sm text-lh-heading transition-colors hover:bg-lh-sage-50 focus-visible:outline-2 focus-visible:outline-lh-primary">
                     <x-lucide-shopping-bag class="size-5 stroke-[1.5]" aria-hidden="true" />
-                    <span aria-hidden="true">({{ $cartCount }})</span>
-                    <span class="sr-only">{{ __('storefront.nav.cart', ['count' => $cartCount]) }}</span>
+                    <span aria-hidden="true" data-cart-count-number>({{ $cartCount }})</span>
+                    <span class="sr-only" data-cart-count-label="{{ __('storefront.nav.cart', ['count' => ':count']) }}">{{ __('storefront.nav.cart', ['count' => $cartCount]) }}</span>
                 </a>
             @endunless
         </div>

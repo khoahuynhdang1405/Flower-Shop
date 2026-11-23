@@ -29,7 +29,7 @@ class CartPageTest extends TestCase
             ->assertOk()
             ->assertSeeText('Giỏ hoa của bạn còn trống')
             ->assertSee('href="'.route('flowers.index').'"', false)
-            ->assertSee('<span aria-hidden="true">(0)</span>', false)
+            ->assertSee('<span aria-hidden="true" data-cart-count-number>(0)</span>', false)
             ->assertDontSeeText('Gói ghém đơn hoa');
     }
 
@@ -51,7 +51,7 @@ class CartPageTest extends TestCase
 
         $this->get(route('cart.show'))
             ->assertOk()
-            ->assertSee('<span aria-hidden="true">(2)</span>', false)
+            ->assertSee('<span aria-hidden="true" data-cart-count-number>(2)</span>', false)
             ->assertSee('aria-current="step"', false)
             ->assertSeeTextInOrder(['Lời thì thầm', 'Cỡ vừa', 'Đơn giá 680.000 VNĐ', '680.000 VNĐ'])
             ->assertSeeTextInOrder(['Chocolate ngọt ngào', 'Đơn giá 120.000 VNĐ', '120.000 VNĐ'])
